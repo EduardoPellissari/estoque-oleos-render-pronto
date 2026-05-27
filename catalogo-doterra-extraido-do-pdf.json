@@ -1,0 +1,2312 @@
+[
+  {
+    "code": "60226006",
+    "name": "Adaptiv® Pastilhas",
+    "size": "60 pastilhas",
+    "retail": 247,
+    "wholesale": 185,
+    "pv": 31,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215485",
+    "name": "Basil - Manjericão (Ingestão)",
+    "size": "5 ml",
+    "retail": 101,
+    "wholesale": 76,
+    "pv": 9,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214247",
+    "name": "Black Pepper - Pimenta-preta (Ingestão)",
+    "size": "5 ml",
+    "retail": 180,
+    "wholesale": 135,
+    "pv": 25,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214077",
+    "name": "Cassia - Canela-cássia (Ingestão)",
+    "size": "5 ml",
+    "retail": 60,
+    "wholesale": 45,
+    "pv": 8,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214079",
+    "name": "Cilantro - Coentro (Ingestão)",
+    "size": "5 ml",
+    "retail": 75,
+    "wholesale": 56,
+    "pv": 9,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215478",
+    "name": "Cinnamon Bark - Casca de Canela (Ingestão)",
+    "size": "5 ml",
+    "retail": 201,
+    "wholesale": 151,
+    "pv": 24,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215437",
+    "name": "Clary Sage - Sálvia-esclareia (Ingestão)",
+    "size": "5 ml",
+    "retail": 131,
+    "wholesale": 98,
+    "pv": 17,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215486",
+    "name": "Clove - Cravo (Ingestão)",
+    "size": "5 ml",
+    "retail": 65,
+    "wholesale": 49,
+    "pv": 7,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215576",
+    "name": "Copaiba - Copaíba (Ingestão)",
+    "size": "5 ml",
+    "retail": 121,
+    "wholesale": 91,
+    "pv": 16,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205909",
+    "name": "DDR Prime® Pastilha",
+    "size": "90 pastilhas",
+    "retail": 260,
+    "wholesale": 195,
+    "pv": 31,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205729",
+    "name": "Daily Nutrient Pack - Conjunto de nutrientes diários (Ingestão)",
+    "size": "2 frascos de 120 Cáps cada",
+    "retail": 467,
+    "wholesale": 350,
+    "pv": 50,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215519",
+    "name": "Frankincense - Olíbano (Ingestão)",
+    "size": "5 ml",
+    "retail": 204,
+    "wholesale": 153,
+    "pv": 27,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60212252",
+    "name": "Ginger - Balas dōTERRA Gengibre",
+    "size": "30 balas",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214090",
+    "name": "Ginger - Gengibre (Ingestão)",
+    "size": "5 ml",
+    "retail": 103,
+    "wholesale": 77,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214078",
+    "name": "Grapefruit - Toranja (Ingestão)",
+    "size": "5 ml",
+    "retail": 59,
+    "wholesale": 44,
+    "pv": 6,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60213098",
+    "name": "Green Mandarin - Mandarina-verde (Ingestão)",
+    "size": "5 ml",
+    "retail": 79,
+    "wholesale": 59,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215530",
+    "name": "Juniper Berry - Zimbro (Ingestão)",
+    "size": "5 ml",
+    "retail": 157,
+    "wholesale": 118,
+    "pv": 21,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214667",
+    "name": "Lavender - Lavanda (Ingestão)",
+    "size": "5 ml",
+    "retail": 83,
+    "wholesale": 62,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60225674",
+    "name": "Lemon - Limão-siciliano (Ingestão)",
+    "size": "5 ml",
+    "retail": 39,
+    "wholesale": 29,
+    "pv": 4,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214248",
+    "name": "Lemongrass - Capim-limão (Ingestão)",
+    "size": "5 ml",
+    "retail": 35,
+    "wholesale": 26,
+    "pv": 4,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214246",
+    "name": "Lime - Limão (Ingestão)",
+    "size": "5 ml",
+    "retail": 47,
+    "wholesale": 35,
+    "pv": 5,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60226003",
+    "name": "MetaPWR™ Fiber UP",
+    "size": "300 g",
+    "retail": 296,
+    "wholesale": 222,
+    "pv": 32,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60227423",
+    "name": "MetaPWR™ Fiber UP Sachês",
+    "size": "30 sachês",
+    "retail": 296,
+    "wholesale": 222,
+    "pv": 32,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224797",
+    "name": "MetaPWR™ Pastilhas",
+    "size": "90 Cápsulas",
+    "retail": 252,
+    "wholesale": 189,
+    "pv": 28,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214244",
+    "name": "On Guard® - Especiarias (Ingestão)",
+    "size": "5 ml",
+    "retail": 100,
+    "wholesale": 75,
+    "pv": 14,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60212030",
+    "name": "On Guard® Balas Naturais de Especiarias",
+    "size": "30 balas",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60217403",
+    "name": "On Guard® Beadlets (Pastilhas de Especiarias)",
+    "size": "125 pastilhas",
+    "retail": 124,
+    "wholesale": 93,
+    "pv": 15,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60222615",
+    "name": "On Guard®+ Pastilhas",
+    "size": "60 pastilhas",
+    "retail": 199,
+    "wholesale": 149,
+    "pv": 22,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214672",
+    "name": "Oregano - Orégano (Ingestão)",
+    "size": "5 ml",
+    "retail": 77,
+    "wholesale": 58,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215479",
+    "name": "Peppermint - Hortelã-pimenta (Ingestão)",
+    "size": "5 ml",
+    "retail": 73,
+    "wholesale": 55,
+    "pv": 9,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60217402",
+    "name": "Peppermint Beadlets (Pastilhas de Hortelã-pimenta)",
+    "size": "125 pastilhas",
+    "retail": 112,
+    "wholesale": 84,
+    "pv": 13,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60213503",
+    "name": "Pink Pepper - Pimenta-rosa (Ingestão)",
+    "size": "5 ml",
+    "retail": 156,
+    "wholesale": 117,
+    "pv": 23,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215533",
+    "name": "Rosemary - Alecrim (Ingestão)",
+    "size": "5 ml",
+    "retail": 53,
+    "wholesale": 40,
+    "pv": 6,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60226208",
+    "name": "SuperMint™ Beadlets (pastilhas sabor especiarias)",
+    "size": "125 pastilhas",
+    "retail": 145,
+    "wholesale": 109,
+    "pv": 16,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214671",
+    "name": "Tangerine - Tangerina (Ingestão)",
+    "size": "5 ml",
+    "retail": 55,
+    "wholesale": 41,
+    "pv": 7,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205861",
+    "name": "TriEase® Pastilha",
+    "size": "120 unidades",
+    "retail": 237,
+    "wholesale": 178,
+    "pv": 27,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60213132",
+    "name": "Turmeric - Cúrcuma (Ingestão)",
+    "size": "15 ml",
+    "retail": 233,
+    "wholesale": 175,
+    "pv": 28,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60223612",
+    "name": "Turmeric Pastilhas",
+    "size": "60 pastilhas",
+    "retail": 199,
+    "wholesale": 149,
+    "pv": 24,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205740",
+    "name": "VM Complex® - Suplemento Alimentar (Ingestão)",
+    "size": "120 Cápsulas",
+    "retail": 265,
+    "wholesale": 199,
+    "pv": 36,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214245",
+    "name": "Wild Orange - Laranja-selvagem (Ingestão)",
+    "size": "5 ml",
+    "retail": 35,
+    "wholesale": 26,
+    "pv": 4,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215489",
+    "name": "ZenGest® - Condimentos (Ingestão)",
+    "size": "5 ml",
+    "retail": 105,
+    "wholesale": 79,
+    "pv": 14,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205951",
+    "name": "ZenGest® Pastilhas",
+    "size": "60 pastilhas",
+    "retail": 172,
+    "wholesale": 129,
+    "pv": 20,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208386",
+    "name": "Zendocrine® - Condimentos (Ingestão)",
+    "size": "5 ml",
+    "retail": 79,
+    "wholesale": 59,
+    "pv": 9,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205950",
+    "name": "Zendocrine® Pastilhas",
+    "size": "60 pastilhas",
+    "retail": 185,
+    "wholesale": 139,
+    "pv": 21,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60229844",
+    "name": "dōTERRA Beauty Power™ Collagen Elixir",
+    "size": "210 g",
+    "retail": 250,
+    "wholesale": 187,
+    "pv": 35,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60212031",
+    "name": "dōTERRA Breathe® Balas Naturais de Limão com Especiarias",
+    "size": "30 balas",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60228146",
+    "name": "dōTERRA Lifeshot",
+    "size": "1 litro",
+    "retail": 203,
+    "wholesale": 152,
+    "pv": 24,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60230860",
+    "name": "dōTERRA Lifeshot Pack com 2 (Gênesis do Bem-Estar)",
+    "size": "2 litros",
+    "retail": 381,
+    "wholesale": 286,
+    "pv": 52,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214676",
+    "name": "dōTERRA Smart & Sassy® - Cítrico e Herbáceo (Ingestão)",
+    "size": "5 ml",
+    "retail": 84,
+    "wholesale": 63,
+    "pv": 10,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205741",
+    "name": "xEO Mega® - Suplemento Alimentar (Ingestão)",
+    "size": "120 Cápsulas",
+    "retail": 360,
+    "wholesale": 270,
+    "pv": 48,
+    "category": "Aromas naturais / suplementos / alimentos",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216929",
+    "name": "Condicionador Diário",
+    "size": "500 ml",
+    "retail": 212,
+    "wholesale": 159,
+    "pv": 18,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216922",
+    "name": "Condicionador Sem Enxágue",
+    "size": "237 ml",
+    "retail": 159,
+    "wholesale": 119,
+    "pv": 15,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60212032",
+    "name": "Correct-X® Creme Essencial",
+    "size": "15 ml",
+    "retail": 129,
+    "wholesale": 97,
+    "pv": 14,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60228314",
+    "name": "Lavender Fields™ Body Splash",
+    "size": "100 ml",
+    "retail": 169,
+    "wholesale": 127,
+    "pv": 20,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60213946",
+    "name": "On Guard® Creme Dental Clareador Natural",
+    "size": "125 g",
+    "retail": 75,
+    "wholesale": 56,
+    "pv": 6,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60227968",
+    "name": "On Guard® Creme Dental Clareador Natural Travel Pack",
+    "size": "5 bisnagas de 4 g",
+    "retail": 31,
+    "wholesale": 23,
+    "pv": 2,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216948",
+    "name": "Shampoo Protetor",
+    "size": "500 ml",
+    "retail": 193,
+    "wholesale": 145,
+    "pv": 18,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60226662",
+    "name": "Veráge® Creme Hidratante",
+    "size": "48 g",
+    "retail": 243,
+    "wholesale": 182,
+    "pv": 32,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203401",
+    "name": "Veráge® Hidratante",
+    "size": "30 ml",
+    "retail": 211,
+    "wholesale": 158,
+    "pv": 29,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203482",
+    "name": "Veráge® Salubelle™ Sérum Hidratante",
+    "size": "15 ml",
+    "retail": 452,
+    "wholesale": 339,
+    "pv": 58,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203474",
+    "name": "Veráge® Solução de Limpeza Facial",
+    "size": "60 ml",
+    "retail": 216,
+    "wholesale": 162,
+    "pv": 26,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203472",
+    "name": "Veráge® Tônico",
+    "size": "50 ml",
+    "retail": 289,
+    "wholesale": 217,
+    "pv": 22,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209636",
+    "name": "Yarrow | Pom",
+    "size": "15 ml",
+    "retail": 360,
+    "wholesale": 270,
+    "pv": 47,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60212418",
+    "name": "Yarrow | Pom - Ativo Botânico / Nutritivo Duo",
+    "size": "30 ml",
+    "retail": 728,
+    "wholesale": 546,
+    "pv": 93,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60211397",
+    "name": "Yarrow | Pom - Sérum Firmador Corporal",
+    "size": "100 ml",
+    "retail": 553,
+    "wholesale": 415,
+    "pv": 60,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60222822",
+    "name": "dōTERRA Breathe® Balm Stick",
+    "size": "13,5 g",
+    "retail": 119,
+    "wholesale": 89,
+    "pv": 14,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206121",
+    "name": "dōTERRA Deep Blue® Rub",
+    "size": "120 ml",
+    "retail": 280,
+    "wholesale": 210,
+    "pv": 33,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60227472",
+    "name": "dōTERRA Deep Blue® Rub Travel Pack",
+    "size": "5 bisnagas de 4 g",
+    "retail": 64,
+    "wholesale": 48,
+    "pv": 5,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60231266",
+    "name": "dōTERRA Pūre™ Femme Eau de Parfum",
+    "size": "60 ml",
+    "retail": 385,
+    "wholesale": 289,
+    "pv": 50,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60231267",
+    "name": "dōTERRA Pūr™ Homme Eau de Parfum",
+    "size": "60 ml",
+    "retail": 385,
+    "wholesale": 289,
+    "pv": 50,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205839",
+    "name": "dōTERRA® Spa Citrus Bliss® Loção para as mãos",
+    "size": "75 ml",
+    "retail": 85,
+    "wholesale": 64,
+    "pv": 9,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205845",
+    "name": "dōTERRA® Spa Esfoliante para o Corpo",
+    "size": "226 g",
+    "retail": 200,
+    "wholesale": 150,
+    "pv": 20,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205838",
+    "name": "dōTERRA® Spa Loção para Mãos e Corpo",
+    "size": "200 ml",
+    "retail": 132,
+    "wholesale": 99,
+    "pv": 12,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205756",
+    "name": "dōTERRA® Spa Manteiga Hidratante para o Corpo",
+    "size": "198g",
+    "retail": 212,
+    "wholesale": 159,
+    "pv": 12,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205757",
+    "name": "dōTERRA® Spa Sabonete Hidratante para o Corpo",
+    "size": "250 ml",
+    "retail": 105,
+    "wholesale": 79,
+    "pv": 13,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215500",
+    "name": "Óleo de Coco Fracionado",
+    "size": "115 ml",
+    "retail": 113,
+    "wholesale": 85,
+    "pv": 12,
+    "category": "Cuidados pessoais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60226416",
+    "name": "Difusor Pebble™",
+    "size": "Unidade",
+    "retail": 399,
+    "wholesale": 299,
+    "pv": 13,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215423",
+    "name": "Difusor Petal 2.0",
+    "size": "Unidade",
+    "retail": 532,
+    "wholesale": 399,
+    "pv": 30,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60229184",
+    "name": "Difusor de Parede Myst",
+    "size": "Unidade",
+    "retail": 603,
+    "wholesale": 297,
+    "pv": 10,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60211975",
+    "name": "Difusor dōTERRA Volo™ - Mármore",
+    "size": "Unidade",
+    "retail": 567,
+    "wholesale": 425,
+    "pv": 15,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60204533",
+    "name": "Kit de Cuidados para a Pele Veráge®",
+    "size": "Caixa",
+    "retail": 731,
+    "wholesale": 548,
+    "pv": 67,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215624",
+    "name": "Kit dōTERRA Emotional Aromatherapy®",
+    "size": "Caixa",
+    "retail": 1132,
+    "wholesale": 849,
+    "pv": 139,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60217040",
+    "name": "Livro Culinária Essencial",
+    "size": "Livro de Receitas",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 10,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60221857",
+    "name": "Livro dōTERRA® Spa Essencial",
+    "size": "Livro",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 10,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215422",
+    "name": "dōTERRA® Brasil Living Kit",
+    "size": "Caixa",
+    "retail": 1007,
+    "wholesale": 755,
+    "pv": 120,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215470",
+    "name": "dōTERRA® Colecionador",
+    "size": "Coleção com 69 itens",
+    "retail": 7993,
+    "wholesale": 5995,
+    "pv": 800,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215466",
+    "name": "dōTERRA® Culinária Essencial",
+    "size": "Caixa com Livro de Receitas",
+    "retail": 713,
+    "wholesale": 535,
+    "pv": 65,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60219174",
+    "name": "dōTERRA® Culinária Essencial Sem Livro de Receitas",
+    "size": "Caixa",
+    "retail": 573,
+    "wholesale": 430,
+    "pv": 55,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60218036",
+    "name": "dōTERRA® Diamond",
+    "size": "Coleção com 107 itens",
+    "retail": 15993,
+    "wholesale": 11995,
+    "pv": 1600,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60225644",
+    "name": "dōTERRA® Essencial Para o Lar",
+    "size": "Caixa com Difusor",
+    "retail": 2187,
+    "wholesale": 1640,
+    "pv": 200,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209805",
+    "name": "dōTERRA® Kids Kit",
+    "size": "Unidade",
+    "retail": 817,
+    "wholesale": 613,
+    "pv": 89,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60229796",
+    "name": "dōTERRA® Kit Início Rápido",
+    "size": "Caixa",
+    "retail": 884,
+    "wholesale": 547,
+    "pv": 100,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60230849",
+    "name": "dōTERRA® Kit Primeiros Cuidados",
+    "size": "Caixa",
+    "retail": 1311,
+    "wholesale": 898,
+    "pv": 132,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215282",
+    "name": "dōTERRA® Kit de Apresentação",
+    "size": "Caixa",
+    "retail": 149,
+    "wholesale": 112,
+    "pv": 13,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215467",
+    "name": "dōTERRA® Soluções Naturais",
+    "size": "Caixa com Difusor e dōTERRA® Wooden Box",
+    "retail": 3987,
+    "wholesale": 2990,
+    "pv": 400,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60207429",
+    "name": "dōTERRA® Wooden Box",
+    "size": "Unidade",
+    "retail": 105,
+    "wholesale": 79,
+    "pv": 0,
+    "category": "Kits e acessórios",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210367",
+    "name": "Adaptiv®",
+    "size": "15 ml",
+    "retail": 303,
+    "wholesale": 227,
+    "pv": 37,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60217400",
+    "name": "Air-X™",
+    "size": "15 ml",
+    "retail": 185,
+    "wholesale": 139,
+    "pv": 23,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203417",
+    "name": "Citrus Bliss®",
+    "size": "15 ml",
+    "retail": 144,
+    "wholesale": 108,
+    "pv": 17,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209540",
+    "name": "DDR Prime®",
+    "size": "15 ml",
+    "retail": 280,
+    "wholesale": 180,
+    "pv": 29,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203410",
+    "name": "On Guard®",
+    "size": "15 ml",
+    "retail": 259,
+    "wholesale": 194,
+    "pv": 36,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224904",
+    "name": "SuperMint™",
+    "size": "15 ml",
+    "retail": 193,
+    "wholesale": 145,
+    "pv": 25,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216342",
+    "name": "TerraShield®",
+    "size": "15 ml",
+    "retail": 87,
+    "wholesale": 65,
+    "pv": 11,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60204521",
+    "name": "TerraShield® Spray",
+    "size": "30 ml",
+    "retail": 159,
+    "wholesale": 119,
+    "pv": 19,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214934",
+    "name": "ZenGest®",
+    "size": "15 ml",
+    "retail": 257,
+    "wholesale": 193,
+    "pv": 35,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203931",
+    "name": "Zendocrine®",
+    "size": "15 ml",
+    "retail": 197,
+    "wholesale": 148,
+    "pv": 24,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203389",
+    "name": "dōTERRA Balance®",
+    "size": "15 ml",
+    "retail": 156,
+    "wholesale": 117,
+    "pv": 21,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203392",
+    "name": "dōTERRA Breathe®",
+    "size": "15 ml",
+    "retail": 183,
+    "wholesale": 137,
+    "pv": 23,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203394",
+    "name": "dōTERRA Deep Blue®",
+    "size": "5 ml",
+    "retail": 252,
+    "wholesale": 189,
+    "pv": 36,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224643",
+    "name": "dōTERRA Deep Blue® Stick + Copaíba",
+    "size": "30 g",
+    "retail": 185,
+    "wholesale": 139,
+    "pv": 23,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203789",
+    "name": "dōTERRA Elevation®",
+    "size": "15 ml",
+    "retail": 420,
+    "wholesale": 315,
+    "pv": 42,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224737",
+    "name": "dōTERRA Hygge™",
+    "size": "15 ml",
+    "retail": 280,
+    "wholesale": 210,
+    "pv": 33,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203424",
+    "name": "dōTERRA Purify®",
+    "size": "15 ml",
+    "retail": 151,
+    "wholesale": 113,
+    "pv": 20,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60220994",
+    "name": "dōTERRA Serenity®",
+    "size": "15 ml",
+    "retail": 265,
+    "wholesale": 199,
+    "pv": 34,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203935",
+    "name": "dōTERRA Smart & Sassy®",
+    "size": "15 ml",
+    "retail": 220,
+    "wholesale": 165,
+    "pv": 28,
+    "category": "Mix de óleos essenciais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210337",
+    "name": "Adaptiv® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 160,
+    "wholesale": 120,
+    "pv": 20,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206563",
+    "name": "Clarycalm® - Roll-On",
+    "size": "10 ml",
+    "retail": 233,
+    "wholesale": 175,
+    "pv": 28,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60219361",
+    "name": "Copaiba Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 172,
+    "wholesale": 129,
+    "pv": 23,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206659",
+    "name": "HD Clear™ - Roll-On",
+    "size": "10 ml",
+    "retail": 143,
+    "wholesale": 107,
+    "pv": 18,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215985",
+    "name": "Helichrysum Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 432,
+    "wholesale": 324,
+    "pv": 50,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60223645",
+    "name": "Hope™ Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 167,
+    "wholesale": 125,
+    "pv": 20,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206670",
+    "name": "InTune® - Roll-On",
+    "size": "10 ml",
+    "retail": 269,
+    "wholesale": 202,
+    "pv": 32,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206661",
+    "name": "Jasmine - Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 315,
+    "wholesale": 236,
+    "pv": 39,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215361",
+    "name": "Kit Técnica dōTERRA AromaTouch®",
+    "size": "Caixa",
+    "retail": 873,
+    "wholesale": 655,
+    "pv": 104,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216401",
+    "name": "Kit Técnica dōTERRA® AromaTouch® com Difusor",
+    "size": "Caixa com Difusor",
+    "retail": 1307,
+    "wholesale": 980,
+    "pv": 115,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60218769",
+    "name": "Kit dōTERRA Touch Emotional Aromatherapy®",
+    "size": "Caixa",
+    "retail": 801,
+    "wholesale": 601,
+    "pv": 100,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206564",
+    "name": "Lavender Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 125,
+    "wholesale": 94,
+    "pv": 16,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206613",
+    "name": "Melaleuca Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 105,
+    "wholesale": 79,
+    "pv": 14,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206568",
+    "name": "On Guard® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 171,
+    "wholesale": 128,
+    "pv": 24,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206614",
+    "name": "Oregano Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 111,
+    "wholesale": 83,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206562",
+    "name": "PastTense® - Roll-On",
+    "size": "10 ml",
+    "retail": 164,
+    "wholesale": 123,
+    "pv": 20,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206569",
+    "name": "Peppermint Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 115,
+    "wholesale": 86,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206662",
+    "name": "Rose Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 499,
+    "wholesale": 374,
+    "pv": 65,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206573",
+    "name": "Salubelle™ - Roll-On",
+    "size": "10 ml",
+    "retail": 580,
+    "wholesale": 435,
+    "pv": 68,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60222773",
+    "name": "Vetiver Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 264,
+    "wholesale": 198,
+    "pv": 33,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60215129",
+    "name": "Whisper™ Touch - Roll-On",
+    "size": "5 ml",
+    "retail": 119,
+    "wholesale": 89,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214935",
+    "name": "ZenGest® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 176,
+    "wholesale": 132,
+    "pv": 23,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203802",
+    "name": "dōTERRA AromaTouch®",
+    "size": "15 ml",
+    "retail": 232,
+    "wholesale": 174,
+    "pv": 29,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209560",
+    "name": "dōTERRA Brave® - Mix Coragem - Roll-On",
+    "size": "10 ml",
+    "retail": 164,
+    "wholesale": 123,
+    "pv": 22,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206570",
+    "name": "dōTERRA Breathe® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 112,
+    "wholesale": 84,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209630",
+    "name": "dōTERRA Calmer® - Mix Calmante - Roll-On",
+    "size": "10 ml",
+    "retail": 145,
+    "wholesale": 109,
+    "pv": 20,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206655",
+    "name": "dōTERRA Cheer® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 127,
+    "wholesale": 95,
+    "pv": 16,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206594",
+    "name": "dōTERRA Console® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 176,
+    "wholesale": 132,
+    "pv": 24,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206574",
+    "name": "dōTERRA Deep Blue® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 305,
+    "wholesale": 229,
+    "pv": 43,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206593",
+    "name": "dōTERRA Forgive® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 108,
+    "wholesale": 81,
+    "pv": 13,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206649",
+    "name": "dōTERRA Frankincense Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 357,
+    "wholesale": 268,
+    "pv": 50,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206660",
+    "name": "dōTERRA Motivate® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 117,
+    "wholesale": 88,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206656",
+    "name": "dōTERRA Passion® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 197,
+    "wholesale": 148,
+    "pv": 27,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206559",
+    "name": "dōTERRA Peace® Touch - Roll-On",
+    "size": "10 ml",
+    "retail": 156,
+    "wholesale": 117,
+    "pv": 20,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209586",
+    "name": "dōTERRA Rescuer® - Mix Conforto - Roll-On",
+    "size": "10 ml",
+    "retail": 120,
+    "wholesale": 90,
+    "pv": 16,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209588",
+    "name": "dōTERRA Steady® - Mix Equilíbrio - Roll-On",
+    "size": "10 ml",
+    "retail": 121,
+    "wholesale": 91,
+    "pv": 16,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209587",
+    "name": "dōTERRA Stronger® - Mix Proteção - Roll-On",
+    "size": "10 ml",
+    "retail": 115,
+    "wholesale": 86,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210369",
+    "name": "dōTERRA Tamer™ - Mix Bem-Estar - Roll-On",
+    "size": "10 ml",
+    "retail": 113,
+    "wholesale": 85,
+    "pv": 15,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60209589",
+    "name": "dōTERRA Thinker® - Mix Atenção - Roll-On",
+    "size": "10 ml",
+    "retail": 128,
+    "wholesale": 96,
+    "pv": 17,
+    "category": "Roll-On",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203806",
+    "name": "dōTERRA Cheer®",
+    "size": "5 ml",
+    "retail": 184,
+    "wholesale": 138,
+    "pv": 26,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203807",
+    "name": "dōTERRA Console®",
+    "size": "5 ml",
+    "retail": 303,
+    "wholesale": 227,
+    "pv": 38,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203821",
+    "name": "dōTERRA Forgive®",
+    "size": "5 ml",
+    "retail": 159,
+    "wholesale": 119,
+    "pv": 21,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203796",
+    "name": "dōTERRA Motivate®",
+    "size": "5 ml",
+    "retail": 180,
+    "wholesale": 135,
+    "pv": 24,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60221000",
+    "name": "dōTERRA Passion®",
+    "size": "5 ml",
+    "retail": 327,
+    "wholesale": 245,
+    "pv": 44,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203823",
+    "name": "dōTERRA Peace®",
+    "size": "5 ml",
+    "retail": 233,
+    "wholesale": 175,
+    "pv": 31,
+    "category": "doTERRA Emotional Aromatherapy",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203876",
+    "name": "Basil - Manjericão",
+    "size": "15 ml",
+    "retail": 245,
+    "wholesale": 184,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216373",
+    "name": "Bergamot - Bergamota",
+    "size": "5 ml",
+    "retail": 99,
+    "wholesale": 74,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203875",
+    "name": "Bergamot - Bergamota",
+    "size": "15 ml",
+    "retail": 239,
+    "wholesale": 179,
+    "pv": 31,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206619",
+    "name": "Black Pepper - Pimenta-preta",
+    "size": "5 ml",
+    "retail": 188,
+    "wholesale": 141,
+    "pv": 25,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210031",
+    "name": "Black Spruce - Abeto-negro",
+    "size": "5 ml",
+    "retail": 132,
+    "wholesale": 99,
+    "pv": 18,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60217234",
+    "name": "Breu Branco",
+    "size": "5 ml",
+    "retail": 260,
+    "wholesale": 195,
+    "pv": 32,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203805",
+    "name": "Cardamom - Cardamomo",
+    "size": "5 ml",
+    "retail": 217,
+    "wholesale": 163,
+    "pv": 29,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208245",
+    "name": "Cardamomo - Cardamomo",
+    "size": "5 ml",
+    "retail": 217,
+    "wholesale": 163,
+    "pv": 29,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203874",
+    "name": "Cassia - Canela-cássia",
+    "size": "15 ml",
+    "retail": 148,
+    "wholesale": 111,
+    "pv": 20,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203416",
+    "name": "Cedarwood - Cedro",
+    "size": "15 ml",
+    "retail": 109,
+    "wholesale": 82,
+    "pv": 14,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224736",
+    "name": "Celery Seed",
+    "size": "5 ml",
+    "retail": 101,
+    "wholesale": 76,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210086",
+    "name": "Celery Seed - Semente de Aipo",
+    "size": "15ml",
+    "retail": 255,
+    "wholesale": 191,
+    "pv": 31,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203873",
+    "name": "Cilantro - Coentro",
+    "size": "15 ml",
+    "retail": 220,
+    "wholesale": 165,
+    "pv": 29,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60225517",
+    "name": "Citronella - Citronela",
+    "size": "15 ml",
+    "retail": 99,
+    "wholesale": 74,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203872",
+    "name": "Clary Sage - Sálvia-esclareia",
+    "size": "15 ml",
+    "retail": 316,
+    "wholesale": 237,
+    "pv": 41,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203871",
+    "name": "Clove - Cravo",
+    "size": "15 ml",
+    "retail": 129,
+    "wholesale": 97,
+    "pv": 16,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203605",
+    "name": "Copaiba - Copaíba",
+    "size": "15 ml",
+    "retail": 287,
+    "wholesale": 215,
+    "pv": 40,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208433",
+    "name": "Coriander - Coentro",
+    "size": "5 ml",
+    "retail": 69,
+    "wholesale": 52,
+    "pv": 9,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203870",
+    "name": "Coriander - Coentro (Sementes)",
+    "size": "15 ml",
+    "retail": 167,
+    "wholesale": 125,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203418",
+    "name": "Cypress - Cipreste",
+    "size": "15 ml",
+    "retail": 141,
+    "wholesale": 106,
+    "pv": 18,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203851",
+    "name": "Douglas Fir - Abeto de Douglas",
+    "size": "5 ml",
+    "retail": 179,
+    "wholesale": 134,
+    "pv": 22,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60221204",
+    "name": "Erva Baleeira",
+    "size": "5 ml",
+    "retail": 239,
+    "wholesale": 179,
+    "pv": 31,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60222820",
+    "name": "Eucalyptus",
+    "size": "15 ml",
+    "retail": 153,
+    "wholesale": 115,
+    "pv": 19,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203326",
+    "name": "Eucalyptus - Eucalipto",
+    "size": "15 ml",
+    "retail": 125,
+    "wholesale": 94,
+    "pv": 16,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208242",
+    "name": "Fennel (Sweet) - Erva-doce",
+    "size": "5 ml",
+    "retail": 51,
+    "wholesale": 38,
+    "pv": 6,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203788",
+    "name": "Fennel (Sweet) - Erva-doce",
+    "size": "15 ml",
+    "retail": 109,
+    "wholesale": 82,
+    "pv": 14,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203411",
+    "name": "Frankincense - Olíbano",
+    "size": "15 ml",
+    "retail": 519,
+    "wholesale": 389,
+    "pv": 64,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208432",
+    "name": "Geranium",
+    "size": "5 ml",
+    "retail": 100,
+    "wholesale": 75,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203787",
+    "name": "Geranium - Gerânio",
+    "size": "15 ml",
+    "retail": 255,
+    "wholesale": 191,
+    "pv": 31,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203928",
+    "name": "Ginger - Gengibre",
+    "size": "15 ml",
+    "retail": 287,
+    "wholesale": 215,
+    "pv": 33,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203423",
+    "name": "Grapefruit - Toranja",
+    "size": "15 ml",
+    "retail": 155,
+    "wholesale": 116,
+    "pv": 17,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208446",
+    "name": "Green Mandarin - Mandarina-verde",
+    "size": "15 ml",
+    "retail": 219,
+    "wholesale": 164,
+    "pv": 28,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60224621",
+    "name": "Guaiacwood",
+    "size": "15 ml",
+    "retail": 127,
+    "wholesale": 95,
+    "pv": 17,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205862",
+    "name": "Hawaiian Sandalwood - Sândalo-havaiano",
+    "size": "5 ml",
+    "retail": 567,
+    "wholesale": 425,
+    "pv": 60,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203810",
+    "name": "Helichrysum - Sempre-viva",
+    "size": "5 ml",
+    "retail": 651,
+    "wholesale": 488,
+    "pv": 65,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203921",
+    "name": "Juniper Berry - Zimbro",
+    "size": "5 ml",
+    "retail": 157,
+    "wholesale": 118,
+    "pv": 21,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203327",
+    "name": "Lavender - Lavanda",
+    "size": "15 ml",
+    "retail": 197,
+    "wholesale": 148,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203419",
+    "name": "Lemon - Limão-siciliano",
+    "size": "15 ml",
+    "retail": 92,
+    "wholesale": 69,
+    "pv": 11,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60210370",
+    "name": "Lemon Eucalyptus - Eucalipto-limão",
+    "size": "15 ml",
+    "retail": 89,
+    "wholesale": 67,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203322",
+    "name": "Lemongrass - Capim-limão",
+    "size": "15 ml",
+    "retail": 85,
+    "wholesale": 64,
+    "pv": 11,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203420",
+    "name": "Lime - Limão",
+    "size": "15 ml",
+    "retail": 115,
+    "wholesale": 86,
+    "pv": 14,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60207183",
+    "name": "Marjoram - Manjerona",
+    "size": "5 ml",
+    "retail": 71,
+    "wholesale": 53,
+    "pv": 8,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203329",
+    "name": "Marjoram - Manjerona",
+    "size": "15 ml",
+    "retail": 171,
+    "wholesale": 128,
+    "pv": 21,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203421",
+    "name": "Melaleuca - Tea Tree",
+    "size": "15 ml",
+    "retail": 163,
+    "wholesale": 122,
+    "pv": 21,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60214171",
+    "name": "Melissa",
+    "size": "5 ml",
+    "retail": 785,
+    "wholesale": 589,
+    "pv": 76,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60221274",
+    "name": "MetaPWR™ Aroma Natural de Especiarias",
+    "size": "15 ml",
+    "retail": 239,
+    "wholesale": 179,
+    "pv": 27,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208387",
+    "name": "Myrrh - Mirra",
+    "size": "5 ml",
+    "retail": 199,
+    "wholesale": 149,
+    "pv": 19,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203924",
+    "name": "Myrrh - Mirra",
+    "size": "15 ml",
+    "retail": 524,
+    "wholesale": 393,
+    "pv": 51,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203412",
+    "name": "Oregano - Orégano",
+    "size": "15 ml",
+    "retail": 175,
+    "wholesale": 131,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60207163",
+    "name": "Patchouli - Patchouli",
+    "size": "5 ml",
+    "retail": 91,
+    "wholesale": 68,
+    "pv": 11,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203923",
+    "name": "Patchouli - Patchouli",
+    "size": "15 ml",
+    "retail": 235,
+    "wholesale": 176,
+    "pv": 29,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203323",
+    "name": "Peppermint - Hortelã-pimenta",
+    "size": "15 ml",
+    "retail": 177,
+    "wholesale": 133,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208436",
+    "name": "Petitgrain - Petitgrain",
+    "size": "5 ml",
+    "retail": 73,
+    "wholesale": 55,
+    "pv": 9,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203936",
+    "name": "Petitgrain - Petitgrain",
+    "size": "15 ml",
+    "retail": 183,
+    "wholesale": 137,
+    "pv": 23,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203920",
+    "name": "Roman Chamomile - Camomila-romana",
+    "size": "5 ml",
+    "retail": 405,
+    "wholesale": 304,
+    "pv": 51,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203413",
+    "name": "Rosemary - Alecrim",
+    "size": "15 ml",
+    "retail": 132,
+    "wholesale": 99,
+    "pv": 16,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60207211",
+    "name": "Siberian Fir",
+    "size": "5 ml",
+    "retail": 56,
+    "wholesale": 42,
+    "pv": 7,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203324",
+    "name": "Siberian Fir - Pinheiro-siberiano",
+    "size": "15 ml",
+    "retail": 136,
+    "wholesale": 102,
+    "pv": 19,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208435",
+    "name": "Spearmint",
+    "size": "5 ml",
+    "retail": 79,
+    "wholesale": 59,
+    "pv": 10,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60206600",
+    "name": "Spearmint - Hortelã-verde",
+    "size": "15 ml",
+    "retail": 211,
+    "wholesale": 158,
+    "pv": 29,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60205841",
+    "name": "Spikenard - Nardo",
+    "size": "5 ml",
+    "retail": 447,
+    "wholesale": 335,
+    "pv": 56,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60222819",
+    "name": "Tangerine - Tangerina",
+    "size": "15 ml",
+    "retail": 124,
+    "wholesale": 93,
+    "pv": 17,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60208434",
+    "name": "Thyme - Tomilho",
+    "size": "5 ml",
+    "retail": 99,
+    "wholesale": 74,
+    "pv": 11,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203933",
+    "name": "Thyme - Tomilho",
+    "size": "15 ml",
+    "retail": 233,
+    "wholesale": 175,
+    "pv": 28,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60216372",
+    "name": "Vetiver",
+    "size": "5 ml",
+    "retail": 173,
+    "wholesale": 130,
+    "pv": 18,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203422",
+    "name": "Vetiver - Vetiver",
+    "size": "15 ml",
+    "retail": 409,
+    "wholesale": 307,
+    "pv": 39,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203415",
+    "name": "Wild Orange - Laranja-selvagem",
+    "size": "15 ml",
+    "retail": 89,
+    "wholesale": 67,
+    "pv": 12,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203932",
+    "name": "Wintergreen - Wintergreen",
+    "size": "15 ml",
+    "retail": 143,
+    "wholesale": 107,
+    "pv": 18,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60207178",
+    "name": "Ylang Ylang - Ylang Ylang",
+    "size": "5 ml",
+    "retail": 123,
+    "wholesale": 92,
+    "pv": 15,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60203414",
+    "name": "Ylang Ylang - Ylang Ylang",
+    "size": "15 ml",
+    "retail": 299,
+    "wholesale": 224,
+    "pv": 37,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  },
+  {
+    "code": "60220484",
+    "name": "dōTERRA Dawn® Umidificador Aromático",
+    "size": "Unidade",
+    "retail": 729,
+    "wholesale": 547,
+    "pv": 15,
+    "category": "Óleos essenciais individuais",
+    "imageUrl": ""
+  }
+]

@@ -1,0 +1,52 @@
+ESSENZA CLOUD PRO — VERSÃO FINAL
+
+Como rodar localmente:
+1. Extraia o ZIP
+2. Abra a pasta no terminal
+3. Rode: npm start
+4. Acesse: http://localhost:3001
+
+Como acessar em outros aparelhos da mesma rede:
+- Rode npm start no computador principal.
+- Use o endereço de rede que aparece no terminal.
+
+Como subir online no Render:
+1. Envie esta pasta para um repositório GitHub.
+2. No Render, crie um Web Service.
+3. Build Command: não precisa, pode deixar vazio ou npm install.
+4. Start Command: npm start.
+5. Environment: Node.
+
+Observação:
+- O banco é o arquivo database.json.
+- Login, perfil e estoque ficam salvos no servidor.
+- O módulo de imagens reais foi removido conforme solicitado.
+
+
+COMO ADICIONAR IMAGENS DOS PRODUTOS
+
+1. Abra o arquivo:
+   assets/image-links.js
+
+2. Procure o código do produto.
+
+3. Cole o link da imagem entre as aspas.
+
+Exemplo:
+"60210367": "https://site.com/imagem.png",
+
+Se o link estiver vazio, o sistema continua mostrando as iniciais do produto.
+
+
+IMAGENS AUTOMÁTICAS
+
+O sistema já está configurado para buscar as imagens automaticamente na pasta:
+
+assets/produtos/
+
+Você só precisa salvar cada imagem com o código do produto.
+
+Exemplo:
+assets/produtos/60210367.png
+
+Se a imagem não existir, o sistema mostra as iniciais do produto.

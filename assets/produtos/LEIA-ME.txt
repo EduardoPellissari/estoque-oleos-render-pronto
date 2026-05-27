@@ -1,0 +1,18 @@
+COLOQUE AS IMAGENS DOS PRODUTOS NESTA PASTA
+
+Regra:
+- O nome do arquivo precisa ser o CÓDIGO do produto.
+- Preferência: PNG.
+
+Exemplo:
+Produto Adaptiv®
+Código: 60210367
+
+Arquivo:
+60210367.png
+
+Caminho final:
+assets/produtos/60210367.png
+
+Se quiser usar JPG ou WEBP, será necessário alterar o caminho no arquivo:
+assets/image-links.js

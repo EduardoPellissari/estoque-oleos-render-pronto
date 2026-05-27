@@ -1,0 +1,374 @@
+*{box-sizing:border-box}
+:root{
+  --p:#5b3b8c;
+  --pd:#321953;
+  --muted:#756b7d;
+  --line:#ece5f2;
+  --bg:#faf7ff;
+  --ok:#1f7a3a;
+  --warn:#9b5b00;
+  --danger:#a5162c;
+}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f7efe5,#f2edfb);color:#221b2c}
+.hidden{display:none!important}
+.setup-banner{background:#fff8df;padding:12px;text-align:center;color:#6b5200}
+
+/* Login */
+.auth{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.2fr) 420px;gap:40px;align-items:center;max-width:1180px;margin:auto;padding:30px}
+.pill{display:inline-block;background:#fff;border-radius:999px;padding:10px 16px;font-weight:900;color:var(--p)}
+.hero h1{font-size:58px;line-height:1;color:var(--pd);margin:22px 0 16px}
+.hero p{font-size:19px;color:var(--muted)}
+.hero-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+.hero-grid span{background:#fff;border-radius:16px;padding:14px;font-weight:900;color:var(--pd);box-shadow:0 10px 30px rgba(41,24,72,.08)}
+.auth-card,.panel,.metrics article{background:#fff;border-radius:22px;padding:24px;box-shadow:0 18px 50px rgba(41,24,72,.12)}
+.auth-card h2{font-size:30px;margin:0 0 8px;color:var(--pd)}
+.auth-card p,.panel p{color:var(--muted);margin:0 0 15px}
+label{display:block;font-weight:900;margin:13px 0 6px}
+input,textarea,select{width:100%;border:1px solid #ddd3ea;border-radius:14px;padding:13px;font-size:15px;background:#fff}
+textarea{min-height:76px}
+button{border:0;border-radius:14px;padding:13px 16px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,var(--p),#8059bb);color:#fff}
+.secondary{background:#f0e8fb!important;color:var(--p)!important}
+.small-btn{padding:12px 14px;white-space:nowrap}
+.auth-card button{width:100%;margin-top:12px}
+.msg{padding:12px;border-radius:12px;font-weight:800}
+.msg.error{background:#ffe9ed;color:var(--danger)}
+.msg.success{background:#e9f7ed;color:var(--ok)}
+
+/* App layout */
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh;width:100%}
+aside{background:#191221;color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:10px;min-height:100vh;position:sticky;top:0}
+.logo{display:flex;gap:12px;margin-bottom:24px;align-items:center}
+.brand-icon{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.logo small{display:block;color:rgba(255,255,255,.6);margin-top:3px}
+.nav,.logout{background:transparent;color:rgba(255,255,255,.75);text-align:left;width:100%;display:flex;align-items:center;gap:10px}
+.nav.active,.nav:hover,.logout:hover{background:rgba(255,255,255,.1);color:#fff}
+.logout{margin-top:auto}
+.main{padding:30px;min-width:0;width:100%}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:20px}
+header h1{font-size:42px;margin:4px 0;color:var(--pd)}
+header small{color:var(--p);font-weight:900;text-transform:uppercase}
+.mobile-menu-btn,.mobile-overlay{display:none}
+
+/* Dashboard */
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.metrics strong{display:block;font-size:30px;color:var(--pd);margin-top:8px}
+.metrics span{color:var(--muted);font-weight:900}
+.dashboard-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:18px}
+.bar-row{margin:12px 0}
+.bar-row span{display:block;font-weight:900;margin-bottom:5px}
+.bar-row strong{color:var(--p)}
+.bar-row div{height:9px;background:#f1e9fb;border-radius:999px;margin-top:8px;overflow:hidden}
+.bar-row i{display:block;height:100%;background:linear-gradient(135deg,var(--p),#8059bb);border-radius:999px}
+
+/* Stock and catalog */
+.grid{display:grid;grid-template-columns:minmax(320px,390px) minmax(0,1fr);gap:20px;width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel-head{display:flex;justify-content:space-between;gap:18px;margin-bottom:16px;align-items:flex-start}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filters input{min-width:260px}
+.filters select{min-width:220px}
+.table-wrap{overflow-x:auto;width:100%;max-width:100%;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:13px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
+.tag{display:inline-block;border-radius:999px;padding:6px 9px;background:#eef7ef;color:#387243;font-weight:900}
+.tag.warn{background:#fff0df;color:var(--warn)}
+.row-actions{display:flex;gap:7px}
+.mini{padding:8px 10px;font-size:12px}
+.danger{background:#ffe9ed;color:var(--danger)}
+.selected,.report-item{padding:15px;border:1px solid var(--line);background:#faf7ff;border-radius:16px;margin:10px 0}
+.empty{padding:26px;text-align:center;color:var(--muted)}
+.reports{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.product-card{border:1px solid var(--line);border-radius:20px;padding:16px;background:#fff;display:grid;gap:10px}
+.product-icon{width:74px;height:74px;border-radius:22px;background:linear-gradient(135deg,#efe6fb,#fff);color:var(--p);display:grid;place-items:center;font-weight:900;font-size:22px;border:1px solid var(--line)}
+.product-meta{display:flex;gap:8px;flex-wrap:wrap}
+.product-meta span,.catalog-prices span{background:#faf7ff;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:900;color:var(--muted)}
+.product-card h3{margin:0;color:var(--pd)}
+.product-card p{margin:0;color:var(--muted)}
+.catalog-prices{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Profile */
+.profile-grid{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:18px}
+.profile-message{padding:12px;border-radius:12px;margin-top:12px;font-weight:900}
+.profile-message.success{background:#e9f7ed;color:var(--ok)}
+.profile-message.error{background:#ffe9ed;color:var(--danger)}
+.profile-info{display:grid;gap:12px}
+.profile-info div{border:1px solid var(--line);border-radius:16px;padding:14px;background:#faf7ff}
+.profile-info span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:900;margin-bottom:4px}
+.profile-info strong{word-break:break-word}
+
+/* Responsive */
+@media(max-width:1100px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .dashboard-grid,.reports,.profile-grid{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .auth{grid-template-columns:1fr;padding:18px;gap:18px}
+  .hero h1{font-size:38px}
+  .hero-grid{grid-template-columns:1fr}
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;z-index:20;left:0;top:0;width:280px;max-width:86vw;transform:translateX(-105%);transition:.25s ease;min-height:100vh}
+  .menu-open aside{transform:translateX(0)}
+  .mobile-menu-btn{display:block;position:fixed;left:14px;top:14px;z-index:30;width:auto;padding:10px 13px;border-radius:12px}
+  .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(20,10,30,.45);z-index:15}
+  .menu-open .mobile-overlay{display:block}
+  .main{padding:72px 14px 22px}
+  header{align-items:flex-start;flex-direction:column}
+  header h1{font-size:32px}
+  header button{width:100%}
+  .metrics{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+  .panel-head{flex-direction:column}
+  .filters,.filters input,.filters select{width:100%;min-width:0}
+  table{min-width:760px}
+  .auth-card,.panel,.metrics article{padding:18px;border-radius:18px}
+}
+
+
+
+/* Ajuste solicitado: perfil em 2 colunas, com alterar senha e dados da conta empilhados */
+.profile-grid{
+  display:grid;
+  grid-template-columns:minmax(420px,1.2fr) minmax(320px,.9fr);
+  gap:18px;
+  align-items:start;
+}
+
+.profile-grid > .panel:nth-child(1){
+  grid-row:1 / span 2;
+}
+
+.profile-grid > .panel:nth-child(2),
+.profile-grid > .panel:nth-child(3){
+  grid-column:2;
+}
+
+@media(max-width:1100px){
+  .profile-grid{
+    grid-template-columns:1fr;
+  }
+
+  .profile-grid > .panel:nth-child(1),
+  .profile-grid > .panel:nth-child(2),
+  .profile-grid > .panel:nth-child(3){
+    grid-column:auto;
+    grid-row:auto;
+  }
+}
+
+
+
+/* Imagens dos produtos no catálogo */
+.product-icon-img{
+  overflow:hidden;
+  padding:0;
+  background:#fff;
+}
+
+.product-icon-img img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  padding:8px;
+}
+
+
+
+/* =========================================================
+   AJUSTE FINAL — ABA MEU ESTOQUE + MOBILE
+   - Desktop: formulário em cima e tabela abaixo
+   - Mobile: evita cortes e reduz escala visual
+   ========================================================= */
+
+#stock .grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:20px !important;
+  width:100% !important;
+  max-width:100% !important;
+}
+
+#stock #stockForm{
+  width:100% !important;
+  max-width:100% !important;
+}
+
+#stock #stockForm .two{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(160px,1fr));
+  gap:12px;
+}
+
+#stock .table-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:auto !important;
+  -webkit-overflow-scrolling:touch;
+}
+
+#stock table{
+  width:100% !important;
+  min-width:860px;
+}
+
+html, body, .app, .main, .page, .panel{
+  max-width:100%;
+}
+
+.main{
+  min-width:0 !important;
+}
+
+@media(max-width:1100px){
+  #stock #stockForm .two{
+    grid-template-columns:repeat(2,minmax(140px,1fr));
+  }
+}
+
+@media(max-width:768px){
+  html, body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+    font-size:14px;
+  }
+
+  body{
+    background:#faf7ff;
+  }
+
+  .app{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .main{
+    width:100% !important;
+    max-width:100% !important;
+    padding:76px 12px 24px !important;
+    margin:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  header{
+    gap:10px !important;
+    margin-bottom:14px !important;
+  }
+
+  header h1{
+    font-size:28px !important;
+    line-height:1.05 !important;
+  }
+
+  header small{
+    font-size:11px !important;
+  }
+
+  .panel{
+    width:100% !important;
+    max-width:100% !important;
+    padding:16px !important;
+    border-radius:18px !important;
+    overflow:hidden;
+  }
+
+  .panel h2{
+    font-size:22px !important;
+    line-height:1.15 !important;
+  }
+
+  label{
+    font-size:14px !important;
+    margin:10px 0 5px !important;
+  }
+
+  input, textarea, select{
+    width:100% !important;
+    max-width:100% !important;
+    font-size:16px !important;
+    padding:11px 12px !important;
+    border-radius:13px !important;
+  }
+
+  textarea{
+    min-height:84px !important;
+  }
+
+  button{
+    font-size:14px !important;
+    padding:12px 14px !important;
+  }
+
+  #stock .grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:16px !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #stock #stockForm .two{
+    grid-template-columns:1fr !important;
+    gap:0 !important;
+  }
+
+  .panel-head{
+    display:block !important;
+  }
+
+  .filters{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    width:100% !important;
+  }
+
+  .filters input,
+  .filters select{
+    min-width:0 !important;
+    width:100% !important;
+  }
+
+  #stock table{
+    min-width:760px !important;
+  }
+
+  th, td{
+    font-size:12px !important;
+    padding:10px 8px !important;
+  }
+
+  .mobile-menu-btn{
+    left:12px !important;
+    top:14px !important;
+    width:48px !important;
+    height:48px !important;
+    padding:0 !important;
+    display:grid !important;
+    place-items:center !important;
+  }
+}
+
+@media(max-width:430px){
+  .main{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+
+  header h1{
+    font-size:26px !important;
+  }
+
+  .panel{
+    padding:14px !important;
+  }
+
+  .panel h2{
+    font-size:21px !important;
+  }
+}
