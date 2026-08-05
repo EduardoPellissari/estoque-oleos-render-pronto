@@ -129,6 +129,28 @@ function getCatalog(){
   return Array.isArray(window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : [];
 }
 
+function escapeAttr(value){
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function fallbackProductImage(p){
+  const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
+  if(text.includes("pastilha") || text.includes("suplement") || text.includes("alimento")) return "assets/produtos/fallback-supplement.svg";
+  if(text.includes("roll-on") || text.includes("roll on") || text.includes("touch")) return "assets/produtos/fallback-rollon.svg";
+  if(text.includes("difusor") || text.includes("umidificador")) return "assets/produtos/fallback-diffuser.svg";
+  if(text.includes("kit") || text.includes("acessorio") || text.includes("colecionador")) return "assets/produtos/fallback-kit.svg";
+  if(text.includes("creme") || text.includes("shampoo") || text.includes("condicionador") || text.includes("loção") || text.includes("locao") || text.includes("serum") || text.includes("sabonete")) return "assets/produtos/fallback-care.svg";
+  if(text.includes("lemon") || text.includes("limão") || text.includes("limao") || text.includes("orange") || text.includes("laranja") || text.includes("citrus") || text.includes("tangerine") || text.includes("toranja") || text.includes("bergamot")) return "assets/produtos/fallback-citrus.svg";
+  if(text.includes("lavender") || text.includes("lavanda") || text.includes("ylang") || text.includes("geranium") || text.includes("geranio") || text.includes("jasmine") || text.includes("rose")) return "assets/produtos/fallback-floral.svg";
+  if(text.includes("peppermint") || text.includes("hortel") || text.includes("basil") || text.includes("manjeric") || text.includes("rosemary") || text.includes("alecrim") || text.includes("melaleuca") || text.includes("eucalyptus")) return "assets/produtos/fallback-herbal.svg";
+  if(text.includes("cinnamon") || text.includes("canela") || text.includes("clove") || text.includes("cravo") || text.includes("ginger") || text.includes("gengibre") || text.includes("oregano") || text.includes("tomilho") || text.includes("thyme")) return "assets/produtos/fallback-spice.svg";
+  return "assets/produtos/fallback-oil.svg";
+}
+
 function productIcon(p){
   const code = p?.code || p?.productCode || "";
   const name = String((p && (p.name || p.productName)) || "DT");
@@ -141,19 +163,26 @@ function productIcon(p){
     .toUpperCase();
 
   const links = window.PRODUCT_IMAGE_LINKS || {};
-  const imageUrl = links[code];
+  const imageUrl = links[code] || fallbackProductImage(p);
+  const fallbackUrl = fallbackProductImage(p);
 
   if (imageUrl) {
     return `
       <div class="product-icon product-icon-img">
         <img
           src="${imageUrl}"
-          alt="${name}"
+          data-fallback="${fallbackUrl}"
+          data-initials="${escapeAttr(initials || "DT")}"
+          alt="${escapeAttr(name)}"
           loading="lazy"
           onerror="
-            this.onerror=null;
-            this.parentElement.innerHTML='${initials || "DT"}';
-            this.parentElement.classList.remove('product-icon-img');
+            if (this.src.indexOf(this.dataset.fallback) === -1) {
+              this.src=this.dataset.fallback;
+            } else {
+              this.onerror=null;
+              this.parentElement.textContent=this.dataset.initials;
+              this.parentElement.classList.remove('product-icon-img');
+            }
           "
         >
       </div>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Roll-on bottle">
+  <defs>
+    <linearGradient id="bg" x1="23" y1="22" x2="218" y2="218">
+      <stop stop-color="#fbf7ff"/>
+      <stop offset="1" stop-color="#eef9f1"/>
+    </linearGradient>
+    <linearGradient id="b" x1="96" y1="46" x2="145" y2="199">
+      <stop stop-color="#8e5ac7"/>
+      <stop offset="1" stop-color="#563286"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="42" fill="url(#bg)"/>
+  <path d="M66 166c23-15 47-13 64 5-23 15-47 13-64-5Z" fill="#78be6c"/>
+  <path d="M167 144c-6 22-20 33-41 33 6-22 20-33 41-33Z" fill="#8aca7a"/>
+  <rect x="98" y="36" width="44" height="31" rx="15" fill="#2d1a45"/>
+  <rect x="93" y="61" width="54" height="139" rx="26" fill="url(#b)"/>
+  <rect x="104" y="91" width="32" height="72" rx="13" fill="#fff8e6"/>
+  <circle cx="120" cy="51" r="10" fill="#f7f2ff"/>
+  <path d="M120 105c13 17 15 27 8 34-5 5-12 5-17 0-7-7-4-17 9-34Z" fill="#7abd65"/>
+</svg>

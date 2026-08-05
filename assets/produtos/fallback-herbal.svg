@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Herbal oil">
+  <defs>
+    <linearGradient id="bg" x1="22" y1="22" x2="218" y2="218">
+      <stop stop-color="#f5fff7"/>
+      <stop offset="1" stop-color="#f3ecff"/>
+    </linearGradient>
+    <linearGradient id="b" x1="90" y1="55" x2="150" y2="190">
+      <stop stop-color="#8151bd"/>
+      <stop offset="1" stop-color="#553285"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="42" fill="url(#bg)"/>
+  <path d="M55 178c16-57 51-92 103-105" fill="none" stroke="#69aa58" stroke-width="8" stroke-linecap="round"/>
+  <path d="M76 143c29-13 50-8 65 15-29 13-50 8-65-15Z" fill="#7bc56f"/>
+  <path d="M104 107c25-14 45-11 59 9-25 14-45 11-59-9Z" fill="#6ebf72"/>
+  <path d="M55 168c27-4 44 5 52 27-27 4-44-5-52-27Z" fill="#88ca7c"/>
+  <rect x="94" y="38" width="52" height="28" rx="8" fill="#2d1a45"/>
+  <rect x="88" y="60" width="64" height="128" rx="24" fill="url(#b)"/>
+  <rect x="99" y="91" width="42" height="56" rx="13" fill="#f7fff1"/>
+  <path d="M120 101c15 18 18 29 10 37-6 6-15 6-21 0-7-8-4-19 11-37Z" fill="#69aa58"/>
+</svg>

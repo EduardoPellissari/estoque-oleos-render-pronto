@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Citrus oil">
+  <defs>
+    <linearGradient id="bg" x1="24" y1="22" x2="216" y2="218">
+      <stop stop-color="#fff9e8"/>
+      <stop offset="1" stop-color="#eef8ee"/>
+    </linearGradient>
+    <linearGradient id="b" x1="92" y1="55" x2="148" y2="190">
+      <stop stop-color="#8a55c2"/>
+      <stop offset="1" stop-color="#5c378e"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="42" fill="url(#bg)"/>
+  <circle cx="70" cy="150" r="40" fill="#f8c145"/>
+  <circle cx="70" cy="150" r="29" fill="#ffd86a"/>
+  <path d="M70 121v58M41 150h58M50 130l41 41M91 130l-41 41" stroke="#f59d25" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="172" cy="86" r="29" fill="#f3943e"/>
+  <circle cx="172" cy="86" r="19" fill="#ffc25d"/>
+  <rect x="94" y="38" width="52" height="28" rx="8" fill="#2d1a45"/>
+  <rect x="88" y="60" width="64" height="128" rx="24" fill="url(#b)"/>
+  <rect x="99" y="91" width="42" height="56" rx="13" fill="#fff8de"/>
+  <path d="M119 101c15 18 18 29 10 37-5 5-15 5-20 0-8-8-5-19 10-37Z" fill="#f6ae2d"/>
+  <path d="M148 152c20-8 35-4 43 10-20 8-35 4-43-10Z" fill="#73bb66"/>
+</svg>
