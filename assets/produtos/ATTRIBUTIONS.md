@@ -40,3 +40,19 @@ As fotos reais usadas como imagens tematicas do catalogo foram baixadas do Wikim
   https://commons.wikimedia.org/wiki/File:Oregano_de_la_tierra.jpg
 - `real-cardamom.jpg`: File:Cardamom pods - Green BNC.jpg - Wikimedia Commons
   https://commons.wikimedia.org/wiki/File:Cardamom_pods_-_Green_BNC.jpg
+- `real-black-pepper.jpg`: File:Black Pepper (Piper nigrum) fruits.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Black_Pepper_(Piper_nigrum)_fruits.jpg
+- `real-coriander.jpg`: File:A scene of Coriander leaves.JPG - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:A_scene_of_Coriander_leaves.JPG
+- `real-clary-sage.jpg`: File:Salvia sclarea 001.JPG - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Salvia_sclarea_001.JPG
+- `real-copaiba.jpg`: File:Copaiba tree.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Copaiba_tree.jpg
+- `real-lemongrass.jpg`: File:Lemongrass (Cymbopogon citratus) 1.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Lemongrass_(Cymbopogon_citratus)_1.jpg
+- `real-lime.jpg`: File:Lime tree fruits.JPG - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Lime_tree_fruits.JPG
+- `real-pink-pepper.jpg`: File:Pink Peppercorns (Schinus terebinthifolius).JPG - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Pink_Peppercorns_(Schinus_terebinthifolius).JPG
+- `real-citronella.jpg`: File:Citronella (Cymbopogon nardus).jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Citronella_(Cymbopogon_nardus).jpg
