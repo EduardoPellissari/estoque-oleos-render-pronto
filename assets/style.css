@@ -163,6 +163,9 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 
 /* Imagens dos produtos no catálogo */
 .product-icon-img{
+  width:100%;
+  height:128px;
+  border-radius:16px;
   overflow:hidden;
   padding:0;
   background:#fff;
@@ -171,9 +174,9 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 .product-icon-img img{
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:cover;
   display:block;
-  padding:8px;
+  padding:0;
 }
 
 

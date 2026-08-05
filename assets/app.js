@@ -139,16 +139,24 @@ function escapeAttr(value){
 
 function fallbackProductImage(p){
   const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
-  if(text.includes("pastilha") || text.includes("suplement") || text.includes("alimento")) return "assets/produtos/fallback-supplement.svg";
-  if(text.includes("roll-on") || text.includes("roll on") || text.includes("touch")) return "assets/produtos/fallback-rollon.svg";
-  if(text.includes("difusor") || text.includes("umidificador")) return "assets/produtos/fallback-diffuser.svg";
-  if(text.includes("kit") || text.includes("acessorio") || text.includes("colecionador")) return "assets/produtos/fallback-kit.svg";
-  if(text.includes("creme") || text.includes("shampoo") || text.includes("condicionador") || text.includes("loção") || text.includes("locao") || text.includes("serum") || text.includes("sabonete")) return "assets/produtos/fallback-care.svg";
-  if(text.includes("lemon") || text.includes("limão") || text.includes("limao") || text.includes("orange") || text.includes("laranja") || text.includes("citrus") || text.includes("tangerine") || text.includes("toranja") || text.includes("bergamot")) return "assets/produtos/fallback-citrus.svg";
-  if(text.includes("lavender") || text.includes("lavanda") || text.includes("ylang") || text.includes("geranium") || text.includes("geranio") || text.includes("jasmine") || text.includes("rose")) return "assets/produtos/fallback-floral.svg";
-  if(text.includes("peppermint") || text.includes("hortel") || text.includes("basil") || text.includes("manjeric") || text.includes("rosemary") || text.includes("alecrim") || text.includes("melaleuca") || text.includes("eucalyptus")) return "assets/produtos/fallback-herbal.svg";
-  if(text.includes("cinnamon") || text.includes("canela") || text.includes("clove") || text.includes("cravo") || text.includes("ginger") || text.includes("gengibre") || text.includes("oregano") || text.includes("tomilho") || text.includes("thyme")) return "assets/produtos/fallback-spice.svg";
-  return "assets/produtos/fallback-oil.svg";
+  if(text.includes("grapefruit") || text.includes("toranja")) return "assets/produtos/real-grapefruit.jpg";
+  if(text.includes("orange") || text.includes("laranja") || text.includes("tangerine") || text.includes("tangerina") || text.includes("mandarin") || text.includes("mandarina") || text.includes("bergamot") || text.includes("bergamota") || text.includes("citrus")) return "assets/produtos/real-orange.jpg";
+  if(text.includes("lemon") || text.includes("limão") || text.includes("limao") || text.includes("lime")) return "assets/produtos/real-lemon.jpg";
+  if(text.includes("lavender") || text.includes("lavanda") || text.includes("ylang") || text.includes("jasmine") || text.includes("rose") || text.includes("geranium") || text.includes("geranio")) return "assets/produtos/real-lavender.jpg";
+  if(text.includes("peppermint") || text.includes("spearmint") || text.includes("hortel") || text.includes("supermint")) return "assets/produtos/real-mint.jpg";
+  if(text.includes("rosemary") || text.includes("alecrim")) return "assets/produtos/real-rosemary.jpg";
+  if(text.includes("basil") || text.includes("manjeric")) return "assets/produtos/real-basil.jpg";
+  if(text.includes("eucalyptus") || text.includes("eucalipto")) return "assets/produtos/real-eucalyptus.jpg";
+  if(text.includes("melaleuca") || text.includes("tea tree")) return "assets/produtos/real-melaleuca.jpg";
+  if(text.includes("cinnamon") || text.includes("canela") || text.includes("cassia")) return "assets/produtos/real-cinnamon.jpg";
+  if(text.includes("clove") || text.includes("cravo")) return "assets/produtos/real-clove.jpg";
+  if(text.includes("ginger") || text.includes("gengibre")) return "assets/produtos/real-ginger.jpg";
+  if(text.includes("coconut") || text.includes("coco")) return "assets/produtos/real-coconut.jpg";
+  if(text.includes("frankincense") || text.includes("olibano") || text.includes("olíbano") || text.includes("myrrh") || text.includes("mirra") || text.includes("copaiba") || text.includes("cedarwood") || text.includes("cedro") || text.includes("sandalwood") || text.includes("patchouli") || text.includes("vetiver") || text.includes("breu") || text.includes("guaiacwood")) return "assets/produtos/real-frankincense.jpg";
+  if(text.includes("oregano") || text.includes("orégano") || text.includes("tomilho") || text.includes("thyme") || text.includes("cilantro") || text.includes("coentro") || text.includes("cardamom") || text.includes("cardamomo") || text.includes("black pepper") || text.includes("pimenta")) return "assets/produtos/real-basil.jpg";
+  if(text.includes("roll-on") || text.includes("roll on") || text.includes("touch")) return "assets/produtos/real-lavender.jpg";
+  if(text.includes("pastilha") || text.includes("suplement") || text.includes("alimento")) return "assets/produtos/real-orange.jpg";
+  return "assets/produtos/real-lavender.jpg";
 }
 
 function productIcon(p){
