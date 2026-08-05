@@ -30,3 +30,13 @@ As fotos reais usadas como imagens tematicas do catalogo foram baixadas do Wikim
   https://commons.wikimedia.org/wiki/File:Coconut_(1).jpg
 - `real-melaleuca.jpg`: File:Melaleuca alternifolia flowers.jpg - Wikimedia Commons
   https://commons.wikimedia.org/wiki/File:Melaleuca_alternifolia_flowers.jpg
+- `real-turmeric.jpg`: File:Curcuma longa roots.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Curcuma_longa_roots.jpg
+- `real-juniper.jpg`: File:Juniper berries q.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Juniper_berries_q.jpg
+- `real-ylang.jpg`: File:Ylang ylang flowers -Cananga odorata.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Ylang_ylang_flowers_-Cananga_odorata.jpg
+- `real-oregano.jpg`: File:Oregano de la tierra.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Oregano_de_la_tierra.jpg
+- `real-cardamom.jpg`: File:Cardamom pods - Green BNC.jpg - Wikimedia Commons
+  https://commons.wikimedia.org/wiki/File:Cardamom_pods_-_Green_BNC.jpg

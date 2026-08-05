@@ -139,24 +139,52 @@ function escapeAttr(value){
 
 function fallbackProductImage(p){
   const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
-  if(text.includes("grapefruit") || text.includes("toranja")) return "assets/produtos/real-grapefruit.jpg";
-  if(text.includes("orange") || text.includes("laranja") || text.includes("tangerine") || text.includes("tangerina") || text.includes("mandarin") || text.includes("mandarina") || text.includes("bergamot") || text.includes("bergamota") || text.includes("citrus")) return "assets/produtos/real-orange.jpg";
-  if(text.includes("lemon") || text.includes("limão") || text.includes("limao") || text.includes("lime")) return "assets/produtos/real-lemon.jpg";
-  if(text.includes("lavender") || text.includes("lavanda") || text.includes("ylang") || text.includes("jasmine") || text.includes("rose") || text.includes("geranium") || text.includes("geranio")) return "assets/produtos/real-lavender.jpg";
-  if(text.includes("peppermint") || text.includes("spearmint") || text.includes("hortel") || text.includes("supermint")) return "assets/produtos/real-mint.jpg";
-  if(text.includes("rosemary") || text.includes("alecrim")) return "assets/produtos/real-rosemary.jpg";
-  if(text.includes("basil") || text.includes("manjeric")) return "assets/produtos/real-basil.jpg";
-  if(text.includes("eucalyptus") || text.includes("eucalipto")) return "assets/produtos/real-eucalyptus.jpg";
-  if(text.includes("melaleuca") || text.includes("tea tree")) return "assets/produtos/real-melaleuca.jpg";
-  if(text.includes("cinnamon") || text.includes("canela") || text.includes("cassia")) return "assets/produtos/real-cinnamon.jpg";
-  if(text.includes("clove") || text.includes("cravo")) return "assets/produtos/real-clove.jpg";
-  if(text.includes("ginger") || text.includes("gengibre")) return "assets/produtos/real-ginger.jpg";
-  if(text.includes("coconut") || text.includes("coco")) return "assets/produtos/real-coconut.jpg";
-  if(text.includes("frankincense") || text.includes("olibano") || text.includes("olíbano") || text.includes("myrrh") || text.includes("mirra") || text.includes("copaiba") || text.includes("cedarwood") || text.includes("cedro") || text.includes("sandalwood") || text.includes("patchouli") || text.includes("vetiver") || text.includes("breu") || text.includes("guaiacwood")) return "assets/produtos/real-frankincense.jpg";
-  if(text.includes("oregano") || text.includes("orégano") || text.includes("tomilho") || text.includes("thyme") || text.includes("cilantro") || text.includes("coentro") || text.includes("cardamom") || text.includes("cardamomo") || text.includes("black pepper") || text.includes("pimenta")) return "assets/produtos/real-basil.jpg";
-  if(text.includes("roll-on") || text.includes("roll on") || text.includes("touch")) return "assets/produtos/real-lavender.jpg";
-  if(text.includes("pastilha") || text.includes("suplement") || text.includes("alimento")) return "assets/produtos/real-orange.jpg";
-  return "assets/produtos/real-lavender.jpg";
+  const rules = [
+    [["on guard"], "assets/produtos/real-cinnamon.jpg"],
+    [["breathe", "air-x"], "assets/produtos/real-eucalyptus.jpg"],
+    [["deep blue", "pasttense", "rescuer"], "assets/produtos/real-mint.jpg"],
+    [["zengest"], "assets/produtos/real-ginger.jpg"],
+    [["zendocrine", "ddr prime", "turmeric", "curcuma", "cúrcuma"], "assets/produtos/real-turmeric.jpg"],
+    [["smart & sassy", "metapwr", "grapefruit", "toranja"], "assets/produtos/real-grapefruit.jpg"],
+    [["purify", "correct-x"], "assets/produtos/real-lemon.jpg"],
+    [["hygge", "brave", "forgive"], "assets/produtos/real-cinnamon.jpg"],
+    [["tamer"], "assets/produtos/real-ginger.jpg"],
+    [["thinker", "motivate"], "assets/produtos/real-rosemary.jpg"],
+    [["stronger", "hd clear"], "assets/produtos/real-melaleuca.jpg"],
+    [["steady", "console", "intune", "balance"], "assets/produtos/real-frankincense.jpg"],
+    [["helichrysum", "spikenard", "whisper"], "assets/produtos/real-ylang.jpg"],
+    [["black spruce", "douglas fir", "siberian fir", "cypress", "cipreste", "abeto", "pinheiro"], "assets/produtos/real-eucalyptus.jpg"],
+    [["wintergreen"], "assets/produtos/real-mint.jpg"],
+    [["petitgrain"], "assets/produtos/real-orange.jpg"],
+    [["livro culinária", "livro culinaria", "culinária essencial", "culinaria essencial"], "assets/produtos/real-basil.jpg"],
+    [["wooden box", "colecionador"], "assets/produtos/real-frankincense.jpg"],
+    [["kit início", "kit inicio", "living kit", "soluções naturais", "solucoes naturais", "kit de apresentação", "kit de apresentacao"], "assets/produtos/real-orange.jpg"],
+    [["citrus bliss", "wild orange", "tangerine", "tangerina", "mandarin", "mandarina", "bergamot", "bergamota", "orange", "laranja"], "assets/produtos/real-orange.jpg"],
+    [["lemon eucalyptus", "doterra dawn", "citronella", "terashield", "terrashield"], "assets/produtos/real-eucalyptus.jpg"],
+    [["lemon", "limão", "limao", "lime", "lemongrass", "capim-limão", "capim-limao"], "assets/produtos/real-lemon.jpg"],
+    [["adaptiv", "serenity", "calmer", "peace", "console", "clarycalm", "clary sage", "lavender", "lavanda"], "assets/produtos/real-lavender.jpg"],
+    [["ylang", "passion", "cheer", "motivate", "elevation", "hope", "jasmine", "rose", "geranium", "geranio", "salubelle"], "assets/produtos/real-ylang.jpg"],
+    [["peppermint", "spearmint", "hortel", "supermint"], "assets/produtos/real-mint.jpg"],
+    [["rosemary", "alecrim"], "assets/produtos/real-rosemary.jpg"],
+    [["basil", "manjeric"], "assets/produtos/real-basil.jpg"],
+    [["eucalyptus", "eucalipto"], "assets/produtos/real-eucalyptus.jpg"],
+    [["melaleuca", "tea tree", "hd clear", "correct-x"], "assets/produtos/real-melaleuca.jpg"],
+    [["cinnamon", "canela", "cassia"], "assets/produtos/real-cinnamon.jpg"],
+    [["clove", "cravo"], "assets/produtos/real-clove.jpg"],
+    [["ginger", "gengibre"], "assets/produtos/real-ginger.jpg"],
+    [["juniper", "zimbro"], "assets/produtos/real-juniper.jpg"],
+    [["oregano", "orégano", "tomilho", "thyme", "marjoram", "manjerona"], "assets/produtos/real-oregano.jpg"],
+    [["cardamom", "cardamomo"], "assets/produtos/real-cardamom.jpg"],
+    [["cilantro", "coentro", "coriander", "celery", "aipo", "fennel", "erva-doce", "erva doce", "black pepper", "pimenta"], "assets/produtos/real-cardamom.jpg"],
+    [["coconut", "coco"], "assets/produtos/real-coconut.jpg"],
+    [["frankincense", "olibano", "olíbano", "myrrh", "mirra", "copaiba", "cedarwood", "cedro", "sandalwood", "patchouli", "vetiver", "breu", "guaiacwood", "balance", "forgive", "aromatouch", "whisper", "intune"], "assets/produtos/real-frankincense.jpg"],
+    [["difusor", "umidificador"], "assets/produtos/real-eucalyptus.jpg"],
+    [["veráge", "verage", "yarrow", "pūr", "pure", "spa", "condicionador", "shampoo", "creme", "serum", "sérum", "loção", "locao", "sabonete"], "assets/produtos/real-coconut.jpg"],
+    [["pastilha", "suplement", "alimento", "lifeshot", "collagen", "colageno", "colágeno", "vm complex", "xeo mega", "daily nutrient"], "assets/produtos/real-orange.jpg"]
+  ];
+
+  const match = rules.find(([keywords]) => keywords.some(keyword => text.includes(keyword)));
+  return match ? match[1] : "assets/produtos/real-lavender.jpg";
 }
 
 function productIcon(p){
@@ -171,7 +199,8 @@ function productIcon(p){
     .toUpperCase();
 
   const links = window.PRODUCT_IMAGE_LINKS || {};
-  const imageUrl = links[code] || fallbackProductImage(p);
+  const customUrl = links[code] && !/^assets\/produtos\/\d+\.png$/.test(links[code]) ? links[code] : "";
+  const imageUrl = customUrl || fallbackProductImage(p);
   const fallbackUrl = fallbackProductImage(p);
 
   if (imageUrl) {
