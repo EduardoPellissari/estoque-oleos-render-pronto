@@ -179,6 +179,15 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
   padding:0;
 }
 
+.product-icon-official{
+  background:#fbfbfd;
+  padding:10px;
+}
+
+.product-icon-official img{
+  object-fit:contain;
+}
+
 
 
 /* =========================================================

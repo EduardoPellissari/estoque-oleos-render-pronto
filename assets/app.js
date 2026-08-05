@@ -207,13 +207,13 @@ function productIcon(p){
     .toUpperCase();
 
   const links = window.PRODUCT_IMAGE_LINKS || {};
-  const customUrl = links[code] && !/^assets\/produtos\/\d+\.png$/.test(links[code]) ? links[code] : "";
+  const customUrl = links[code] || "";
   const imageUrl = customUrl || fallbackProductImage(p);
   const fallbackUrl = fallbackProductImage(p);
 
   if (imageUrl) {
     return `
-      <div class="product-icon product-icon-img">
+      <div class="product-icon product-icon-img ${customUrl ? "product-icon-official" : ""}">
         <img
           src="${imageUrl}"
           data-fallback="${fallbackUrl}"

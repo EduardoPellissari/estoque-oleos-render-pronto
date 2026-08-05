@@ -1,5 +1,19 @@
 # Atribuicoes das imagens do catalogo
 
+## Imagens oficiais dos produtos
+
+As imagens nomeadas pelo codigo do produto, como `60210367.png`, foram extraidas das paginas oficiais da loja doTERRA Brasil em 05/08/2026:
+
+- https://shop.doterra.com/BR/pt_BR/shop/single-oils/
+- https://shop.doterra.com/BR/pt_BR/shop/proprietary-blends/
+- https://shop.doterra.com/BR/pt_BR/shop/oil-flavors/
+- https://shop.doterra.com/BR/pt_BR/shop/personal-care/
+- https://shop.doterra.com/BR/pt_BR/shop/enrollment-kits/
+- https://shop.doterra.com/BR/pt_BR/shop/collections/
+- https://shop.doterra.com/BR/pt_BR/shop/diffusers/
+
+## Imagens tematicas de apoio
+
 As fotos reais usadas como imagens tematicas do catalogo foram baixadas do Wikimedia Commons em 05/08/2026.
 
 - `real-lemon.jpg`: File:Lemon.jpg - Wikimedia Commons
