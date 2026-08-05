@@ -210,15 +210,19 @@ function productIcon(p){
   const customUrl = links[code] || "";
   const imageUrl = customUrl || fallbackProductImage(p);
   const fallbackUrl = fallbackProductImage(p);
+  const isOfficialImage = Boolean(customUrl);
+  const officialBoxStyle = isOfficialImage ? 'style="height:220px;padding:14px;background:#fbfbfd;display:flex;align-items:center;justify-content:center;"' : "";
+  const officialImageStyle = isOfficialImage ? 'style="width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;object-position:center center;display:block;margin:auto;"' : "";
 
   if (imageUrl) {
     return `
-      <div class="product-icon product-icon-img ${customUrl ? "product-icon-official" : ""}">
+      <div class="product-icon product-icon-img ${isOfficialImage ? "product-icon-official" : ""}" ${officialBoxStyle}>
         <img
           src="${imageUrl}"
           data-fallback="${fallbackUrl}"
           data-initials="${escapeAttr(initials || "DT")}"
           alt="${escapeAttr(name)}"
+          ${officialImageStyle}
           loading="lazy"
           onerror="
             if (this.src.indexOf(this.dataset.fallback) === -1) {

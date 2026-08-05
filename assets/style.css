@@ -181,9 +181,12 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 }
 
 .product-icon-official{
-  height:180px;
+  height:220px;
   background:#fbfbfd;
-  padding:12px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .product-icon-official img{
@@ -192,6 +195,7 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
   max-width:100%;
   max-height:100%;
   object-fit:contain;
+  object-position:center center;
   margin:auto;
 }
 
