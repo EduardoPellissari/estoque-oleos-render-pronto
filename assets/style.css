@@ -88,6 +88,16 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 .product-card h3{margin:0;color:var(--pd)}
 .product-card p{margin:0;color:var(--muted)}
 .catalog-prices{display:flex;gap:6px;flex-wrap:wrap}
+.customers-layout{display:grid;grid-template-columns:minmax(320px,420px) minmax(0,1fr);gap:20px;align-items:start}
+.customer-cards{display:grid;gap:12px}
+.customer-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;display:grid;gap:10px}
+.customer-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.customer-card h3{margin:0;color:var(--pd)}
+.customer-card-head span,.customer-card p,.customer-meta span{color:var(--muted)}
+.customer-card p{margin:0;line-height:1.35}
+.customer-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.customer-meta span,.customer-notes{background:#faf7ff;border:1px solid var(--line);border-radius:12px;padding:7px 9px;font-size:12px;font-weight:800;color:var(--muted)}
+.customer-meta strong{margin-left:auto;color:var(--pd);font-size:18px}
 
 /* Profile */
 .profile-grid{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:18px}
@@ -102,7 +112,7 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 /* Responsive */
 @media(max-width:1100px){
   .metrics{grid-template-columns:repeat(2,1fr)}
-  .dashboard-grid,.reports,.profile-grid{grid-template-columns:1fr}
+  .dashboard-grid,.reports,.profile-grid,.customers-layout{grid-template-columns:1fr}
   .grid{grid-template-columns:1fr}
 }
 @media(max-width:768px){
@@ -471,6 +481,34 @@ html, body, .app, .main, .page, .panel{
     font-size:12px !important;
     border-radius:11px !important;
     line-height:1.15 !important;
+  }
+
+  .customers-layout{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  .customer-card{
+    padding:12px !important;
+    border-radius:14px !important;
+  }
+
+  .customer-card-head{
+    display:grid !important;
+    gap:8px !important;
+  }
+
+  .customer-card h3{
+    font-size:16px !important;
+  }
+
+  .customer-meta{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+  }
+
+  .customer-meta strong{
+    margin-left:0 !important;
   }
 }
 

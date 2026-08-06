@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260806-mobile">
+  <link rel="stylesheet" href="assets/style.css?v=20260806-customers">
 </head>
 <body>
 <div id="setupBanner" class="setup-banner hidden"></div>
@@ -55,6 +55,7 @@
     <button class="nav active" data-page="dashboard"><span>📊</span> Dashboard</button>
     <button class="nav" data-page="stock"><span>📦</span> Meu estoque</button>
     <button class="nav" data-page="catalog"><span>🔎</span> Catálogo doTERRA</button>
+    <button class="nav" data-page="customers"><span>🤝</span> Clientes</button>
     <button class="nav" data-page="reports"><span>📈</span> Relatórios</button>
     <button class="nav" data-page="profile"><span>👤</span> Usuários / Perfil</button>
     <button id="logout" class="logout" type="button"><span>🚪</span> Sair</button>
@@ -155,6 +156,65 @@
       </div>
     </section>
 
+    <section id="customers" class="page hidden">
+      <div class="customers-layout">
+        <form id="customerForm" class="panel">
+          <h2>Adicionar cliente</h2>
+          <p>Registre compras para acompanhar cobranças futuras.</p>
+          <input type="hidden" id="customerEditId">
+
+          <label for="customerName">Nome da pessoa</label>
+          <input id="customerName" required placeholder="Nome do cliente">
+
+          <label for="customerPhone">Telefone / WhatsApp</label>
+          <input id="customerPhone" placeholder="(00) 00000-0000">
+
+          <label for="customerProducts">Óleos comprados</label>
+          <textarea id="customerProducts" required placeholder="Ex.: Lavender 15 ml, On Guard, Lemon..."></textarea>
+
+          <div class="two">
+            <div><label for="customerAmount">Valor da compra</label><input id="customerAmount" type="number" min="0" step="0.01" required></div>
+            <div><label for="customerStatus">Status</label><select id="customerStatus">
+              <option value="pending">Pendente</option>
+              <option value="partial">Parcial</option>
+              <option value="paid">Pago</option>
+            </select></div>
+          </div>
+
+          <div class="two">
+            <div><label for="customerPurchaseDate">Data da compra</label><input id="customerPurchaseDate" type="date" required></div>
+            <div><label for="customerDueDate">Cobrar em</label><input id="customerDueDate" type="date"></div>
+          </div>
+
+          <label for="customerNotes">Observações</label>
+          <textarea id="customerNotes" placeholder="Forma de pagamento, parcelas, entrega, lembretes..."></textarea>
+
+          <button type="submit">Salvar cliente</button>
+          <button type="button" id="cancelCustomerEdit" class="secondary hidden">Cancelar edição</button>
+        </form>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Clientes e cobranças</h2>
+              <p id="customerStatusText">Nenhum cliente cadastrado.</p>
+            </div>
+            <div class="filters">
+              <input id="customerFilter" placeholder="Filtrar cliente, óleo, telefone...">
+              <select id="customerStatusFilter">
+                <option value="">Todos os status</option>
+                <option value="pending">Pendentes</option>
+                <option value="partial">Parciais</option>
+                <option value="paid">Pagos</option>
+              </select>
+            </div>
+          </div>
+          <div id="customerCards" class="customer-cards"></div>
+          <div id="emptyCustomers" class="empty">Nenhum cliente cadastrado.</div>
+        </div>
+      </div>
+    </section>
+
     <section id="reports" class="page hidden">
       <div class="reports">
         <div class="panel"><h2>Financeiro</h2><div id="financialReport"></div></div>
@@ -213,8 +273,8 @@
   </section>
 </main>
 
-<script src="assets/catalog.js?v=20260806-mobile"></script>
-<script src="assets/image-links.js?v=20260806-mobile"></script>
-<script src="assets/app.js?v=20260806-mobile"></script>
+<script src="assets/catalog.js?v=20260806-customers"></script>
+<script src="assets/image-links.js?v=20260806-customers"></script>
+<script src="assets/app.js?v=20260806-customers"></script>
 </body>
 </html>

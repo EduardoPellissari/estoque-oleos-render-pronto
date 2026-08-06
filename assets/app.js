@@ -1,5 +1,6 @@
 let currentUser = null;
 let stock = [];
+let customers = [];
 let userProfile = {};
 
 const $ = (id) => document.getElementById(id);
@@ -89,12 +90,14 @@ function logout(){
 async function loadUserData(){
   if(!currentUser) return;
   try{
-    const [profile, rows] = await Promise.all([
+    const [profile, rows, customerRows] = await Promise.all([
       request(`${API_BASE}/users/${currentUser.uid}/profile`),
-      request(`${API_BASE}/users/${currentUser.uid}/stock`)
+      request(`${API_BASE}/users/${currentUser.uid}/stock`),
+      request(`${API_BASE}/users/${currentUser.uid}/customers`)
     ]);
     userProfile = profile || {};
     stock = Array.isArray(rows) ? rows : [];
+    customers = Array.isArray(customerRows) ? customerRows : [];
     renderAll();
     renderProfile();
     hideBanner();
@@ -125,6 +128,28 @@ async function deleteStockRemote(id){
   stock = stock.filter(i=>i.id!==id);
 }
 
+async function saveCustomerRemote(item){
+  if(item.id){
+    await request(`${API_BASE}/users/${currentUser.uid}/customers/${item.id}`,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(item)
+    });
+  }else{
+    await request(`${API_BASE}/users/${currentUser.uid}/customers`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(item)
+    });
+  }
+  customers = await request(`${API_BASE}/users/${currentUser.uid}/customers`);
+}
+
+async function deleteCustomerRemote(id){
+  await request(`${API_BASE}/users/${currentUser.uid}/customers/${id}`,{method:"DELETE"});
+  customers = customers.filter(i=>i.id!==id);
+}
+
 function getCatalog(){
   return Array.isArray(window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : [];
 }
@@ -135,6 +160,10 @@ function escapeAttr(value){
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function escapeHtml(value){
+  return escapeAttr(value).replace(/'/g, "&#39;");
 }
 
 function fallbackProductImage(p){
@@ -289,7 +318,7 @@ function showPage(page){
   if(pageEl) pageEl.classList.remove("hidden");
   const nav=document.querySelector(`.nav[data-page="${page}"]`);
   if(nav) nav.classList.add("active");
-  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",reports:"Relatórios",profile:"Usuários / Perfil"};
+  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil"};
   $("pageTitle").textContent=titles[page] || "Sistema";
   closeMobileMenu();
   renderAll();
@@ -301,6 +330,20 @@ function filteredStock(){
   return stock.filter(i=>{
     const hay=normalizeText(`${i.productName} ${i.productCode} ${i.size} ${i.category} ${i.notes}`);
     return (!q || hay.includes(q)) && (!cat || i.category===cat);
+  });
+}
+
+function statusLabel(status){
+  const labels={pending:"Pendente",partial:"Parcial",paid:"Pago"};
+  return labels[status] || "Pendente";
+}
+
+function filteredCustomers(){
+  const q=normalizeText($("customerFilter") ? $("customerFilter").value : "");
+  const status=$("customerStatusFilter") ? $("customerStatusFilter").value : "";
+  return customers.filter(i=>{
+    const hay=normalizeText(`${i.customerName} ${i.phone} ${i.products} ${i.notes}`);
+    return (!q || hay.includes(q)) && (!status || i.status===status);
   });
 }
 
@@ -354,6 +397,38 @@ function renderCatalog(){
   }
 }
 
+function renderCustomers(){
+  const wrap=$("customerCards");
+  if(!wrap) return;
+  const rows=filteredCustomers();
+  const pending=customers.filter(i=>i.status!=="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  const paid=customers.filter(i=>i.status==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  if($("customerStatusText")){
+    $("customerStatusText").textContent = `${customers.length} cliente(s) • ${money(pending)} em aberto • ${money(paid)} pago(s).`;
+  }
+  $("emptyCustomers").classList.toggle("hidden", rows.length>0);
+  wrap.innerHTML=rows.map(i=>`<article class="customer-card">
+    <div class="customer-card-head">
+      <div>
+        <h3>${escapeHtml(i.customerName || "-")}</h3>
+        <span>${escapeHtml(i.phone || "Sem telefone")}</span>
+      </div>
+      <strong class="tag ${i.status==="paid" ? "" : "warn"}">${statusLabel(i.status)}</strong>
+    </div>
+    <p>${escapeHtml(i.products || "-")}</p>
+    <div class="customer-meta">
+      <span>Compra: ${escapeHtml(i.purchaseDate || "-")}</span>
+      <span>Cobrar: ${escapeHtml(i.dueDate || "-")}</span>
+      <strong>${money(i.amount)}</strong>
+    </div>
+    ${i.notes ? `<div class="customer-notes">${escapeHtml(i.notes)}</div>` : ""}
+    <div class="row-actions">
+      <button class="mini" onclick="editCustomer('${i.id}')">Editar</button>
+      <button class="mini danger" onclick="removeCustomer('${i.id}')">Excluir</button>
+    </div>
+  </article>`).join("");
+}
+
 function renderMetrics(){
   const products=stock.length;
   const units=stock.reduce((s,i)=>s+Number(i.qty||0),0);
@@ -401,6 +476,59 @@ function renderReports(){
   $("expiryReport").innerHTML=expiring.length?expiring.map(i=>`<div class="report-item"><strong>${i.productName}</strong><br>Validade: ${i.expiry}</div>`).join(""):`<div class="report-item">Sem produtos vencendo nos próximos 60 dias.</div>`;
 }
 
+async function saveCustomerForm(e){
+  e.preventDefault();
+  try{
+    const item={
+      id:$("customerEditId").value || "",
+      customerName:$("customerName").value.trim(),
+      phone:$("customerPhone").value.trim(),
+      products:$("customerProducts").value.trim(),
+      amount:Number($("customerAmount").value || 0),
+      purchaseDate:$("customerPurchaseDate").value || today(),
+      dueDate:$("customerDueDate").value || "",
+      status:$("customerStatus").value || "pending",
+      notes:$("customerNotes").value || ""
+    };
+    await saveCustomerRemote(item);
+    resetCustomerForm();
+    renderAll();
+    showPage("customers");
+  }catch(err){ alert("Erro ao salvar cliente: "+err.message); }
+}
+
+function resetCustomerForm(){
+  $("customerForm").reset();
+  $("customerPurchaseDate").value=today();
+  $("customerEditId").value="";
+  if($("customerStatus")) $("customerStatus").value="pending";
+  hide($("cancelCustomerEdit"));
+}
+
+function editCustomer(id){
+  const i=customers.find(x=>x.id===id);
+  if(!i) return;
+  showPage("customers");
+  $("customerEditId").value=i.id;
+  $("customerName").value=i.customerName || "";
+  $("customerPhone").value=i.phone || "";
+  $("customerProducts").value=i.products || "";
+  $("customerAmount").value=i.amount || 0;
+  $("customerPurchaseDate").value=i.purchaseDate || today();
+  $("customerDueDate").value=i.dueDate || "";
+  $("customerStatus").value=i.status || "pending";
+  $("customerNotes").value=i.notes || "";
+  show($("cancelCustomerEdit"));
+}
+
+async function removeCustomer(id){
+  if(!confirm("Deseja excluir este cliente/compra?")) return;
+  try{
+    await deleteCustomerRemote(id);
+    renderAll();
+  }catch(err){ alert("Erro ao excluir cliente: "+err.message); }
+}
+
 function renderProfile(){
   if(!userProfile) return;
   if($("profileName")) $("profileName").value=userProfile.name || "";
@@ -420,6 +548,7 @@ function renderAll(){
   renderDashboardDetails();
   renderStock();
   renderCatalog();
+  renderCustomers();
   renderReports();
 }
 
@@ -552,9 +681,13 @@ function bindEvents(){
   $("quickAdd").addEventListener("click", ()=>showPage("stock"));
   $("stockForm").addEventListener("submit", saveStockForm);
   $("cancelEdit").addEventListener("click", resetForm);
+  $("customerForm").addEventListener("submit", saveCustomerForm);
+  $("cancelCustomerEdit").addEventListener("click", resetCustomerForm);
   $("productSearch").addEventListener("input", handleProductSearch);
   $("stockFilter").addEventListener("input", renderStock);
   $("stockCategoryFilter").addEventListener("change", renderStock);
+  $("customerFilter").addEventListener("input", renderCustomers);
+  $("customerStatusFilter").addEventListener("change", renderCustomers);
   $("catalogFilter").addEventListener("input", renderCatalog);
   $("catalogCategoryFilter").addEventListener("change", renderCatalog);
   $("refreshCatalog").addEventListener("click", renderCatalog);
@@ -580,6 +713,7 @@ async function autoLogin(){
 window.addEventListener("DOMContentLoaded", ()=>{
   bindEvents();
   $("entryDate").value=today();
+  $("customerPurchaseDate").value=today();
   populateFilters();
   populateDatalist();
   autoLogin();

@@ -26,7 +26,7 @@ const mimeTypes = {
 };
 
 function defaultDb() {
-  return { users: [], stock: [] };
+  return { users: [], stock: [], customers: [] };
 }
 
 function readDb() {
@@ -35,6 +35,7 @@ function readDb() {
     const db = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
     db.users ||= [];
     db.stock ||= [];
+    db.customers ||= [];
     return db;
   } catch (err) {
     console.error("Erro ao ler banco:", err);
@@ -96,6 +97,24 @@ function stockFromRow(row) {
   };
 }
 
+function customerFromRow(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    userId: row.user_id,
+    customerName: row.customer_name,
+    phone: row.phone,
+    products: row.products,
+    amount: Number(row.amount || 0),
+    purchaseDate: row.purchase_date,
+    dueDate: row.due_date,
+    status: row.status,
+    notes: row.notes,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+
 async function ensurePostgres() {
   if (!usingPostgres() || pgReady) return;
   const pool = getPool();
@@ -125,6 +144,22 @@ async function ensurePostgres() {
       expiry TEXT DEFAULT '',
       notes TEXT DEFAULT '',
       category TEXT DEFAULT 'Sem categoria',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS customers (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+      customer_name TEXT NOT NULL,
+      phone TEXT DEFAULT '',
+      products TEXT DEFAULT '',
+      amount NUMERIC DEFAULT 0,
+      purchase_date TEXT DEFAULT '',
+      due_date TEXT DEFAULT '',
+      status TEXT DEFAULT 'pending',
+      notes TEXT DEFAULT '',
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     )
@@ -295,6 +330,92 @@ async function deleteStockItem(uid, id) {
   db.stock = db.stock.filter(i => !(i.userId === uid && i.id === id));
   writeDb(db);
   return before - db.stock.length;
+}
+
+async function listCustomers(uid) {
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const { rows } = await getPool().query(
+      "SELECT * FROM customers WHERE user_id = $1 ORDER BY created_at DESC",
+      [uid]
+    );
+    return rows.map(customerFromRow);
+  }
+  return readDb().customers
+    .filter(i => i.userId === uid)
+    .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+}
+
+async function createCustomer(item) {
+  if (usingPostgres()) {
+    await ensurePostgres();
+    await getPool().query(
+      `INSERT INTO customers
+       (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+      [
+        item.id, item.userId, item.customerName, item.phone, item.products, item.amount,
+        item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt
+      ]
+    );
+    return item;
+  }
+  const db = readDb();
+  db.customers.push(item);
+  writeDb(db);
+  return item;
+}
+
+async function updateCustomer(uid, id, fields) {
+  const item = {
+    id,
+    userId: uid,
+    customerName: String(fields.customerName || "").trim(),
+    phone: String(fields.phone || "").trim(),
+    products: String(fields.products || "").trim(),
+    amount: Number(fields.amount || 0),
+    purchaseDate: String(fields.purchaseDate || ""),
+    dueDate: String(fields.dueDate || ""),
+    status: String(fields.status || "pending"),
+    notes: String(fields.notes || ""),
+    updatedAt: new Date().toISOString()
+  };
+
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const { rows } = await getPool().query(
+      `UPDATE customers
+       SET customer_name = $3, phone = $4, products = $5, amount = $6,
+           purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
+       WHERE user_id = $1 AND id = $2
+       RETURNING *`,
+      [
+        uid, id, item.customerName, item.phone, item.products, item.amount,
+        item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt
+      ]
+    );
+    return customerFromRow(rows[0]);
+  }
+
+  const db = readDb();
+  const existing = db.customers.find(i => i.userId === uid && i.id === id);
+  if (!existing) return null;
+  Object.assign(existing, item);
+  writeDb(db);
+  return existing;
+}
+
+async function deleteCustomer(uid, id) {
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const result = await getPool().query("DELETE FROM customers WHERE user_id = $1 AND id = $2", [uid, id]);
+    return result.rowCount;
+  }
+  const db = readDb();
+  const before = db.customers.length;
+  db.customers = db.customers.filter(i => !(i.userId === uid && i.id === id));
+  writeDb(db);
+  return before - db.customers.length;
 }
 
 function makeId(prefix = "id") {
@@ -500,6 +621,60 @@ async function handleApi(req, res) {
         if (method === "DELETE" && parts.length === 5) {
           const id = parts[4];
           const removed = await deleteStockItem(uid, id);
+          return send(res, 200, { ok: true, removed });
+        }
+      }
+
+      if (parts[3] === "customers") {
+        if (method === "GET" && parts.length === 4) {
+          const rows = await listCustomers(uid);
+          return send(res, 200, rows.map(i => ({
+            id: i.id,
+            customerName: i.customerName,
+            phone: i.phone,
+            products: i.products,
+            amount: Number(i.amount || 0),
+            purchaseDate: i.purchaseDate,
+            dueDate: i.dueDate,
+            status: i.status,
+            notes: i.notes,
+            createdAt: i.createdAt,
+            updatedAt: i.updatedAt
+          })));
+        }
+
+        if (method === "POST" && parts.length === 4) {
+          const body = await readBody(req);
+          const now = new Date().toISOString();
+          const item = {
+            id: makeId("c"),
+            userId: uid,
+            customerName: String(body.customerName || "").trim(),
+            phone: String(body.phone || "").trim(),
+            products: String(body.products || "").trim(),
+            amount: Number(body.amount || 0),
+            purchaseDate: String(body.purchaseDate || ""),
+            dueDate: String(body.dueDate || ""),
+            status: String(body.status || "pending"),
+            notes: String(body.notes || ""),
+            createdAt: now,
+            updatedAt: now
+          };
+          if (!item.customerName) return send(res, 400, { error: "Informe o nome do cliente." });
+          return send(res, 200, await createCustomer(item));
+        }
+
+        if (method === "PUT" && parts.length === 5) {
+          const id = parts[4];
+          const body = await readBody(req);
+          const item = await updateCustomer(uid, id, body);
+          if (!item) return send(res, 404, { error: "Cliente não encontrado." });
+          return send(res, 200, item);
+        }
+
+        if (method === "DELETE" && parts.length === 5) {
+          const id = parts[4];
+          const removed = await deleteCustomer(uid, id);
           return send(res, 200, { ok: true, removed });
         }
       }
