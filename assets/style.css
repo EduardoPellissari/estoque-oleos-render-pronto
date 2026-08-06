@@ -108,6 +108,7 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 .selected-product{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;background:#faf7ff;padding:10px}
 .selected-product strong{display:block;color:var(--pd)}
 .selected-product span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.selected-product-qty{width:74px!important;min-width:74px!important;text-align:center;padding:8px!important;border-radius:10px!important}
 .empty.compact{padding:12px;font-size:12px}
 input[readonly],textarea[readonly]{background:#faf7ff;color:#4a4252}
 .installment-preview{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
@@ -550,6 +551,11 @@ html, body, .app, .main, .page, .panel{
 
   .selected-product{
     align-items:flex-start;
+  }
+
+  .selected-product-qty{
+    width:64px!important;
+    min-width:64px!important;
   }
 }
 

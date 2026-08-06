@@ -327,6 +327,33 @@ function customerPurchaseLine(item){
   return `${item.qty}x ${item.name}${item.size ? ` (${item.size})` : ""} - ${money(item.unitPrice)} un. = ${money(item.total)}`;
 }
 
+function purchaseItemsNote(){
+  if(!customerPurchaseItems.length) return "";
+  return `Itens estruturados: ${JSON.stringify(customerPurchaseItems)}`;
+}
+
+function extractPurchaseItems(notes){
+  const match=String(notes || "").match(/Itens estruturados:\s*(\[.*\])(?:\n|$)/);
+  if(!match) return [];
+  try{
+    const parsed=JSON.parse(match[1]);
+    return Array.isArray(parsed) ? parsed.map(item=>({
+      code:String(item.code || ""),
+      name:String(item.name || "Produto"),
+      size:String(item.size || ""),
+      qty:Math.max(1, Number(item.qty || 1)),
+      unitPrice:Number(item.unitPrice || 0),
+      total:Number(item.total || 0) || Math.max(1, Number(item.qty || 1))*Number(item.unitPrice || 0)
+    })) : [];
+  }catch{
+    return [];
+  }
+}
+
+function cleanCustomerNotes(notes){
+  return String(notes || "").replace(/\n?Itens estruturados:\s*\[.*\](?:\n|$)/s,"").trim();
+}
+
 function syncCustomerPurchaseSummary(){
   const productsEl=$("customerProducts");
   const amountEl=$("customerAmount");
@@ -349,8 +376,9 @@ function renderCustomerSelectedProducts(){
     <div class="selected-product">
       <div>
         <strong>${escapeHtml(item.name)}</strong>
-        <span>${item.qty} unidade(s) • ${money(item.unitPrice)} cada</span>
+        <span>${money(item.unitPrice)} cada • ${money(item.total)} total</span>
       </div>
+      <input class="selected-product-qty" type="number" min="1" step="1" value="${item.qty}" aria-label="Quantidade de ${escapeAttr(item.name)}" onchange="updateCustomerPurchaseQty(${index}, this.value)">
       <button type="button" class="mini danger" onclick="removeCustomerPurchaseItem(${index})">Remover</button>
     </div>
   `).join("");
@@ -385,6 +413,14 @@ function addCustomerPurchaseItem(){
 
 function removeCustomerPurchaseItem(index){
   customerPurchaseItems.splice(index,1);
+  syncCustomerPurchaseSummary();
+}
+
+function updateCustomerPurchaseQty(index,value){
+  const item=customerPurchaseItems[index];
+  if(!item) return;
+  item.qty=Math.max(1, Number(value || 1));
+  item.total=item.qty*Number(item.unitPrice || 0);
   syncCustomerPurchaseSummary();
 }
 
@@ -554,7 +590,7 @@ function renderCustomers(){
       <span>Cobrar: ${escapeHtml(i.dueDate || "-")}</span>
       <strong>${money(i.amount)}</strong>
     </div>
-    ${i.notes ? `<div class="customer-notes">${escapeHtml(i.notes)}</div>` : ""}
+    ${cleanCustomerNotes(i.notes) ? `<div class="customer-notes">${escapeHtml(cleanCustomerNotes(i.notes))}</div>` : ""}
     <div class="row-actions">
       <a class="mini whatsapp" href="${whatsappLink(i)}" target="_blank" rel="noopener">WhatsApp</a>
       <button class="mini" onclick="editCustomer('${i.id}')">Editar</button>
@@ -710,14 +746,14 @@ function exportCustomersCsv(){
     Compra:i.purchaseDate,
     "Cobrar em":i.dueDate,
     Status:billingLabel(i),
-    Observacoes:i.notes
+    Observacoes:cleanCustomerNotes(i.notes)
   })));
 }
 
 async function saveCustomerForm(e){
   e.preventDefault();
   try{
-    const notes=[String($("customerNotes").value || "").trim(), installmentNotes()].filter(Boolean).join("\n");
+    const notes=[String($("customerNotes").value || "").trim(), installmentNotes(), purchaseItemsNote()].filter(Boolean).join("\n");
     const item={
       id:$("customerEditId").value || "",
       customerName:$("customerName").value.trim(),
@@ -754,17 +790,19 @@ function editCustomer(id){
   const i=customers.find(x=>x.id===id);
   if(!i) return;
   showPage("customers");
+  const parsedItems=extractPurchaseItems(i.notes);
   $("customerEditId").value=i.id;
   $("customerName").value=i.customerName || "";
   $("customerPhone").value=i.phone || "";
   $("customerProducts").value=i.products || "";
   $("customerAmount").value=i.amount || 0;
-  customerPurchaseItems=[];
+  customerPurchaseItems=parsedItems;
   renderCustomerSelectedProducts();
   $("customerPurchaseDate").value=i.purchaseDate || today();
   $("customerDueDate").value=i.dueDate || "";
   $("customerStatus").value=i.status || "pending";
-  $("customerNotes").value=i.notes || "";
+  $("customerNotes").value=cleanCustomerNotes(i.notes);
+  if(parsedItems.length) syncCustomerPurchaseSummary();
   show($("cancelCustomerEdit"));
 }
 
