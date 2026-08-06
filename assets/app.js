@@ -1,6 +1,7 @@
 let currentUser = null;
 let stock = [];
 let customers = [];
+let customerPurchaseItems = [];
 let userProfile = {};
 
 const $ = (id) => document.getElementById(id);
@@ -311,6 +312,70 @@ function handleProductSearch(){
   show($("selectedPreview"));
 }
 
+function customerPurchaseLine(item){
+  return `${item.qty}x ${item.name}${item.size ? ` (${item.size})` : ""} - ${money(item.unitPrice)} un. = ${money(item.total)}`;
+}
+
+function syncCustomerPurchaseSummary(){
+  const productsEl=$("customerProducts");
+  const amountEl=$("customerAmount");
+  if(!productsEl || !amountEl) return;
+  const total=customerPurchaseItems.reduce((sum,item)=>sum+Number(item.total||0),0);
+  productsEl.value=customerPurchaseItems.map(customerPurchaseLine).join("\n");
+  amountEl.value=total ? total.toFixed(2) : "";
+  renderCustomerSelectedProducts();
+}
+
+function renderCustomerSelectedProducts(){
+  const wrap=$("customerSelectedProducts");
+  if(!wrap) return;
+  if(!customerPurchaseItems.length){
+    wrap.innerHTML=`<div class="empty compact">Nenhum óleo selecionado.</div>`;
+    return;
+  }
+  wrap.innerHTML=customerPurchaseItems.map((item,index)=>`
+    <div class="selected-product">
+      <div>
+        <strong>${escapeHtml(item.name)}</strong>
+        <span>${item.qty} unidade(s) • ${money(item.unitPrice)} cada</span>
+      </div>
+      <button type="button" class="mini danger" onclick="removeCustomerPurchaseItem(${index})">Remover</button>
+    </div>
+  `).join("");
+}
+
+function addCustomerPurchaseItem(){
+  const product=findCatalogBySearch($("customerProductSearch").value);
+  if(!product){
+    alert("Selecione um produto do catálogo para adicionar.");
+    return;
+  }
+  const qty=Math.max(1, Number($("customerProductQty").value || 1));
+  const unitPrice=Number(product.retail || product.wholesale || 0);
+  const existing=customerPurchaseItems.find(item=>item.code===product.code && item.size===(product.size || ""));
+  if(existing){
+    existing.qty += qty;
+    existing.total = existing.qty * existing.unitPrice;
+  }else{
+    customerPurchaseItems.push({
+      code: product.code || "",
+      name: product.name || "Produto",
+      size: product.size || "",
+      qty,
+      unitPrice,
+      total: qty * unitPrice
+    });
+  }
+  $("customerProductSearch").value="";
+  $("customerProductQty").value=1;
+  syncCustomerPurchaseSummary();
+}
+
+function removeCustomerPurchaseItem(index){
+  customerPurchaseItems.splice(index,1);
+  syncCustomerPurchaseSummary();
+}
+
 function showPage(page){
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
   document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
@@ -501,6 +566,9 @@ function resetCustomerForm(){
   $("customerForm").reset();
   $("customerPurchaseDate").value=today();
   $("customerEditId").value="";
+  $("customerProductQty").value=1;
+  customerPurchaseItems=[];
+  syncCustomerPurchaseSummary();
   if($("customerStatus")) $("customerStatus").value="pending";
   hide($("cancelCustomerEdit"));
 }
@@ -514,6 +582,8 @@ function editCustomer(id){
   $("customerPhone").value=i.phone || "";
   $("customerProducts").value=i.products || "";
   $("customerAmount").value=i.amount || 0;
+  customerPurchaseItems=[];
+  renderCustomerSelectedProducts();
   $("customerPurchaseDate").value=i.purchaseDate || today();
   $("customerDueDate").value=i.dueDate || "";
   $("customerStatus").value=i.status || "pending";
@@ -683,6 +753,13 @@ function bindEvents(){
   $("cancelEdit").addEventListener("click", resetForm);
   $("customerForm").addEventListener("submit", saveCustomerForm);
   $("cancelCustomerEdit").addEventListener("click", resetCustomerForm);
+  $("addCustomerProduct").addEventListener("click", addCustomerPurchaseItem);
+  $("customerProductSearch").addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      addCustomerPurchaseItem();
+    }
+  });
   $("productSearch").addEventListener("input", handleProductSearch);
   $("stockFilter").addEventListener("input", renderStock);
   $("stockCategoryFilter").addEventListener("change", renderStock);
@@ -714,6 +791,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
   bindEvents();
   $("entryDate").value=today();
   $("customerPurchaseDate").value=today();
+  renderCustomerSelectedProducts();
   populateFilters();
   populateDatalist();
   autoLogin();

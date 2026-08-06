@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260806-customers">
+  <link rel="stylesheet" href="assets/style.css?v=20260806-customer-products">
 </head>
 <body>
 <div id="setupBanner" class="setup-banner hidden"></div>
@@ -169,11 +169,19 @@
           <label for="customerPhone">Telefone / WhatsApp</label>
           <input id="customerPhone" placeholder="(00) 00000-0000">
 
-          <label for="customerProducts">Óleos comprados</label>
-          <textarea id="customerProducts" required placeholder="Ex.: Lavender 15 ml, On Guard, Lemon..."></textarea>
+          <label for="customerProductSearch">Selecionar óleo do catálogo</label>
+          <div class="customer-product-picker">
+            <input id="customerProductSearch" list="catalogList" placeholder="Digite lavanda, lemon, on guard, código...">
+            <input id="customerProductQty" type="number" min="1" step="1" value="1" aria-label="Quantidade">
+            <button id="addCustomerProduct" type="button" class="small-btn">Adicionar</button>
+          </div>
+          <div id="customerSelectedProducts" class="selected-products"></div>
+
+          <label for="customerProducts">Resumo da compra</label>
+          <textarea id="customerProducts" required readonly placeholder="Os produtos selecionados aparecem aqui."></textarea>
 
           <div class="two">
-            <div><label for="customerAmount">Valor da compra</label><input id="customerAmount" type="number" min="0" step="0.01" required></div>
+            <div><label for="customerAmount">Valor da compra</label><input id="customerAmount" type="number" min="0" step="0.01" required readonly></div>
             <div><label for="customerStatus">Status</label><select id="customerStatus">
               <option value="pending">Pendente</option>
               <option value="partial">Parcial</option>
@@ -273,8 +281,8 @@
   </section>
 </main>
 
-<script src="assets/catalog.js?v=20260806-customers"></script>
-<script src="assets/image-links.js?v=20260806-customers"></script>
-<script src="assets/app.js?v=20260806-customers"></script>
+<script src="assets/catalog.js?v=20260806-customer-products"></script>
+<script src="assets/image-links.js?v=20260806-customer-products"></script>
+<script src="assets/app.js?v=20260806-customer-products"></script>
 </body>
 </html>
