@@ -350,6 +350,34 @@ function extractPurchaseItems(notes){
   }
 }
 
+function numberFromMoney(text){
+  const raw=String(text || "").replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".");
+  return Number(raw || 0);
+}
+
+function parsePurchaseSummary(products){
+  return String(products || "").split(/\n+/).map(line=>{
+    const match=line.match(/^(\d+(?:[.,]\d+)?)x\s+(.+?)\s+-\s+(R\$\s*[\d.,]+)\s+un\.\s+=\s+(R\$\s*[\d.,]+)$/);
+    if(!match) return null;
+    const qty=Math.max(1, Number(String(match[1]).replace(",",".")));
+    const productText=String(match[2] || "").trim();
+    const sizeMatch=productText.match(/\(([^()]*)\)\s*$/);
+    const size=sizeMatch ? sizeMatch[1].trim() : "";
+    const name=(sizeMatch ? productText.slice(0,sizeMatch.index) : productText).trim();
+    const unitPrice=numberFromMoney(match[3]);
+    const total=numberFromMoney(match[4]) || qty*unitPrice;
+    const catalogItem=getCatalog().find(p=>normalizeText(p.name)===normalizeText(name) && (!size || normalizeText(p.size)===normalizeText(size))) || findCatalogBySearch(name);
+    return {
+      code: catalogItem ? String(catalogItem.code || "") : "",
+      name,
+      size,
+      qty,
+      unitPrice,
+      total
+    };
+  }).filter(Boolean);
+}
+
 function cleanCustomerNotes(notes){
   return String(notes || "").replace(/\n?Itens estruturados:\s*\[.*\](?:\n|$)/s,"").trim();
 }
@@ -791,18 +819,19 @@ function editCustomer(id){
   if(!i) return;
   showPage("customers");
   const parsedItems=extractPurchaseItems(i.notes);
+  const recoveredItems=parsedItems.length ? parsedItems : parsePurchaseSummary(i.products);
   $("customerEditId").value=i.id;
   $("customerName").value=i.customerName || "";
   $("customerPhone").value=i.phone || "";
   $("customerProducts").value=i.products || "";
   $("customerAmount").value=i.amount || 0;
-  customerPurchaseItems=parsedItems;
+  customerPurchaseItems=recoveredItems;
   renderCustomerSelectedProducts();
   $("customerPurchaseDate").value=i.purchaseDate || today();
   $("customerDueDate").value=i.dueDate || "";
   $("customerStatus").value=i.status || "pending";
   $("customerNotes").value=cleanCustomerNotes(i.notes);
-  if(parsedItems.length) syncCustomerPurchaseSummary();
+  if(recoveredItems.length) syncCustomerPurchaseSummary();
   show($("cancelCustomerEdit"));
 }
 
