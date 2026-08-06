@@ -705,16 +705,40 @@ function renderReports(){
   if($("billingReport")) $("billingReport").innerHTML=billing.length?billing.map(i=>`<div class="report-item"><strong>${escapeHtml(i.customerName)}</strong><br>${billingLabel(i)} • ${money(i.amount)} • ${i.dueDate || "sem data"}</div>`).join(""):`<div class="report-item">Nenhuma cobrança em aberto.</div>`;
 }
 
-async function deductCustomerItemsFromStock(){
-  if($("customerEditId").value || !customerPurchaseItems.length) return;
-  const updates=[];
-  customerPurchaseItems.forEach(item=>{
-    const stockItem=stock.find(s=>String(s.productCode || "")===String(item.code || ""));
-    if(stockItem){
-      updates.push({...stockItem, qty:Math.max(0, Number(stockItem.qty||0)-Number(item.qty||0))});
-    }
+function stockKey(item){
+  return item.code ? `code:${item.code}` : `name:${normalizeText(`${item.name || item.productName || ""} ${item.size || ""}`)}`;
+}
+
+function findStockForPurchaseItem(item){
+  return stock.find(s=>String(s.productCode || "")===String(item.code || "")) ||
+    stock.find(s=>normalizeText(`${s.productName || ""} ${s.size || ""}`)===normalizeText(`${item.name || ""} ${item.size || ""}`));
+}
+
+function summarizePurchaseItems(items){
+  const map={};
+  items.forEach(item=>{
+    const key=stockKey(item);
+    if(!map[key]) map[key]={...item, qty:0};
+    map[key].qty += Number(item.qty || 0);
   });
-  for(const item of updates) await saveStockRemote(item);
+  return map;
+}
+
+async function adjustStockForCustomerItems(previousItems,newItems){
+  const before=summarizePurchaseItems(previousItems);
+  const after=summarizePurchaseItems(newItems);
+  const keys=Array.from(new Set([...Object.keys(before),...Object.keys(after)]));
+  for(const key of keys){
+    const oldQty=Number(before[key]?.qty || 0);
+    const newQty=Number(after[key]?.qty || 0);
+    const delta=newQty-oldQty;
+    if(!delta) continue;
+    const ref=after[key] || before[key];
+    const stockItem=findStockForPurchaseItem(ref);
+    if(stockItem){
+      await saveStockRemote({...stockItem, qty:Math.max(0, Number(stockItem.qty||0)-delta)});
+    }
+  }
 }
 
 function renderGlobalSearch(){
@@ -781,9 +805,13 @@ function exportCustomersCsv(){
 async function saveCustomerForm(e){
   e.preventDefault();
   try{
+    const existingId=$("customerEditId").value || "";
+    const existingCustomer=existingId ? customers.find(i=>i.id===existingId) : null;
+    const previousItems=existingCustomer ? (extractPurchaseItems(existingCustomer.notes).length ? extractPurchaseItems(existingCustomer.notes) : parsePurchaseSummary(existingCustomer.products)) : [];
+    const nextItems=customerPurchaseItems.map(item=>({...item}));
     const notes=[String($("customerNotes").value || "").trim(), installmentNotes(), purchaseItemsNote()].filter(Boolean).join("\n");
     const item={
-      id:$("customerEditId").value || "",
+      id:existingId,
       customerName:$("customerName").value.trim(),
       phone:$("customerPhone").value.trim(),
       products:$("customerProducts").value.trim(),
@@ -794,7 +822,7 @@ async function saveCustomerForm(e){
       notes
     };
     await saveCustomerRemote(item);
-    await deductCustomerItemsFromStock();
+    await adjustStockForCustomerItems(previousItems,nextItems);
     resetCustomerForm();
     renderAll();
     showPage("customers");
