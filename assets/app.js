@@ -159,7 +159,7 @@ function fallbackProductImage(p){
     [["clary sage", "clarycalm", "sálvia-esclareia", "salvia-esclareia", "sálvia esclareia", "salvia esclareia"], "assets/produtos/real-clary-sage.jpg"],
     [["cilantro", "coentro", "coriander"], "assets/produtos/real-coriander.jpg"],
     [["lemongrass", "capim-limão", "capim-limao"], "assets/produtos/real-lemongrass.jpg"],
-    [["lime", "lima"], "assets/produtos/real-lime.jpg"],
+    [["lime -", "lime oil"], "assets/produtos/real-lime.jpg"],
     [["citronella", "terashield", "terrashield"], "assets/produtos/real-citronella.jpg"],
     [["black spruce", "douglas fir", "siberian fir", "cypress", "cipreste", "abeto", "pinheiro"], "assets/produtos/real-eucalyptus.jpg"],
     [["wintergreen"], "assets/produtos/real-mint.jpg"],
@@ -206,23 +206,18 @@ function productIcon(p){
     .join("")
     .toUpperCase();
 
-  const links = window.PRODUCT_IMAGE_LINKS || {};
-  const customUrl = links[code] || "";
-  const imageUrl = customUrl || fallbackProductImage(p);
+  const customUrl = "";
+  const imageUrl = fallbackProductImage(p);
   const fallbackUrl = fallbackProductImage(p);
-  const isOfficialImage = Boolean(customUrl);
-  const officialBoxStyle = isOfficialImage ? 'style="height:220px;padding:14px;background:#fbfbfd;display:flex;align-items:center;justify-content:center;"' : "";
-  const officialImageStyle = isOfficialImage ? 'style="width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;object-position:center center;display:block;margin:auto;"' : "";
 
   if (imageUrl) {
     return `
-      <div class="product-icon product-icon-img ${isOfficialImage ? "product-icon-official" : ""}" ${officialBoxStyle}>
+      <div class="product-icon product-icon-img">
         <img
           src="${imageUrl}"
           data-fallback="${fallbackUrl}"
           data-initials="${escapeAttr(initials || "DT")}"
           alt="${escapeAttr(name)}"
-          ${officialImageStyle}
           loading="lazy"
           onerror="
             if (this.src.indexOf(this.dataset.fallback) === -1) {
