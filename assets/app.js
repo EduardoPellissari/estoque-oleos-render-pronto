@@ -13,6 +13,17 @@ function normalizeText(text){ return String(text||"").normalize("NFD").replace(/
 function today(){ return new Date().toISOString().slice(0,10); }
 function show(el){ if(el) el.classList.remove("hidden"); }
 function hide(el){ if(el) el.classList.add("hidden"); }
+function addDays(date, days){
+  const d=new Date(`${date || today()}T00:00:00`);
+  d.setDate(d.getDate()+Number(days||0));
+  return d.toISOString().slice(0,10);
+}
+function daysUntil(date){
+  if(!date) return null;
+  const target=new Date(`${date}T00:00:00`);
+  const now=new Date(`${today()}T00:00:00`);
+  return Math.round((target-now)/(1000*60*60*24));
+}
 
 async function request(url, options={}){
   const res = await fetch(url, options);
@@ -324,6 +335,7 @@ function syncCustomerPurchaseSummary(){
   productsEl.value=customerPurchaseItems.map(customerPurchaseLine).join("\n");
   amountEl.value=total ? total.toFixed(2) : "";
   renderCustomerSelectedProducts();
+  renderInstallmentPreview();
 }
 
 function renderCustomerSelectedProducts(){
@@ -376,6 +388,33 @@ function removeCustomerPurchaseItem(index){
   syncCustomerPurchaseSummary();
 }
 
+function buildInstallmentPlan(){
+  const amount=Number($("customerAmount") ? $("customerAmount").value : 0);
+  const count=Math.max(1, Number($("customerInstallments") ? $("customerInstallments").value : 1));
+  const gap=Number($("customerInstallmentGap") ? $("customerInstallmentGap").value : 30);
+  const firstDate=$("customerDueDate") ? ($("customerDueDate").value || today()) : today();
+  const part=count ? amount/count : amount;
+  return Array.from({length:count},(_,i)=>({number:i+1,date:addDays(firstDate,i*gap),amount:part}));
+}
+
+function renderInstallmentPreview(){
+  const wrap=$("installmentPreview");
+  if(!wrap) return;
+  const amount=Number($("customerAmount") ? $("customerAmount").value : 0);
+  const count=Math.max(1, Number($("customerInstallments") ? $("customerInstallments").value : 1));
+  if(!amount || count<=1){
+    wrap.innerHTML="";
+    return;
+  }
+  wrap.innerHTML=buildInstallmentPlan().map(p=>`<span>${p.number}x • ${p.date} • ${money(p.amount)}</span>`).join("");
+}
+
+function installmentNotes(){
+  const count=Math.max(1, Number($("customerInstallments") ? $("customerInstallments").value : 1));
+  if(count<=1) return "";
+  return `Parcelamento: ${buildInstallmentPlan().map(p=>`${p.number}/${count} em ${p.date}: ${money(p.amount)}`).join(" | ")}`;
+}
+
 function showPage(page){
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
   document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
@@ -401,6 +440,34 @@ function filteredStock(){
 function statusLabel(status){
   const labels={pending:"Pendente",partial:"Parcial",paid:"Pago"};
   return labels[status] || "Pendente";
+}
+
+function billingState(customer){
+  if(customer.status==="paid") return "paid";
+  const diff=daysUntil(customer.dueDate);
+  if(diff===null) return "open";
+  if(diff<0) return "overdue";
+  if(diff===0) return "today";
+  if(diff<=3) return "soon";
+  return "open";
+}
+
+function billingLabel(customer){
+  const labels={paid:"Pago",overdue:"Vencido",today:"Cobrar hoje",soon:"Próximo",open:statusLabel(customer.status)};
+  return labels[billingState(customer)] || statusLabel(customer.status);
+}
+
+function whatsappLink(customer){
+  const phone=String(customer.phone || "").replace(/\D/g,"");
+  const text=[
+    `Olá, ${customer.customerName || ""}!`,
+    `Passando para lembrar da compra dos óleos:`,
+    customer.products || "-",
+    `Valor: ${money(customer.amount)}`,
+    customer.dueDate ? `Data combinada: ${customer.dueDate}` : "",
+    `Obrigado!`
+  ].filter(Boolean).join("\n");
+  return `https://wa.me/${phone ? `55${phone.replace(/^55/,"")}` : ""}?text=${encodeURIComponent(text)}`;
 }
 
 function filteredCustomers(){
@@ -471,14 +538,15 @@ function renderCustomers(){
   if($("customerStatusText")){
     $("customerStatusText").textContent = `${customers.length} cliente(s) • ${money(pending)} em aberto • ${money(paid)} pago(s).`;
   }
+  renderCustomerHistory();
   $("emptyCustomers").classList.toggle("hidden", rows.length>0);
-  wrap.innerHTML=rows.map(i=>`<article class="customer-card">
+  wrap.innerHTML=rows.map(i=>`<article class="customer-card billing-${billingState(i)}">
     <div class="customer-card-head">
       <div>
         <h3>${escapeHtml(i.customerName || "-")}</h3>
         <span>${escapeHtml(i.phone || "Sem telefone")}</span>
       </div>
-      <strong class="tag ${i.status==="paid" ? "" : "warn"}">${statusLabel(i.status)}</strong>
+      <strong class="tag ${i.status==="paid" ? "" : "warn"}">${billingLabel(i)}</strong>
     </div>
     <p>${escapeHtml(i.products || "-")}</p>
     <div class="customer-meta">
@@ -488,10 +556,27 @@ function renderCustomers(){
     </div>
     ${i.notes ? `<div class="customer-notes">${escapeHtml(i.notes)}</div>` : ""}
     <div class="row-actions">
+      <a class="mini whatsapp" href="${whatsappLink(i)}" target="_blank" rel="noopener">WhatsApp</a>
       <button class="mini" onclick="editCustomer('${i.id}')">Editar</button>
       <button class="mini danger" onclick="removeCustomer('${i.id}')">Excluir</button>
     </div>
   </article>`).join("");
+}
+
+function renderCustomerHistory(){
+  const wrap=$("customerHistory");
+  if(!wrap) return;
+  const map={};
+  customers.forEach(i=>{
+    const key=normalizeText(i.customerName || "Sem nome");
+    if(!map[key]) map[key]={name:i.customerName || "Sem nome",count:0,open:0,paid:0,last:""};
+    map[key].count += 1;
+    if(i.status==="paid") map[key].paid += Number(i.amount||0);
+    else map[key].open += Number(i.amount||0);
+    if(String(i.purchaseDate || "").localeCompare(map[key].last)>0) map[key].last=i.purchaseDate || "";
+  });
+  const rows=Object.values(map).sort((a,b)=>b.open-a.open || b.count-a.count).slice(0,6);
+  wrap.innerHTML=rows.length ? rows.map(i=>`<div class="history-chip"><strong>${escapeHtml(i.name)}</strong><span>${i.count} compra(s) • aberto ${money(i.open)} • pago ${money(i.paid)}</span></div>`).join("") : "";
 }
 
 function renderMetrics(){
@@ -499,10 +584,18 @@ function renderMetrics(){
   const units=stock.reduce((s,i)=>s+Number(i.qty||0),0);
   const value=stock.reduce((s,i)=>s+(Number(i.qty||0)*Number(i.price||0)),0);
   const low=stock.filter(i=>Number(i.qty||0)<=2).length;
+  const receivable=customers.filter(i=>i.status!=="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  const paid=customers.filter(i=>i.status==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  const overdue=customers.filter(i=>billingState(i)==="overdue").length;
+  const dueToday=customers.filter(i=>billingState(i)==="today").length;
   $("mProducts").textContent=products;
   $("mUnits").textContent=units;
   $("mValue").textContent=money(value);
   $("mLow").textContent=low;
+  if($("mReceivable")) $("mReceivable").textContent=money(receivable);
+  if($("mPaid")) $("mPaid").textContent=money(paid);
+  if($("mOverdue")) $("mOverdue").textContent=overdue;
+  if($("mDueToday")) $("mDueToday").textContent=dueToday;
   $("summary").innerHTML=`<div class="report-item">Você tem <strong>${products}</strong> produto(s), totalizando <strong>${units}</strong> unidade(s) e <strong>${money(value)}</strong> em estoque.</div>`;
 }
 
@@ -539,11 +632,92 @@ function renderReports(){
     return diff<=60;
   }).sort((a,b)=>String(a.expiry).localeCompare(String(b.expiry)));
   $("expiryReport").innerHTML=expiring.length?expiring.map(i=>`<div class="report-item"><strong>${i.productName}</strong><br>Validade: ${i.expiry}</div>`).join(""):`<div class="report-item">Sem produtos vencendo nos próximos 60 dias.</div>`;
+  const month=today().slice(0,7);
+  const monthRows=customers.filter(i=>String(i.purchaseDate || "").startsWith(month));
+  const monthTotal=monthRows.reduce((s,i)=>s+Number(i.amount||0),0);
+  const monthPaid=monthRows.filter(i=>i.status==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  if($("monthlySalesReport")) $("monthlySalesReport").innerHTML=`<div class="report-item"><strong>${monthRows.length}</strong> venda(s) em ${month}<br>Total: ${money(monthTotal)}<br>Recebido: ${money(monthPaid)}</div>`;
+  const billing=customers.filter(i=>i.status!=="paid").sort((a,b)=>String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999"))).slice(0,8);
+  if($("billingReport")) $("billingReport").innerHTML=billing.length?billing.map(i=>`<div class="report-item"><strong>${escapeHtml(i.customerName)}</strong><br>${billingLabel(i)} • ${money(i.amount)} • ${i.dueDate || "sem data"}</div>`).join(""):`<div class="report-item">Nenhuma cobrança em aberto.</div>`;
+}
+
+async function deductCustomerItemsFromStock(){
+  if($("customerEditId").value || !customerPurchaseItems.length) return;
+  const updates=[];
+  customerPurchaseItems.forEach(item=>{
+    const stockItem=stock.find(s=>String(s.productCode || "")===String(item.code || ""));
+    if(stockItem){
+      updates.push({...stockItem, qty:Math.max(0, Number(stockItem.qty||0)-Number(item.qty||0))});
+    }
+  });
+  for(const item of updates) await saveStockRemote(item);
+}
+
+function renderGlobalSearch(){
+  const input=$("globalSearch");
+  const wrap=$("globalSearchResults");
+  if(!input || !wrap) return;
+  const q=normalizeText(input.value);
+  if(!q){
+    hide(wrap);
+    wrap.innerHTML="";
+    return;
+  }
+  const results=[
+    ...customers.filter(i=>normalizeText(`${i.customerName} ${i.phone} ${i.products}`).includes(q)).slice(0,5).map(i=>({type:"Cliente",title:i.customerName,detail:`${money(i.amount)} • ${billingLabel(i)}`,page:"customers"})),
+    ...stock.filter(i=>normalizeText(`${i.productName} ${i.productCode} ${i.category}`).includes(q)).slice(0,5).map(i=>({type:"Estoque",title:i.productName,detail:`${i.qty} un. • ${money(i.price)}`,page:"stock"})),
+    ...getCatalog().filter(i=>normalizeText(`${i.name} ${i.code} ${i.category}`).includes(q)).slice(0,5).map(i=>({type:"Catálogo",title:i.name,detail:`${i.code} • ${money(i.retail)}`,page:"catalog"}))
+  ].slice(0,10);
+  wrap.innerHTML=results.length ? results.map(r=>`<button type="button" onclick="showPage('${r.page}'); hide($('globalSearchResults'));">
+    <span>${r.type}</span><strong>${escapeHtml(r.title || "-")}</strong><small>${escapeHtml(r.detail || "")}</small>
+  </button>`).join("") : `<div class="empty compact">Nada encontrado.</div>`;
+  show(wrap);
+}
+
+function csvEscape(value){
+  return `"${String(value ?? "").replace(/"/g,'""')}"`;
+}
+
+function downloadCsv(filename, headers, rows){
+  const csv=[headers.map(csvEscape).join(","),...rows.map(row=>headers.map(h=>csvEscape(row[h])).join(","))].join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportStockCsv(){
+  downloadCsv(`estoque-${today()}.csv`,["Produto","Codigo","Categoria","Quantidade","Valor unitario","Total","Validade"],stock.map(i=>({
+    Produto:i.productName,
+    Codigo:i.productCode,
+    Categoria:i.category,
+    Quantidade:i.qty,
+    "Valor unitario":i.price,
+    Total:Number(i.qty||0)*Number(i.price||0),
+    Validade:i.expiry
+  })));
+}
+
+function exportCustomersCsv(){
+  downloadCsv(`clientes-${today()}.csv`,["Cliente","Telefone","Produtos","Valor","Compra","Cobrar em","Status","Observacoes"],customers.map(i=>({
+    Cliente:i.customerName,
+    Telefone:i.phone,
+    Produtos:i.products,
+    Valor:i.amount,
+    Compra:i.purchaseDate,
+    "Cobrar em":i.dueDate,
+    Status:billingLabel(i),
+    Observacoes:i.notes
+  })));
 }
 
 async function saveCustomerForm(e){
   e.preventDefault();
   try{
+    const notes=[String($("customerNotes").value || "").trim(), installmentNotes()].filter(Boolean).join("\n");
     const item={
       id:$("customerEditId").value || "",
       customerName:$("customerName").value.trim(),
@@ -553,9 +727,10 @@ async function saveCustomerForm(e){
       purchaseDate:$("customerPurchaseDate").value || today(),
       dueDate:$("customerDueDate").value || "",
       status:$("customerStatus").value || "pending",
-      notes:$("customerNotes").value || ""
+      notes
     };
     await saveCustomerRemote(item);
+    await deductCustomerItemsFromStock();
     resetCustomerForm();
     renderAll();
     showPage("customers");
@@ -567,6 +742,8 @@ function resetCustomerForm(){
   $("customerPurchaseDate").value=today();
   $("customerEditId").value="";
   $("customerProductQty").value=1;
+  $("customerInstallments").value=1;
+  $("customerInstallmentGap").value="30";
   customerPurchaseItems=[];
   syncCustomerPurchaseSummary();
   if($("customerStatus")) $("customerStatus").value="pending";
@@ -754,6 +931,12 @@ function bindEvents(){
   $("customerForm").addEventListener("submit", saveCustomerForm);
   $("cancelCustomerEdit").addEventListener("click", resetCustomerForm);
   $("addCustomerProduct").addEventListener("click", addCustomerPurchaseItem);
+  $("customerInstallments").addEventListener("input", renderInstallmentPreview);
+  $("customerInstallmentGap").addEventListener("change", renderInstallmentPreview);
+  $("customerDueDate").addEventListener("change", renderInstallmentPreview);
+  $("globalSearch").addEventListener("input", renderGlobalSearch);
+  $("exportStock").addEventListener("click", exportStockCsv);
+  $("exportCustomers").addEventListener("click", exportCustomersCsv);
   $("customerProductSearch").addEventListener("keydown", e=>{
     if(e.key==="Enter"){
       e.preventDefault();

@@ -48,6 +48,11 @@ aside{background:#191221;color:#fff;padding:24px 18px;display:flex;flex-directio
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:20px}
 header h1{font-size:42px;margin:4px 0;color:var(--pd)}
 header small{color:var(--p);font-weight:900;text-transform:uppercase}
+.global-search-wrap{position:relative;min-width:280px;max-width:420px;flex:1}
+.global-search-results{position:absolute;z-index:12;left:0;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(41,24,72,.16);padding:8px;display:grid;gap:6px}
+.global-search-results button{background:#fff;color:var(--pd);text-align:left;border:1px solid var(--line);display:grid;gap:2px;padding:10px;border-radius:12px}
+.global-search-results span{font-size:10px;text-transform:uppercase;color:var(--p);font-weight:900}
+.global-search-results small{color:var(--muted)}
 .mobile-menu-btn,.mobile-overlay{display:none}
 
 /* Dashboard */
@@ -105,6 +110,16 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 .selected-product span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .empty.compact{padding:12px;font-size:12px}
 input[readonly],textarea[readonly]{background:#faf7ff;color:#4a4252}
+.installment-preview{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+.installment-preview span,.history-chip{background:#faf7ff;border:1px solid var(--line);border-radius:12px;padding:7px 9px;font-size:12px;color:var(--muted);font-weight:800}
+.customer-history{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin:0 0 12px}
+.history-chip strong{display:block;color:var(--pd);margin-bottom:2px}
+.history-chip span{display:block}
+.billing-overdue{border-color:#f3b8c2;background:#fff8f9}
+.billing-today{border-color:#ffd59b;background:#fffaf1}
+.billing-soon{border-color:#f4e1a6;background:#fffdf4}
+.whatsapp{display:inline-flex;align-items:center;text-decoration:none;background:#e9f7ed;color:#1f7a3a}
+.export-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 
 /* Profile */
 .profile-grid{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:18px}
@@ -307,6 +322,12 @@ html, body, .app, .main, .page, .panel{
 
   header small{
     font-size:11px !important;
+  }
+
+  .global-search-wrap{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
   }
 
   .panel{

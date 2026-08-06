@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260806-customer-products">
+  <link rel="stylesheet" href="assets/style.css?v=20260806-daily-tools">
 </head>
 <body>
 <div id="setupBanner" class="setup-banner hidden"></div>
@@ -67,6 +67,10 @@
         <small id="userLabel">Usuário</small>
         <h1 id="pageTitle">Dashboard</h1>
       </div>
+      <div class="global-search-wrap">
+        <input id="globalSearch" placeholder="Buscar cliente, produto ou cobrança...">
+        <div id="globalSearchResults" class="global-search-results hidden"></div>
+      </div>
       <button id="quickAdd" type="button">+ Adicionar produto</button>
     </header>
 
@@ -76,6 +80,10 @@
         <article><span>🧮 Unidades</span><strong id="mUnits">0</strong></article>
         <article><span>💰 Valor total</span><strong id="mValue">R$ 0,00</strong></article>
         <article><span>⚠️ Baixo estoque</span><strong id="mLow">0</strong></article>
+        <article><span>💳 Em aberto</span><strong id="mReceivable">R$ 0,00</strong></article>
+        <article><span>⏰ Vencidas</span><strong id="mOverdue">0</strong></article>
+        <article><span>📅 Cobrar hoje</span><strong id="mDueToday">0</strong></article>
+        <article><span>✅ Recebido</span><strong id="mPaid">R$ 0,00</strong></article>
       </div>
       <div class="dashboard-grid">
         <div class="panel"><h2>Resumo operacional</h2><div id="summary"></div></div>
@@ -194,6 +202,16 @@
             <div><label for="customerDueDate">Cobrar em</label><input id="customerDueDate" type="date"></div>
           </div>
 
+          <div class="two">
+            <div><label for="customerInstallments">Parcelas</label><input id="customerInstallments" type="number" min="1" max="24" step="1" value="1"></div>
+            <div><label for="customerInstallmentGap">Intervalo</label><select id="customerInstallmentGap">
+              <option value="30">Mensal</option>
+              <option value="15">Quinzenal</option>
+              <option value="7">Semanal</option>
+            </select></div>
+          </div>
+          <div id="installmentPreview" class="installment-preview"></div>
+
           <label for="customerNotes">Observações</label>
           <textarea id="customerNotes" placeholder="Forma de pagamento, parcelas, entrega, lembretes..."></textarea>
 
@@ -217,6 +235,7 @@
               </select>
             </div>
           </div>
+          <div id="customerHistory" class="customer-history"></div>
           <div id="customerCards" class="customer-cards"></div>
           <div id="emptyCustomers" class="empty">Nenhum cliente cadastrado.</div>
         </div>
@@ -224,11 +243,17 @@
     </section>
 
     <section id="reports" class="page hidden">
+      <div class="export-actions">
+        <button type="button" class="secondary" id="exportStock">Exportar estoque CSV</button>
+        <button type="button" class="secondary" id="exportCustomers">Exportar clientes CSV</button>
+      </div>
       <div class="reports">
         <div class="panel"><h2>Financeiro</h2><div id="financialReport"></div></div>
         <div class="panel"><h2>Baixo estoque</h2><div id="lowReport"></div></div>
         <div class="panel"><h2>Por categoria</h2><div id="categoryReport"></div></div>
         <div class="panel"><h2>Validade</h2><div id="expiryReport"></div></div>
+        <div class="panel"><h2>Vendas do mês</h2><div id="monthlySalesReport"></div></div>
+        <div class="panel"><h2>Cobranças</h2><div id="billingReport"></div></div>
       </div>
     </section>
 
@@ -281,8 +306,8 @@
   </section>
 </main>
 
-<script src="assets/catalog.js?v=20260806-customer-products"></script>
-<script src="assets/image-links.js?v=20260806-customer-products"></script>
-<script src="assets/app.js?v=20260806-customer-products"></script>
+<script src="assets/catalog.js?v=20260806-daily-tools"></script>
+<script src="assets/image-links.js?v=20260806-daily-tools"></script>
+<script src="assets/app.js?v=20260806-daily-tools"></script>
 </body>
 </html>
