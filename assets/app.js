@@ -236,6 +236,106 @@ function fallbackProductImage(p){
   return match ? match[1] : "assets/produtos/real-lavender.jpg";
 }
 
+function productUseInfo(p){
+  const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
+  const defaultCare = "Uso externo/aromático conforme o rótulo. Dilua quando aplicar na pele e evite olhos, mucosas, crianças pequenas e gestantes sem orientação profissional.";
+  const supplementCare = "Usar somente conforme o rótulo do produto. Em caso de gravidez, uso de medicamentos ou condição de saúde, confirme com um profissional.";
+  const citrusCare = "Pode causar sensibilidade ao sol quando aplicado na pele. Evite exposição solar na região aplicada conforme orientação do rótulo.";
+  const rules = [
+    {
+      keys: ["on guard", "canela", "cinnamon", "cassia", "clove", "cravo", "hygge", "stronger"],
+      use: "Aroma quente de especiarias, muito usado em difusor e rotinas de limpeza aromática.",
+      wellness: "Associado à sensação de ambiente protegido, acolhedor e mais limpo.",
+      care: "Óleos quentes podem sensibilizar a pele. Use bem diluído e evite uso direto em crianças pequenas."
+    },
+    {
+      keys: ["breathe", "air-x", "eucalyptus", "eucalipto", "lemon eucalyptus", "douglas fir", "siberian fir", "black spruce", "abeto", "pinheiro", "cypress", "cipreste"],
+      use: "Aroma fresco para difusão, banho de vapor ou aplicação diluída no peito e nuca.",
+      wellness: "Associado à sensação de respiração mais livre e ambiente renovado.",
+      care: defaultCare
+    },
+    {
+      keys: ["deep blue", "pasttense", "wintergreen", "rescuer", "aromatouch"],
+      use: "Massagem localizada, sempre diluído, principalmente depois de treino, esforço físico ou tensão do dia.",
+      wellness: "Associado à sensação de conforto muscular, relaxamento corporal e alívio de tensão.",
+      care: "Não aplique sobre feridas, olhos ou mucosas. Wintergreen exige cuidado extra e deve seguir o rótulo."
+    },
+    {
+      keys: ["zengest", "ginger", "gengibre", "fennel", "erva doce", "erva-doce", "cardamom", "cardamomo", "peppermint", "hortel", "tamer"],
+      use: "Aroma herbal ou especiado para rotina após refeições, massagem abdominal diluída ou uso conforme rótulo.",
+      wellness: "Associado à sensação de conforto digestivo e leveza no dia a dia.",
+      care: defaultCare
+    },
+    {
+      keys: ["lavender", "lavanda", "serenity", "calmer", "adaptiv", "peace", "console"],
+      use: "Difusão à noite, aromatização do quarto ou aplicação diluída em pulsos, nuca e pés.",
+      wellness: "Associado à sensação de calma, relaxamento emocional e preparo para descanso.",
+      care: defaultCare
+    },
+    {
+      keys: ["lemon", "limão", "limao", "orange", "laranja", "wild orange", "tangerine", "tangerina", "mandarin", "mandarina", "bergamot", "bergamota", "lime", "grapefruit", "toranja", "citrus bliss", "smart & sassy", "metapwr"],
+      use: "Difusão para frescor e energia, aromatização do ambiente e rotinas de limpeza.",
+      wellness: "Associado à sensação de ânimo, clareza e ambiente mais leve.",
+      care: citrusCare
+    },
+    {
+      keys: ["melaleuca", "tea tree", "hd clear", "correct-x"],
+      use: "Cuidados pessoais e rotina de pele, sempre com aplicação pontual e diluída quando necessário.",
+      wellness: "Associado à sensação de pele limpa e cuidado diário.",
+      care: "Faça teste de sensibilidade. Evite olhos, mucosas e uso em áreas irritadas sem orientação."
+    },
+    {
+      keys: ["rosemary", "alecrim", "basil", "manjeric", "thinker", "intune", "motivate", "peppermint", "supermint"],
+      use: "Difusão em momentos de estudo, trabalho, leitura ou organização da rotina.",
+      wellness: "Associado à sensação de foco, energia mental e disposição.",
+      care: defaultCare
+    },
+    {
+      keys: ["copaiba", "copaíba", "frankincense", "olibano", "olíbano", "myrrh", "mirra", "cedarwood", "cedro", "sandalwood", "patchouli", "vetiver", "breu", "guaiacwood", "balance", "steady", "forgive"],
+      use: "Difusão, meditação, massagem diluída e rotinas de cuidado da pele.",
+      wellness: "Associado à sensação de aterramento, equilíbrio e tranquilidade.",
+      care: defaultCare
+    },
+    {
+      keys: ["ylang", "rose", "jasmine", "geranium", "geranio", "passion", "cheer", "elevation", "hope", "whisper", "clary sage", "clarycalm", "salvia", "sálvia"],
+      use: "Aroma floral para difusão, autocuidado, banho aromático ou aplicação diluída.",
+      wellness: "Associado à sensação de acolhimento, bom humor e bem-estar emocional.",
+      care: defaultCare
+    },
+    {
+      keys: ["turmeric", "curcuma", "cúrcuma", "zendocrine", "ddr prime", "lifeshot", "collagen", "colageno", "colágeno", "vm complex", "xeo mega", "daily nutrient", "pastilha", "suplement", "alimento"],
+      use: "Suplemento ou alimento funcional para complementar uma rotina de bem-estar.",
+      wellness: "Associado ao suporte geral da rotina, energia e autocuidado conforme a proposta do produto.",
+      care: supplementCare
+    },
+    {
+      keys: ["difusor", "umidificador", "wooden box", "colecionador", "livro", "kit"],
+      use: "Acessório ou material de apoio para organizar, aprender e usar os óleos no dia a dia.",
+      wellness: "Ajuda a deixar a rotina mais prática, centralizada e consistente.",
+      care: "Siga as instruções do fabricante e mantenha fora do alcance de crianças quando houver peças pequenas."
+    },
+    {
+      keys: ["verage", "veráge", "yarrow", "pūr", "pure", "spa", "condicionador", "shampoo", "creme", "serum", "sérum", "loção", "locao", "sabonete", "coconut", "coco"],
+      use: "Cuidados pessoais para pele, cabelo, hidratação ou banho.",
+      wellness: "Associado à sensação de pele e cabelo bem cuidados, maciez e rotina de autocuidado.",
+      care: "Faça teste de sensibilidade e interrompa o uso se houver irritação."
+    }
+  ];
+  const info = rules.find(rule => rule.keys.some(keyword => text.includes(keyword))) || {
+    use: "Uso aromático ou tópico diluído conforme a orientação do rótulo do produto.",
+    wellness: "Associado a uma rotina de bem-estar, autocuidado e aromatização do ambiente.",
+    care: defaultCare
+  };
+
+  return `<details class="product-info">
+    <summary>Uso e cuidados</summary>
+    <div><strong>Uso:</strong> ${escapeHtml(info.use)}</div>
+    <div><strong>Bem-estar:</strong> ${escapeHtml(info.wellness)}</div>
+    <div><strong>Cuidados:</strong> ${escapeHtml(info.care)}</div>
+    <small>Informação educativa. Não substitui orientação médica e não indica diagnóstico, tratamento, cura ou prevenção de doenças.</small>
+  </details>`;
+}
+
 function productIcon(p){
   const code = p?.code || p?.productCode || "";
   const name = String((p && (p.name || p.productName)) || "DT");
@@ -584,6 +684,7 @@ function renderCatalog(){
     <div class="product-meta"><span>${p.code || "-"}</span><span>${p.size || "-"}</span></div>
     <h3>${p.name || "-"}</h3>
     <p>${p.category || "Sem categoria"}</p>
+    ${productUseInfo(p)}
     <div class="catalog-prices"><span>Venda: ${money(p.retail)}</span><span>Atacado: ${money(p.wholesale)}</span><span>PV: ${p.pv || 0}</span></div>
     <button type="button" onclick="addCatalogToStock('${p.code}')">Adicionar ao estoque</button>
   </article>`).join("");
