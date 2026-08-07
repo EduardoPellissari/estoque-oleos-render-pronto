@@ -236,6 +236,316 @@ function fallbackProductImage(p){
   return match ? match[1] : "assets/produtos/real-lavender.jpg";
 }
 
+function officialProductInfo(p){
+  const code = String(p?.code || p?.productCode || "");
+  const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
+  const topicalCare = "Uso externo. Evite olhos, ouvidos e áreas sensíveis. Em gravidez, tratamento médico ou irritação, procure orientação profissional.";
+  const dilutedCare = "Para uso tópico, dilua em Óleo Carreador doTERRA. Para uso aromático, use 3 a 4 gotas no aromatizador.";
+  const photosensitiveCare = `${dilutedCare} Evite sol ou raios UV na pele após aplicação, conforme orientação do rótulo.`;
+  const entries = [
+    {
+      codes: ["60210367"],
+      keys: ["adaptiv"],
+      source: "https://www.doterra.com/BR/pt_BR/p/adaptiv-oil",
+      use: "Banho de imersão, massagem confortante e inalação nas mãos em momentos de inquietude.",
+      wellness: "Serve para ajudar na adaptação a novos ambientes, tensão do dia a dia e sensação de equilíbrio emocional.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: photosensitiveCare
+    },
+    {
+      codes: ["60210337"],
+      keys: ["adaptiv touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/adaptiv-touch-oil",
+      use: "Aplicar nos punhos, têmporas, ombros ou pescoço e inalar quando precisar se recompor.",
+      wellness: "Serve para tranquilidade, equilíbrio de humor, conforto emocional e energia leve.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60203392"],
+      keys: ["breathe"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-breathe-oil",
+      use: "Aplicar diluído no peito, costas ou planta dos pés; também pode ser difundido à noite.",
+      wellness: "Serve para sensação de vias aéreas limpas, frescor respiratório e ambiente restaurador para dormir.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: "Não trata bronquite, asma, sinusite, pneumonia ou falta de ar. Nesses casos, procure orientação médica."
+    },
+    {
+      codes: ["60206570"],
+      keys: ["breathe touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-breathe-touch",
+      use: "Aplicar no pescoço, peito, costas ou planta dos pés, especialmente na rotina noturna.",
+      wellness: "Serve para aroma suave e refrescante, sensação de vias aéreas limpas e ambiente positivo.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: "Não trata bronquite, asma, sinusite, pneumonia ou falta de ar. Nesses casos, procure orientação médica."
+    },
+    {
+      codes: ["60203394"],
+      keys: ["deep blue"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-deep-blue-oil",
+      use: "Massagem diluída em pés, joelhos, costas, ombros, pescoço, dedos e punhos.",
+      wellness: "Serve para massagem relaxante, sensação refrescante e conforto depois de trabalho ou treino.",
+      mode: "Diluir 1 a 3 gotas em Óleo Carreador doTERRA antes de aplicar na pele.",
+      care: "Não aplique em feridas, olhos ou mucosas. Não substitui avaliação para dores intensas ou persistentes."
+    },
+    {
+      codes: ["60206574"],
+      keys: ["deep blue touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-deep-blue-touch",
+      use: "Aplicar em pequenas áreas, pés, joelhos e costas antes/depois de exercícios ou no fim do dia.",
+      wellness: "Serve para desconfortos musculares do cotidiano, massagem confortante e sensação quente/fria no local.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: "Não aplique em feridas, olhos ou mucosas. Não substitui avaliação para dores intensas ou persistentes."
+    },
+    {
+      codes: ["60203410", "60214244"],
+      keys: ["on guard"],
+      source: "https://www.doterra.com/BR/pt_BR/p/on-guard-oil",
+      use: "Difusão no ambiente ou aplicação tópica diluída quando desejar aroma de especiarias.",
+      wellness: "Serve para aroma energizante, revigorante e sensação de ambiente mais leve.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: "Óleo de especiarias pode sensibilizar a pele. Não é tratamento para infecções, gripe ou imunidade baixa."
+    },
+    {
+      codes: ["60203327", "60214667"],
+      keys: ["lavender lavanda"],
+      source: "https://www.doterra.com/BR/pt_BR/p/lavender-oil",
+      use: "Difusão, banho, perfume natural ou aplicação diluída em áreas de relaxamento.",
+      wellness: "Serve para relaxar, acalmar, apoiar o descanso e cuidar da aparência saudável da pele.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: dilutedCare
+    },
+    {
+      codes: ["60206564"],
+      keys: ["lavender touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-lavender-touch",
+      use: "Aplicar nas têmporas, nuca, pontos de pulsação ou planta dos pés antes de dormir.",
+      wellness: "Serve para efeito calmante, relaxante, sono tranquilo e pequenas irritações na pele.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60203419", "60225674"],
+      keys: ["lemon limao siciliano"],
+      source: "https://www.doterra.com/BR/pt_BR/p/lemon-oil",
+      use: "Difusão para refrescar o ambiente ou aplicação tópica diluída quando quiser aroma cítrico.",
+      wellness: "Serve para energizar, refrescar o ambiente e promover sensação de humor positivo.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: photosensitiveCare
+    },
+    {
+      codes: ["60203323", "60215479"],
+      keys: ["peppermint hortela"],
+      source: "https://www.doterra.com/BR/pt_BR/p/peppermint-oil",
+      use: "Difusão ou aplicação tópica diluída quando quiser aroma mentolado e revigorante.",
+      wellness: "Serve para refrescar, tonificar, despertar os sentidos e apoiar foco na rotina.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: dilutedCare
+    },
+    {
+      codes: ["60206569"],
+      keys: ["peppermint touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-peppermint-touch",
+      use: "Aplicar nas têmporas, nuca ou áreas desejadas para frescor e foco durante o dia.",
+      wellness: "Serve para reduzir sensação de tensão, elevar o humor e promover foco.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60203415", "60214245"],
+      keys: ["wild orange laranja selvagem"],
+      source: "https://www.doterra.com/BR/pt_BR/p/wild-orange-oil",
+      use: "Difusão para aroma doce e cítrico ou aplicação tópica diluída.",
+      wellness: "Serve para criar ambiente refrescante, leve, alegre e energizante.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: photosensitiveCare
+    },
+    {
+      codes: ["60203605", "60215576"],
+      keys: ["copaiba copaiba"],
+      source: "https://www.doterra.com/BR/pt_BR/p/copaiba-oil",
+      use: "Difusão, massagem diluída ou aplicação tópica dentro da rotina de cuidado pessoal.",
+      wellness: "Serve para sensação de leveza, apoio ao cuidado da pele e rotina de bem-estar.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: dilutedCare
+    },
+    {
+      codes: ["60219361"],
+      keys: ["copaiba touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/copaiba-touch-oil",
+      use: "Aplicar diretamente em áreas desejadas como parte da rotina de pele e bem-estar.",
+      wellness: "Serve para hidratação natural, aparência saudável da pele e sensação de leveza.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60203411", "60215519"],
+      keys: ["frankincense olibano"],
+      source: "https://www.doterra.com/BR/pt_BR/p/frankincense-oil",
+      use: "Difusão, meditação, massagem diluída ou aplicação tópica para cuidado da pele.",
+      wellness: "Serve para relaxamento, meditação e suavização da aparência da pele.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: dilutedCare
+    },
+    {
+      codes: ["60206649"],
+      keys: ["frankincense touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-frankincense-touch",
+      use: "Aplicar topicamente durante o dia, em meditação ou na rotina de cuidado da pele.",
+      wellness: "Serve para relaxamento, sensação de bem-estar e pele com aparência mais suave.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60203322", "60214248"],
+      keys: ["lemongrass capim limao"],
+      source: "https://www.doterra.com/BR/pt_BR/p/lemongrass-oil",
+      use: "Massagem diluída, difusão e aplicação após atividades para sensação refrescante.",
+      wellness: "Serve para perspectiva positiva, pele tonificada e massagem confortante.",
+      mode: "Para uso tópico, diluir 1 gota em 10 gotas de Óleo Carreador; para difusão, usar 3 a 4 gotas.",
+      care: "Pode sensibilizar a pele. Use bem diluído e evite olhos, mucosas e áreas sensíveis."
+    },
+    {
+      codes: ["60210370"],
+      keys: ["lemon eucalyptus eucalipto limao"],
+      source: "https://www.doterra.com/BR/pt_BR/p/lemon-eucalyptus-oil",
+      use: "Difusão para ambiente revigorante ou aplicação tópica diluída para sensação refrescante na pele.",
+      wellness: "Serve para aroma purificante, ambiente alegre e pele com sensação de frescor.",
+      mode: "Diluir 1 a 3 gotas para aplicação tópica ou usar 3 a 4 gotas no aromatizador.",
+      care: dilutedCare
+    },
+    {
+      codes: ["60206562"],
+      keys: ["pasttense"],
+      source: "https://www.doterra.com/BR/pt_BR/p/pasttense-oil",
+      use: "Aplicar no pescoço, ombros ou atrás das orelhas quando quiser relaxar.",
+      wellness: "Serve para equilibrar emoções e promover sensação rápida de relaxamento.",
+      mode: "Roll-on para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60214935"],
+      keys: ["zengest touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/zengest-touch-oil",
+      use: "Aplicar no abdômen em massagem suave, em casa, no trabalho ou em viagens.",
+      wellness: "Serve para massagem abdominal relaxante e sensação de conforto digestivo.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: "Não trata gastrite, refluxo, intoxicação alimentar ou dor persistente. Use conforme rótulo."
+    },
+    {
+      codes: ["60206613"],
+      keys: ["melaleuca touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-melaleuca-touch",
+      use: "Aplicar pontualmente na pele ou unhas como parte da rotina de limpeza e cuidado.",
+      wellness: "Serve para purificar a aparência da pele e unhas e apoiar pele com aspecto saudável.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: "Não trata acne, micose, feridas ou infecções. Evite olhos, mucosas e áreas irritadas."
+    },
+    {
+      codes: ["60206614"],
+      keys: ["oregano touch"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-oregano-touch",
+      use: "Aplicar em pequenas áreas desejadas, com cuidado, por ser um óleo potente.",
+      wellness: "Serve para rotina tópica purificante em uma versão já diluída para peles sensíveis.",
+      mode: "Roll-on pronto para uso externo sobre a pele limpa e seca.",
+      care: "Óleo potente. Não use em pele ferida ou irritada; não substitui tratamento para infecções."
+    },
+    {
+      codes: ["60206659"],
+      keys: ["hd clear"],
+      source: "https://www.doterra.com/BR/pt_BR/p/hd-clear-oil",
+      use: "Aplicar camada fina em áreas específicas da face ou corpo, conforme rotina de pele.",
+      wellness: "Serve para controle da oleosidade, pele limpa e cuidado localizado.",
+      mode: "Uso tópico externo conforme orientação do produto.",
+      care: "Não trata acne severa, infecção ou lesões. Suspenda em caso de irritação."
+    },
+    {
+      codes: ["60206670"],
+      keys: ["intune"],
+      source: "https://www.doterra.com/BR/pt_BR/p/intune-oil",
+      use: "Aplicar durante trabalho, estudo ou tarefas que exigem atenção.",
+      wellness: "Serve para foco, concentração e sensação de alerta com aroma relaxante e edificante.",
+      mode: "Roll-on para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60206563"],
+      keys: ["clarycalm"],
+      source: "https://www.doterra.com/BR/pt_BR/p/clarycalm-oil",
+      use: "Aplicar topicamente em períodos de desconforto feminino ou tensão do dia a dia.",
+      wellness: "Serve para sensação confortante, aconchegante, fresca e humor mais positivo.",
+      mode: "Roll-on para uso externo sobre a pele limpa e seca.",
+      care: topicalCare
+    },
+    {
+      codes: ["60209560"],
+      keys: ["brave"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-brave-oil",
+      use: "Aplicar na nuca e pulsos junto de afirmações positivas ou antes de situações desafiadoras.",
+      wellness: "Serve para confiança, coragem, energia e sensação de recomeço.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    },
+    {
+      codes: ["60209630"],
+      keys: ["calmer"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-calmer-oil",
+      use: "Aplicar como parte do ritual noturno, antes de descanso ou sono.",
+      wellness: "Serve para atmosfera calma, serenidade, paz e tranquilidade antes de dormir.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    },
+    {
+      codes: ["60209586"],
+      keys: ["rescuer"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-rescuer-oil",
+      use: "Aplicar em pernas, mãos ou ombros depois de exercícios ou atividades intensas.",
+      wellness: "Serve para massagem relaxante, sensação refrescante e pernas cansadas.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    },
+    {
+      codes: ["60209588"],
+      keys: ["steady"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-steady-oil",
+      use: "Aplicar nos punhos ou dorso das mãos em pausas durante a rotina.",
+      wellness: "Serve para atmosfera equilibrada, presença e sensações de relaxamento.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    },
+    {
+      codes: ["60209587"],
+      keys: ["stronger"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-stronger-oil",
+      use: "Aplicar nas mãos, joelhos ou pés após atividades intensas ou em dias corridos.",
+      wellness: "Serve para vitalidade, bem-estar, conforto emocional e aparência saudável da pele.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    },
+    {
+      codes: ["60210369"],
+      keys: ["tamer"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-tamer-oil",
+      use: "Aplicar no abdômen em massagem suave quando quiser conforto durante a rotina.",
+      wellness: "Serve para massagem abdominal confortante e sensação de bem-estar em viagens ou no dia a dia.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: "Não trata gastrite, refluxo, enjoo persistente ou dor abdominal. Busque orientação quando necessário."
+    },
+    {
+      codes: ["60209589"],
+      keys: ["thinker"],
+      source: "https://www.doterra.com/BR/pt_BR/p/doterra-thinker-oil",
+      use: "Aplicar em momentos de estudo, tarefas, leitura ou distração.",
+      wellness: "Serve para atenção, foco e sensação de estar mais concentrado.",
+      mode: "Exclusivamente tópico. Aplicar na região desejada.",
+      care: topicalCare
+    }
+  ];
+  const codeMatch = entries.find(entry => entry.codes.includes(code));
+  if (codeMatch) return codeMatch;
+  return entries.find(entry => entry.keys.some(keyword => text.includes(keyword))) || null;
+}
+
 function productUseInfo(p){
   const text = normalizeText(`${p?.name || ""} ${p?.category || ""} ${p?.size || ""}`);
   const defaultCare = "Uso externo/aromático conforme o rótulo. Dilua quando aplicar na pele e evite olhos, mucosas, crianças pequenas e gestantes sem orientação profissional.";
@@ -321,18 +631,23 @@ function productUseInfo(p){
       care: "Faça teste de sensibilidade e interrompa o uso se houver irritação."
     }
   ];
-  const info = rules.find(rule => rule.keys.some(keyword => text.includes(keyword))) || {
+  const info = officialProductInfo(p) || rules.find(rule => rule.keys.some(keyword => text.includes(keyword))) || {
     use: "Uso aromático ou tópico diluído conforme a orientação do rótulo do produto.",
     wellness: "Serve para aromatizar o ambiente, apoiar autocuidado e criar uma rotina de bem-estar.",
     care: defaultCare
   };
+  const modeLine = info.mode ? `<div><strong>Modo:</strong> ${escapeHtml(info.mode)}</div>` : "";
+  const sourceLine = info.source
+    ? `<small>Fonte: <a href="${escapeAttr(info.source)}" target="_blank" rel="noopener">doTERRA Brasil</a>. Informação educativa, sem indicação de diagnóstico, tratamento, cura ou prevenção de doenças.</small>`
+    : `<small>Informação educativa. Não substitui orientação médica e não indica diagnóstico, tratamento, cura ou prevenção de doenças.</small>`;
 
   return `<details class="product-info">
     <summary>Uso e cuidados</summary>
     <div><strong>Uso:</strong> ${escapeHtml(info.use)}</div>
     <div><strong>Serve para:</strong> ${escapeHtml(info.wellness)}</div>
+    ${modeLine}
     <div><strong>Cuidados:</strong> ${escapeHtml(info.care)}</div>
-    <small>Informação educativa. Não substitui orientação médica e não indica diagnóstico, tratamento, cura ou prevenção de doenças.</small>
+    ${sourceLine}
   </details>`;
 }
 
