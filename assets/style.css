@@ -1290,7 +1290,9 @@ html, body, .app, .main, .page, .panel{
     width:100% !important;
     max-width:100% !important;
     overflow-x:hidden !important;
-    touch-action:pan-y;
+    touch-action:pan-y manipulation;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
   }
 
   body{
