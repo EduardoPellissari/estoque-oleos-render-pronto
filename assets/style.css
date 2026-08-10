@@ -641,24 +641,20 @@ html, body, .app, .main, .page, .panel{
   }
 
   .main{
-    padding:calc(56px + env(safe-area-inset-top)) 12px calc(var(--mobile-bar) + 22px + env(safe-area-inset-bottom)) !important;
+    padding:calc(10px + env(safe-area-inset-top)) 12px calc(var(--mobile-bar) + 22px + env(safe-area-inset-bottom)) !important;
   }
 
   header{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    z-index:25;
+    position:relative;
+    z-index:5;
     display:grid !important;
     grid-template-columns:1fr auto;
     align-items:center !important;
-    min-height:calc(54px + env(safe-area-inset-top));
-    padding:calc(7px + env(safe-area-inset-top)) 10px 7px 64px;
-    margin:0 !important;
-    background:rgba(248,244,253,.92);
-    backdrop-filter:blur(16px);
-    border-bottom:1px solid rgba(236,229,242,.9);
+    min-height:48px;
+    padding:0 0 0 56px;
+    margin:0 0 8px !important;
+    background:transparent;
+    border-bottom:0;
   }
 
   header > div:first-child{
@@ -714,7 +710,7 @@ html, body, .app, .main, .page, .panel{
     position:fixed;
     left:12px;
     right:12px;
-    top:calc(106px + env(safe-area-inset-top));
+    top:calc(96px + env(safe-area-inset-top));
     max-height:54vh;
     overflow:auto;
   }
