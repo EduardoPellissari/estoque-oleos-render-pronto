@@ -985,3 +985,245 @@ html, body, .app, .main, .page, .panel{
     font-size:26px !important;
   }
 }
+
+/* Mobile readability pass */
+@media(max-width:768px){
+  body{
+    color:#251c31;
+  }
+
+  .main{
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+
+  header{
+    grid-template-columns:minmax(0,1fr) auto !important;
+    min-height:44px !important;
+    margin-bottom:10px !important;
+  }
+
+  header h1{
+    font-size:20px !important;
+    line-height:1.18 !important;
+    white-space:normal !important;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+  }
+
+  #quickAdd{
+    min-width:86px !important;
+    height:42px !important;
+    font-size:13px !important;
+  }
+
+  .mobile-search-slot{
+    margin-bottom:14px !important;
+  }
+
+  .mobile-search-slot input{
+    min-height:48px !important;
+    font-size:15px !important;
+  }
+
+  .panel{
+    padding:16px !important;
+    border-radius:16px !important;
+  }
+
+  .panel h2{
+    font-size:20px !important;
+    line-height:1.22 !important;
+    margin-top:0;
+  }
+
+  .panel p,
+  .empty,
+  .report-item,
+  .selected,
+  .customer-card p{
+    font-size:14px !important;
+    line-height:1.45 !important;
+  }
+
+  label{
+    font-size:14px !important;
+    line-height:1.25 !important;
+  }
+
+  input,
+  textarea,
+  select,
+  button{
+    font-size:16px !important;
+  }
+
+  .quick-actions{
+    gap:9px !important;
+  }
+
+  .quick-actions button{
+    min-height:66px !important;
+    padding:12px !important;
+    grid-template-columns:42px minmax(0,1fr);
+  }
+
+  .quick-actions span{
+    width:42px !important;
+    height:42px !important;
+    font-size:21px !important;
+  }
+
+  .quick-actions strong{
+    font-size:15px !important;
+  }
+
+  .quick-actions small{
+    font-size:12px !important;
+  }
+
+  .metrics{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .metrics article{
+    min-height:86px !important;
+    padding:13px !important;
+  }
+
+  .metrics span{
+    font-size:12px !important;
+  }
+
+  .metrics strong{
+    font-size:21px !important;
+    word-break:break-word;
+  }
+
+  .catalog-grid{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  .product-card{
+    padding:14px !important;
+    gap:10px !important;
+    border-radius:16px !important;
+  }
+
+  .product-icon-img{
+    height:150px !important;
+    border-radius:14px !important;
+  }
+
+  .product-card h3{
+    font-size:17px !important;
+    line-height:1.25 !important;
+  }
+
+  .product-card p{
+    font-size:14px !important;
+    line-height:1.35 !important;
+  }
+
+  .product-meta span,
+  .catalog-prices span{
+    font-size:12px !important;
+    line-height:1.2 !important;
+    padding:6px 8px !important;
+  }
+
+  .catalog-prices{
+    grid-template-columns:1fr 1fr !important;
+    gap:6px !important;
+  }
+
+  .product-info summary{
+    font-size:14px !important;
+    padding:10px !important;
+  }
+
+  .product-info div{
+    font-size:13px !important;
+    line-height:1.38 !important;
+    padding:0 10px 9px !important;
+  }
+
+  .product-info small{
+    font-size:12px !important;
+    line-height:1.35 !important;
+    padding:9px 10px !important;
+  }
+
+  .product-card button{
+    min-height:46px;
+    font-size:14px !important;
+  }
+
+  .customer-card{
+    padding:14px !important;
+    gap:11px !important;
+    border-radius:16px !important;
+  }
+
+  .customer-card h3{
+    font-size:18px !important;
+    line-height:1.22 !important;
+  }
+
+  .customer-card-head span{
+    font-size:13px !important;
+    line-height:1.3 !important;
+  }
+
+  .customer-meta span,
+  .customer-notes,
+  .history-chip{
+    font-size:13px !important;
+    line-height:1.35 !important;
+  }
+
+  .customer-meta strong{
+    font-size:20px !important;
+  }
+
+  .row-actions{
+    gap:9px !important;
+  }
+
+  .mini,
+  .whatsapp{
+    min-height:46px !important;
+    font-size:14px !important;
+  }
+
+  #stock tr{
+    padding:14px !important;
+    gap:10px !important;
+  }
+
+  #stock td{
+    grid-template-columns:minmax(86px,.38fr) minmax(0,1fr) !important;
+    font-size:14px !important;
+    line-height:1.35 !important;
+  }
+
+  #stock td::before{
+    font-size:11px !important;
+  }
+
+  #stock td:first-child strong{
+    font-size:17px !important;
+  }
+}
+
+@media(max-width:370px){
+  .metrics{
+    grid-template-columns:1fr !important;
+  }
+
+  .catalog-prices{
+    grid-template-columns:1fr !important;
+  }
+}
