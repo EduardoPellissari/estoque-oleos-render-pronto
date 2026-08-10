@@ -899,8 +899,7 @@ function showPage(page){
   document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
   const pageEl=$(page);
   if(pageEl) pageEl.classList.remove("hidden");
-  const nav=document.querySelector(`.nav[data-page="${page}"]`);
-  if(nav) nav.classList.add("active");
+  document.querySelectorAll(`.nav[data-page="${page}"]`).forEach(nav=>nav.classList.add("active"));
   const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil"};
   $("pageTitle").textContent=titles[page] || "Sistema";
   closeMobileMenu();
