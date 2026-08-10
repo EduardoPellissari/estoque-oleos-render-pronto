@@ -1053,6 +1053,32 @@ html, body, .app, .main, .page, .panel{
     padding:12px 13px !important;
   }
 
+  input[type="date"]{
+    display:block;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    height:48px !important;
+    line-height:1.2 !important;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+
+  input[type="date"]::-webkit-date-and-time-value{
+    text-align:left;
+    min-height:1.2em;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator{
+    flex-shrink:0;
+    margin-left:4px;
+  }
+
+  #stock #stockForm .two > div{
+    min-width:0 !important;
+    width:100% !important;
+  }
+
   label{
     margin:11px 0 6px !important;
   }
