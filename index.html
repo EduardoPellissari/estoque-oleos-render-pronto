@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260810-no-zoom">
+  <link rel="stylesheet" href="assets/style.css?v=20260810-br-dates">
 </head>
 <body>
 <div id="setupBanner" class="setup-banner hidden"></div>
@@ -127,8 +127,8 @@
           </div>
 
           <div class="two">
-            <div><label for="entryDate">Data de entrada</label><input id="entryDate" type="date" required></div>
-            <div><label for="expiry">Validade</label><input id="expiry" type="date"></div>
+            <div><label for="entryDate">Data de entrada</label><input id="entryDate" type="text" inputmode="numeric" maxlength="10" placeholder="dd/mm/aaaa" required></div>
+            <div><label for="expiry">Validade</label><input id="expiry" type="text" inputmode="numeric" maxlength="10" placeholder="dd/mm/aaaa"></div>
           </div>
 
           <label for="notes">Observações</label>
@@ -208,8 +208,8 @@
           </div>
 
           <div class="two">
-            <div><label for="customerPurchaseDate">Data da compra</label><input id="customerPurchaseDate" type="date" required></div>
-            <div><label for="customerDueDate">Cobrar em</label><input id="customerDueDate" type="date"></div>
+            <div><label for="customerPurchaseDate">Data da compra</label><input id="customerPurchaseDate" type="text" inputmode="numeric" maxlength="10" placeholder="dd/mm/aaaa" required></div>
+            <div><label for="customerDueDate">Cobrar em</label><input id="customerDueDate" type="text" inputmode="numeric" maxlength="10" placeholder="dd/mm/aaaa"></div>
           </div>
 
           <div class="two">
@@ -316,8 +316,8 @@
   </section>
 </main>
 
-<script src="assets/catalog.js?v=20260810-no-zoom"></script>
+<script src="assets/catalog.js?v=20260810-br-dates"></script>
 <script src="assets/image-links.js?v=20260806-stock-delta"></script>
-<script src="assets/app.js?v=20260810-no-zoom"></script>
+<script src="assets/app.js?v=20260810-br-dates"></script>
 </body>
 </html>

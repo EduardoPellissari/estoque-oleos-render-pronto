@@ -11,6 +11,44 @@ const SESSION_KEY = "essenza_session_uid";
 function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
 function normalizeText(text){ return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[®™️]/g,"").trim(); }
 function today(){ return new Date().toISOString().slice(0,10); }
+function formatDateBR(value){
+  if(!value) return "";
+  const text=String(value).trim();
+  const iso=text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  const br=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(br) return `${br[1].padStart(2,"0")}/${br[2].padStart(2,"0")}/${br[3]}`;
+  return text;
+}
+function parseDateBR(value){
+  const text=String(value || "").trim();
+  if(!text) return "";
+  const iso=text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(iso) return text;
+  const digits=text.replace(/\D/g,"");
+  if(digits.length!==8) return "";
+  const day=digits.slice(0,2);
+  const month=digits.slice(2,4);
+  const year=digits.slice(4,8);
+  const date=new Date(`${year}-${month}-${day}T00:00:00`);
+  if(Number.isNaN(date.getTime())) return "";
+  if(date.getFullYear()!==Number(year) || date.getMonth()+1!==Number(month) || date.getDate()!==Number(day)) return "";
+  return `${year}-${month}-${day}`;
+}
+function dateFieldValue(id,fallback=""){
+  const el=$(id);
+  if(!el) return fallback;
+  return parseDateBR(el.value) || fallback;
+}
+function setDateField(id,value){
+  const el=$(id);
+  if(el) el.value=formatDateBR(value);
+}
+function maskDateInput(el){
+  const digits=String(el.value || "").replace(/\D/g,"").slice(0,8);
+  const parts=[digits.slice(0,2),digits.slice(2,4),digits.slice(4,8)].filter(Boolean);
+  el.value=parts.join("/");
+}
 function show(el){ if(el) el.classList.remove("hidden"); }
 function hide(el){ if(el) el.classList.add("hidden"); }
 function addDays(date, days){
@@ -871,7 +909,7 @@ function buildInstallmentPlan(){
   const amount=Number($("customerAmount") ? $("customerAmount").value : 0);
   const count=Math.max(1, Number($("customerInstallments") ? $("customerInstallments").value : 1));
   const gap=Number($("customerInstallmentGap") ? $("customerInstallmentGap").value : 30);
-  const firstDate=$("customerDueDate") ? ($("customerDueDate").value || today()) : today();
+  const firstDate=$("customerDueDate") ? dateFieldValue("customerDueDate",today()) : today();
   const part=count ? amount/count : amount;
   return Array.from({length:count},(_,i)=>({number:i+1,date:addDays(firstDate,i*gap),amount:part}));
 }
@@ -885,13 +923,13 @@ function renderInstallmentPreview(){
     wrap.innerHTML="";
     return;
   }
-  wrap.innerHTML=buildInstallmentPlan().map(p=>`<span>${p.number}x • ${p.date} • ${money(p.amount)}</span>`).join("");
+  wrap.innerHTML=buildInstallmentPlan().map(p=>`<span>${p.number}x • ${formatDateBR(p.date)} • ${money(p.amount)}</span>`).join("");
 }
 
 function installmentNotes(){
   const count=Math.max(1, Number($("customerInstallments") ? $("customerInstallments").value : 1));
   if(count<=1) return "";
-  return `Parcelamento: ${buildInstallmentPlan().map(p=>`${p.number}/${count} em ${p.date}: ${money(p.amount)}`).join(" | ")}`;
+  return `Parcelamento: ${buildInstallmentPlan().map(p=>`${p.number}/${count} em ${formatDateBR(p.date)}: ${money(p.amount)}`).join(" | ")}`;
 }
 
 function showPage(page){
@@ -942,7 +980,7 @@ function whatsappLink(customer){
     `Passando para lembrar da compra dos óleos:`,
     customer.products || "-",
     `Valor: ${money(customer.amount)}`,
-    customer.dueDate ? `Data combinada: ${customer.dueDate}` : "",
+    customer.dueDate ? `Data combinada: ${formatDateBR(customer.dueDate)}` : "",
     `Obrigado!`
   ].filter(Boolean).join("\n");
   return `https://wa.me/${phone ? `55${phone.replace(/^55/,"")}` : ""}?text=${encodeURIComponent(text)}`;
@@ -972,7 +1010,7 @@ function renderStock(){
       <td data-label="Quantidade"><span class="tag ${low ? "warn" : ""}">${i.qty || 0}</span></td>
       <td data-label="Valor unitário">${money(i.price)}</td>
       <td data-label="Total">${money(total)}</td>
-      <td data-label="Validade">${i.expiry || "-"}</td>
+      <td data-label="Validade">${formatDateBR(i.expiry) || "-"}</td>
       <td data-label="Ações"><div class="row-actions"><button class="mini" onclick="editItem('${i.id}')">Editar</button><button class="mini danger" onclick="removeItem('${i.id}')">Excluir</button></div></td>
     </tr>`;
   }).join("");
@@ -1029,8 +1067,8 @@ function renderCustomers(){
     </div>
     <p>${escapeHtml(i.products || "-")}</p>
     <div class="customer-meta">
-      <span>Compra: ${escapeHtml(i.purchaseDate || "-")}</span>
-      <span>Cobrar: ${escapeHtml(i.dueDate || "-")}</span>
+      <span>Compra: ${escapeHtml(formatDateBR(i.purchaseDate) || "-")}</span>
+      <span>Cobrar: ${escapeHtml(formatDateBR(i.dueDate) || "-")}</span>
       <strong>${money(i.amount)}</strong>
     </div>
     ${cleanCustomerNotes(i.notes) ? `<div class="customer-notes">${escapeHtml(cleanCustomerNotes(i.notes))}</div>` : ""}
@@ -1110,14 +1148,14 @@ function renderReports(){
     const diff=(new Date(i.expiry)-now)/(1000*60*60*24);
     return diff<=60;
   }).sort((a,b)=>String(a.expiry).localeCompare(String(b.expiry)));
-  $("expiryReport").innerHTML=expiring.length?expiring.map(i=>`<div class="report-item"><strong>${i.productName}</strong><br>Validade: ${i.expiry}</div>`).join(""):`<div class="report-item">Sem produtos vencendo nos próximos 60 dias.</div>`;
+  $("expiryReport").innerHTML=expiring.length?expiring.map(i=>`<div class="report-item"><strong>${i.productName}</strong><br>Validade: ${formatDateBR(i.expiry)}</div>`).join(""):`<div class="report-item">Sem produtos vencendo nos próximos 60 dias.</div>`;
   const month=today().slice(0,7);
   const monthRows=customers.filter(i=>String(i.purchaseDate || "").startsWith(month));
   const monthTotal=monthRows.reduce((s,i)=>s+Number(i.amount||0),0);
   const monthPaid=monthRows.filter(i=>i.status==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
-  if($("monthlySalesReport")) $("monthlySalesReport").innerHTML=`<div class="report-item"><strong>${monthRows.length}</strong> venda(s) em ${month}<br>Total: ${money(monthTotal)}<br>Recebido: ${money(monthPaid)}</div>`;
+  if($("monthlySalesReport")) $("monthlySalesReport").innerHTML=`<div class="report-item"><strong>${monthRows.length}</strong> venda(s) em ${formatDateBR(`${month}-01`).slice(3)}<br>Total: ${money(monthTotal)}<br>Recebido: ${money(monthPaid)}</div>`;
   const billing=customers.filter(i=>i.status!=="paid").sort((a,b)=>String(a.dueDate || "9999").localeCompare(String(b.dueDate || "9999"))).slice(0,8);
-  if($("billingReport")) $("billingReport").innerHTML=billing.length?billing.map(i=>`<div class="report-item"><strong>${escapeHtml(i.customerName)}</strong><br>${billingLabel(i)} • ${money(i.amount)} • ${i.dueDate || "sem data"}</div>`).join(""):`<div class="report-item">Nenhuma cobrança em aberto.</div>`;
+  if($("billingReport")) $("billingReport").innerHTML=billing.length?billing.map(i=>`<div class="report-item"><strong>${escapeHtml(i.customerName)}</strong><br>${billingLabel(i)} • ${money(i.amount)} • ${formatDateBR(i.dueDate) || "sem data"}</div>`).join(""):`<div class="report-item">Nenhuma cobrança em aberto.</div>`;
 }
 
 function stockKey(item){
@@ -1208,7 +1246,7 @@ function exportStockCsv(){
     Quantidade:i.qty,
     "Valor unitario":i.price,
     Total:Number(i.qty||0)*Number(i.price||0),
-    Validade:i.expiry
+    Validade:formatDateBR(i.expiry)
   })));
 }
 
@@ -1218,8 +1256,8 @@ function exportCustomersCsv(){
     Telefone:i.phone,
     Produtos:i.products,
     Valor:i.amount,
-    Compra:i.purchaseDate,
-    "Cobrar em":i.dueDate,
+    Compra:formatDateBR(i.purchaseDate),
+    "Cobrar em":formatDateBR(i.dueDate),
     Status:billingLabel(i),
     Observacoes:cleanCustomerNotes(i.notes)
   })));
@@ -1239,8 +1277,8 @@ async function saveCustomerForm(e){
       phone:$("customerPhone").value.trim(),
       products:$("customerProducts").value.trim(),
       amount:Number($("customerAmount").value || 0),
-      purchaseDate:$("customerPurchaseDate").value || today(),
-      dueDate:$("customerDueDate").value || "",
+      purchaseDate:dateFieldValue("customerPurchaseDate",today()),
+      dueDate:dateFieldValue("customerDueDate",""),
       status:$("customerStatus").value || "pending",
       notes
     };
@@ -1254,7 +1292,7 @@ async function saveCustomerForm(e){
 
 function resetCustomerForm(){
   $("customerForm").reset();
-  $("customerPurchaseDate").value=today();
+  setDateField("customerPurchaseDate",today());
   $("customerEditId").value="";
   $("customerProductQty").value=1;
   $("customerInstallments").value=1;
@@ -1278,8 +1316,8 @@ function editCustomer(id){
   $("customerAmount").value=i.amount || 0;
   customerPurchaseItems=recoveredItems;
   renderCustomerSelectedProducts();
-  $("customerPurchaseDate").value=i.purchaseDate || today();
-  $("customerDueDate").value=i.dueDate || "";
+  setDateField("customerPurchaseDate",i.purchaseDate || today());
+  setDateField("customerDueDate",i.dueDate || "");
   $("customerStatus").value=i.status || "pending";
   $("customerNotes").value=cleanCustomerNotes(i.notes);
   if(recoveredItems.length) syncCustomerPurchaseSummary();
@@ -1329,8 +1367,8 @@ async function saveStockForm(e){
       size:$("productSize").value.trim(),
       qty:Number($("qty").value || 0),
       price:Number($("price").value || 0),
-      entryDate:$("entryDate").value || today(),
-      expiry:$("expiry").value || "",
+      entryDate:dateFieldValue("entryDate",today()),
+      expiry:dateFieldValue("expiry",""),
       notes:$("notes").value || "",
       category: catalogItem ? (catalogItem.category || "Sem categoria") : "Sem categoria"
     };
@@ -1343,7 +1381,7 @@ async function saveStockForm(e){
 
 function resetForm(){
   $("stockForm").reset();
-  $("entryDate").value=today();
+  setDateField("entryDate",today());
   $("editId").value="";
   hide($("cancelEdit"));
   hide($("selectedPreview"));
@@ -1359,8 +1397,8 @@ function editItem(id){
   $("productSize").value=i.size || "";
   $("qty").value=i.qty || 0;
   $("price").value=i.price || 0;
-  $("entryDate").value=i.entryDate || today();
-  $("expiry").value=i.expiry || "";
+  setDateField("entryDate",i.entryDate || today());
+  setDateField("expiry",i.expiry || "");
   $("notes").value=i.notes || "";
   show($("cancelEdit"));
 }
@@ -1383,8 +1421,8 @@ function addCatalogToStock(code){
   $("productSize").value=p.size || "";
   $("qty").value=1;
   $("price").value=Number(p.retail || p.wholesale || 0);
-  $("entryDate").value=today();
-  $("expiry").value="";
+  setDateField("entryDate",today());
+  setDateField("expiry","");
   $("notes").value="";
   $("selectedPreview").innerHTML=`<strong>${p.name}</strong><br><span>${p.category || "Sem categoria"} • ${p.size || ""} • Cód. ${p.code || ""}</span>`;
   show($("selectedPreview"));
@@ -1452,6 +1490,16 @@ function bindEvents(){
   $("customerInstallments").addEventListener("input", renderInstallmentPreview);
   $("customerInstallmentGap").addEventListener("change", renderInstallmentPreview);
   $("customerDueDate").addEventListener("change", renderInstallmentPreview);
+  ["entryDate","expiry","customerPurchaseDate","customerDueDate"].forEach(id=>{
+    const el=$(id);
+    if(!el) return;
+    el.addEventListener("input",()=>maskDateInput(el));
+    el.addEventListener("blur",()=>{
+      const iso=parseDateBR(el.value);
+      if(iso) el.value=formatDateBR(iso);
+      if(id==="customerDueDate") renderInstallmentPreview();
+    });
+  });
   $("globalSearch").addEventListener("input", ()=>syncGlobalSearch($("globalSearch"), $("mobileGlobalSearch")));
   if($("mobileGlobalSearch")){
     $("mobileGlobalSearch").addEventListener("input", ()=>syncGlobalSearch($("mobileGlobalSearch"), $("globalSearch")));
@@ -1494,8 +1542,8 @@ async function autoLogin(){
 
 window.addEventListener("DOMContentLoaded", ()=>{
   bindEvents();
-  $("entryDate").value=today();
-  $("customerPurchaseDate").value=today();
+  setDateField("entryDate",today());
+  setDateField("customerPurchaseDate",today());
   renderCustomerSelectedProducts();
   populateFilters();
   populateDatalist();
