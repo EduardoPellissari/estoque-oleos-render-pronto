@@ -1282,3 +1282,139 @@ html, body, .app, .main, .page, .panel{
     grid-template-columns:1fr !important;
   }
 }
+
+/* Mobile layout lock: impede páginas de passar da largura da tela */
+@media(max-width:768px){
+  html,
+  body{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+    touch-action:pan-y;
+  }
+
+  body{
+    min-width:320px;
+  }
+
+  .app,
+  .main,
+  .page,
+  .grid,
+  .dashboard-grid,
+  .reports,
+  .profile-grid,
+  .customers-layout,
+  .panel,
+  .metrics,
+  .quick-actions,
+  .catalog-grid,
+  .customer-cards,
+  form{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  .page{
+    contain:inline-size;
+  }
+
+  header,
+  .panel-head,
+  .filters,
+  .two,
+  .customer-product-picker,
+  .selected-product,
+  .row-actions,
+  .export-actions{
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  input,
+  textarea,
+  select,
+  button,
+  .small-btn,
+  .mini,
+  .whatsapp{
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+
+  .panel *,
+  .metrics *,
+  .quick-actions *,
+  .product-card *,
+  .customer-card *,
+  #stock td{
+    min-width:0;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  label,
+  strong,
+  span,
+  small,
+  td,
+  th,
+  .selected,
+  .report-item,
+  .customer-notes,
+  .history-chip{
+    overflow-wrap:anywhere;
+    word-break:normal;
+  }
+
+  .table-wrap{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  table{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #stock table,
+  #stock tbody,
+  #stock tr{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #stock td[data-label="Ações"] .row-actions,
+  .customer-card .row-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .product-meta,
+  .catalog-prices,
+  .customer-meta,
+  .installment-preview,
+  .customer-history{
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  .product-meta span,
+  .catalog-prices span,
+  .customer-meta span,
+  .installment-preview span,
+  .history-chip{
+    max-width:100%;
+  }
+}
+
+@media(max-width:360px){
+  #stock td[data-label="Ações"] .row-actions,
+  .customer-card .row-actions{
+    grid-template-columns:1fr !important;
+  }
+}
