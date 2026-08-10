@@ -1158,9 +1158,11 @@ async function adjustStockForCustomerItems(previousItems,newItems){
 
 function renderGlobalSearch(){
   const input=$("globalSearch");
+  const mobileInput=$("mobileGlobalSearch");
   const wrap=$("globalSearchResults");
   if(!input || !wrap) return;
-  const q=normalizeText(input.value);
+  const source = document.activeElement===mobileInput ? mobileInput : input;
+  const q=normalizeText(source ? source.value : input.value);
   if(!q){
     hide(wrap);
     wrap.innerHTML="";
@@ -1175,6 +1177,12 @@ function renderGlobalSearch(){
     <span>${r.type}</span><strong>${escapeHtml(r.title || "-")}</strong><small>${escapeHtml(r.detail || "")}</small>
   </button>`).join("") : `<div class="empty compact">Nada encontrado.</div>`;
   show(wrap);
+}
+
+function syncGlobalSearch(from,to){
+  if(!from || !to) return;
+  to.value=from.value;
+  renderGlobalSearch();
 }
 
 function csvEscape(value){
@@ -1444,7 +1452,11 @@ function bindEvents(){
   $("customerInstallments").addEventListener("input", renderInstallmentPreview);
   $("customerInstallmentGap").addEventListener("change", renderInstallmentPreview);
   $("customerDueDate").addEventListener("change", renderInstallmentPreview);
-  $("globalSearch").addEventListener("input", renderGlobalSearch);
+  $("globalSearch").addEventListener("input", ()=>syncGlobalSearch($("globalSearch"), $("mobileGlobalSearch")));
+  if($("mobileGlobalSearch")){
+    $("mobileGlobalSearch").addEventListener("input", ()=>syncGlobalSearch($("mobileGlobalSearch"), $("globalSearch")));
+    $("mobileGlobalSearch").addEventListener("focus", renderGlobalSearch);
+  }
   $("exportStock").addEventListener("click", exportStockCsv);
   $("exportCustomers").addEventListener("click", exportCustomersCsv);
   $("customerProductSearch").addEventListener("keydown", e=>{
