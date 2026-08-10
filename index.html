@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260810-mobile-app">
+  <link rel="stylesheet" href="assets/style.css?v=20260810-easy-mobile">
 </head>
 <body>
 <div id="setupBanner" class="setup-banner hidden"></div>
@@ -79,10 +79,16 @@
         <input id="globalSearch" placeholder="Buscar cliente, produto ou cobrança...">
         <div id="globalSearchResults" class="global-search-results hidden"></div>
       </div>
-      <button id="quickAdd" type="button">+ Adicionar produto</button>
+      <button id="quickAdd" type="button" aria-label="Adicionar produto ao estoque">+ Produto</button>
     </header>
 
     <section id="dashboard" class="page">
+      <div class="quick-actions">
+        <button type="button" onclick="showPage('stock')"><span>📦</span><strong>Adicionar estoque</strong><small>Entrou produto novo</small></button>
+        <button type="button" onclick="showPage('customers')"><span>🤝</span><strong>Registrar venda</strong><small>Cliente comprou óleo</small></button>
+        <button type="button" onclick="showPage('catalog')"><span>🔎</span><strong>Buscar óleo</strong><small>Ver preço e uso</small></button>
+        <button type="button" onclick="showPage('reports')"><span>💳</span><strong>Ver cobranças</strong><small>Quem falta pagar</small></button>
+      </div>
       <div class="metrics">
         <article><span>📦 Produtos</span><strong id="mProducts">0</strong></article>
         <article><span>🧮 Unidades</span><strong id="mUnits">0</strong></article>
@@ -314,8 +320,8 @@
   </section>
 </main>
 
-<script src="assets/catalog.js?v=20260810-mobile-app"></script>
+<script src="assets/catalog.js?v=20260810-easy-mobile"></script>
 <script src="assets/image-links.js?v=20260806-stock-delta"></script>
-<script src="assets/app.js?v=20260810-mobile-app"></script>
+<script src="assets/app.js?v=20260810-easy-mobile"></script>
 </body>
 </html>

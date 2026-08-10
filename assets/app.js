@@ -966,14 +966,14 @@ function renderStock(){
     const total=Number(i.qty||0)*Number(i.price||0);
     const low=Number(i.qty||0)<=2;
     return `<tr>
-      <td><strong>${i.productName || "-"}</strong><br><small>${i.size || ""}</small></td>
-      <td>${i.productCode || "-"}</td>
-      <td><span class="tag">${i.category || "Sem categoria"}</span></td>
-      <td><span class="tag ${low ? "warn" : ""}">${i.qty || 0}</span></td>
-      <td>${money(i.price)}</td>
-      <td>${money(total)}</td>
-      <td>${i.expiry || "-"}</td>
-      <td><div class="row-actions"><button class="mini" onclick="editItem('${i.id}')">Editar</button><button class="mini danger" onclick="removeItem('${i.id}')">Excluir</button></div></td>
+      <td data-label="Produto"><strong>${i.productName || "-"}</strong><br><small>${i.size || ""}</small></td>
+      <td data-label="Código">${i.productCode || "-"}</td>
+      <td data-label="Categoria"><span class="tag">${i.category || "Sem categoria"}</span></td>
+      <td data-label="Quantidade"><span class="tag ${low ? "warn" : ""}">${i.qty || 0}</span></td>
+      <td data-label="Valor unitário">${money(i.price)}</td>
+      <td data-label="Total">${money(total)}</td>
+      <td data-label="Validade">${i.expiry || "-"}</td>
+      <td data-label="Ações"><div class="row-actions"><button class="mini" onclick="editItem('${i.id}')">Editar</button><button class="mini danger" onclick="removeItem('${i.id}')">Excluir</button></div></td>
     </tr>`;
   }).join("");
 }
