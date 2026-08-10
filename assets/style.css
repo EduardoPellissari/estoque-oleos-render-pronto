@@ -364,6 +364,7 @@ html, body, .app, .main, .page, .panel{
 
   header .global-search-wrap{
     grid-column:1 / -1;
+    position:absolute !important;
     width:0 !important;
     height:0 !important;
     min-width:0 !important;
@@ -987,6 +988,271 @@ html, body, .app, .main, .page, .panel{
   }
 
   .customer-product-picker{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* Mobile app polish: mais cara de aplicativo e menos sensação de zoom */
+@media(max-width:768px){
+  html{
+    background:#f7f3fb;
+  }
+
+  body{
+    background:#f7f3fb !important;
+  }
+
+  .main{
+    padding:calc(8px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)) !important;
+  }
+
+  header{
+    min-height:46px !important;
+    padding-left:54px !important;
+    margin-bottom:8px !important;
+  }
+
+  header h1{
+    font-size:19px !important;
+    line-height:1.12 !important;
+    -webkit-line-clamp:1;
+  }
+
+  .mobile-menu-btn{
+    left:12px !important;
+    width:46px !important;
+    height:46px !important;
+    border-radius:16px !important;
+  }
+
+  #quickAdd{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    min-width:78px !important;
+    width:auto !important;
+    max-width:108px !important;
+    height:40px !important;
+    padding:0 12px !important;
+    font-size:12px !important;
+  }
+
+  .mobile-search-slot{
+    margin:4px 0 10px !important;
+  }
+
+  .mobile-search-slot input,
+  input,
+  select{
+    min-height:48px !important;
+  }
+
+  input,
+  textarea,
+  select{
+    border-radius:15px !important;
+    padding:12px 13px !important;
+  }
+
+  label{
+    margin:11px 0 6px !important;
+  }
+
+  button,
+  .small-btn,
+  .mini,
+  .whatsapp{
+    min-height:46px !important;
+    border-radius:15px !important;
+  }
+
+  .panel{
+    padding:15px !important;
+    border-radius:20px !important;
+    margin-bottom:12px;
+  }
+
+  .panel h2{
+    font-size:19px !important;
+    margin-bottom:8px !important;
+  }
+
+  .panel p{
+    margin-bottom:12px !important;
+  }
+
+  .quick-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px !important;
+  }
+
+  .quick-actions button{
+    min-height:94px !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    align-content:center !important;
+    justify-items:start !important;
+    gap:6px !important;
+    padding:13px !important;
+  }
+
+  .quick-actions span{
+    grid-row:auto !important;
+    width:38px !important;
+    height:38px !important;
+    border-radius:14px !important;
+    font-size:20px !important;
+  }
+
+  .quick-actions strong{
+    font-size:14px !important;
+    line-height:1.15 !important;
+  }
+
+  .quick-actions small{
+    font-size:11px !important;
+    line-height:1.2 !important;
+  }
+
+  .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px !important;
+  }
+
+  .metrics article{
+    min-height:78px !important;
+    padding:12px !important;
+    border-radius:18px !important;
+  }
+
+  .metrics span{
+    font-size:11px !important;
+    line-height:1.15 !important;
+  }
+
+  .metrics strong{
+    font-size:19px !important;
+    line-height:1.05 !important;
+    margin-top:6px !important;
+  }
+
+  .dashboard-grid,
+  .reports,
+  .profile-grid,
+  .customers-layout{
+    gap:12px !important;
+  }
+
+  .catalog-grid{
+    gap:10px !important;
+  }
+
+  .product-card{
+    padding:12px !important;
+    gap:8px !important;
+    border-radius:18px !important;
+  }
+
+  .product-icon-img{
+    height:118px !important;
+    border-radius:15px !important;
+  }
+
+  .product-card h3{
+    font-size:16px !important;
+  }
+
+  .product-card p{
+    font-size:13px !important;
+  }
+
+  .product-meta,
+  .catalog-prices{
+    gap:5px !important;
+  }
+
+  .product-meta span,
+  .catalog-prices span{
+    font-size:11px !important;
+    padding:5px 7px !important;
+  }
+
+  .product-info summary{
+    min-height:42px;
+    display:flex;
+    align-items:center;
+  }
+
+  .customer-card{
+    padding:13px !important;
+    border-radius:18px !important;
+  }
+
+  .customer-card h3{
+    font-size:17px !important;
+  }
+
+  .customer-meta strong{
+    font-size:19px !important;
+  }
+
+  .customer-product-picker{
+    grid-template-columns:82px minmax(0,1fr) !important;
+    gap:8px !important;
+  }
+
+  #customerProductSearch{
+    grid-column:1 / -1;
+  }
+
+  #customerProductQty{
+    font-size:15px !important;
+  }
+
+  .customer-product-picker .small-btn{
+    grid-column:auto !important;
+  }
+
+  .selected-product{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 70px auto;
+    align-items:center;
+    padding:9px !important;
+    gap:8px !important;
+  }
+
+  .selected-product-qty{
+    width:70px !important;
+    min-width:70px !important;
+    min-height:42px !important;
+  }
+
+  #stock tr{
+    border-radius:18px !important;
+    padding:12px !important;
+  }
+
+  #stock td{
+    grid-template-columns:minmax(78px,.35fr) minmax(0,1fr) !important;
+    gap:8px !important;
+  }
+
+  .export-actions{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+}
+
+@media(max-width:360px){
+  .quick-actions{
+    grid-template-columns:1fr !important;
+  }
+
+  .metrics{
+    grid-template-columns:1fr !important;
+  }
+
+  .selected-product{
     grid-template-columns:1fr !important;
   }
 }
