@@ -6,6 +6,7 @@ const VUS = Math.max(1, Number(process.env.LOAD_TEST_USERS || process.env.VUS ||
 const ITERATIONS = Math.max(1, Number(process.env.LOAD_TEST_ITERATIONS || process.env.ITERATIONS || 5));
 const TIMEOUT_MS = Math.max(1000, Number(process.env.LOAD_TEST_TIMEOUT_MS || 15000));
 const REQUEST_RETRIES = Math.max(0, Number(process.env.LOAD_TEST_RETRIES || 2));
+const RAMP_MS = Math.max(0, Number(process.env.LOAD_TEST_RAMP_MS || 0));
 const ALLOW_PROD = process.env.LOAD_TEST_ALLOW_PROD === "1";
 const RUN_ID = `lt_${Date.now().toString(36)}_${Math.random().toString(16).slice(2, 8)}`;
 const INITIAL_QTY = VUS * ITERATIONS + 25;
@@ -203,6 +204,9 @@ async function createSaleAndAdjustStock(uid, stockItem, worker, iteration) {
 
 async function worker(uid, stockItem, index) {
   const errors = [];
+  if (RAMP_MS > 0 && VUS > 1) {
+    await sleep(Math.floor((RAMP_MS * (index - 1)) / (VUS - 1)));
+  }
   for (let i = 0; i < ITERATIONS; i += 1) {
     try {
       await createSaleAndAdjustStock(uid, stockItem, index, i + 1);
@@ -232,6 +236,7 @@ function summarize(errors, finalStock, finalCustomers, started) {
   console.log(`URL: ${TARGET_URL}`);
   console.log(`Usuarios simultaneos: ${VUS}`);
   console.log(`Vendas por usuario: ${ITERATIONS}`);
+  if (RAMP_MS) console.log(`Rampa de entrada: ${(RAMP_MS / 1000).toFixed(1)}s`);
   console.log(`Requisicoes: ${total}`);
   console.log(`Tentativas HTTP/timeout falhas: ${failedRequests}`);
   console.log(`Erros definitivos de fluxo: ${errors.length}`);
