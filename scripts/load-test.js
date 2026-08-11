@@ -162,40 +162,30 @@ async function getStockItem(uid, stockId) {
   return request("stock:item", `/api/users/${uid}/stock/${stockId}`);
 }
 
-async function createSaleAndAdjustStock(uid, stockId, worker, iteration) {
-  const current = await getStockItem(uid, stockId);
-  if (!current) throw new Error("Produto de teste nao encontrado.");
-
-  await request("customer:create", `/api/users/${uid}/customers`, {
+async function createSaleAndAdjustStock(uid, stockItem, worker, iteration) {
+  await request("sale:create", `/api/users/${uid}/sales`, {
     method: "POST",
     body: JSON.stringify({
-      customerName: `Cliente ${worker}-${iteration} ${RUN_ID}`,
-      phone: "11999999999",
-      products: `1x ${current.productName} (${current.size}) - R$ 100,00 un. = R$ 100,00`,
-      amount: 100,
-      purchaseDate: today(),
-      dueDate: today(),
-      status: "pending",
-      notes: "Venda criada automaticamente pelo teste de carga."
-    })
-  });
-
-  await request("stock:adjust", `/api/users/${uid}/stock/${stockId}`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      delta: 1
+      customer: {
+        customerName: `Cliente ${worker}-${iteration} ${RUN_ID}`,
+        phone: "11999999999",
+        products: `1x ${stockItem.productName} (${stockItem.size}) - R$ 100,00 un. = R$ 100,00`,
+        amount: 100,
+        purchaseDate: today(),
+        dueDate: today(),
+        status: "pending",
+        notes: "Venda criada automaticamente pelo teste de carga."
+      },
+      adjustments: [{ stockId: stockItem.id, delta: 1 }]
     })
   });
 }
 
-async function worker(uid, stockId, index) {
+async function worker(uid, stockItem, index) {
   const errors = [];
   for (let i = 0; i < ITERATIONS; i += 1) {
     try {
-      await createSaleAndAdjustStock(uid, stockId, index, i + 1);
-      if (i % 2 === 0) {
-        await request("customers:list", `/api/users/${uid}/customers`);
-      }
+      await createSaleAndAdjustStock(uid, stockItem, index, i + 1);
     } catch (err) {
       errors.push({ worker: index, iteration: i + 1, message: err.message, status: err.status || 0 });
     }
@@ -273,7 +263,7 @@ async function main() {
   const stockItem = await createStock(user.uid);
 
   const results = await Promise.all(
-    Array.from({ length: VUS }, (_, index) => worker(user.uid, stockItem.id, index + 1))
+    Array.from({ length: VUS }, (_, index) => worker(user.uid, stockItem, index + 1))
   );
   const errors = results.flat();
   const finalStock = await getStockItem(user.uid, stockItem.id);

@@ -204,6 +204,27 @@ async function saveCustomerRemote(item){
   customers = await request(`${API_BASE}/users/${currentUser.uid}/customers`);
 }
 
+async function saveSaleRemote(item,adjustments){
+  const result = await request(`${API_BASE}/users/${currentUser.uid}/sales`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({customer:item,adjustments})
+  });
+
+  if(result.customer){
+    const index=customers.findIndex(i=>i.id===result.customer.id);
+    if(index>=0) customers[index]=result.customer;
+    else customers.unshift(result.customer);
+  }
+
+  if(Array.isArray(result.stock)){
+    result.stock.forEach(updated=>{
+      const index=stock.findIndex(i=>i.id===updated.id);
+      if(index>=0) stock[index]=updated;
+    });
+  }
+}
+
 async function deleteCustomerRemote(id){
   await request(`${API_BASE}/users/${currentUser.uid}/customers/${id}`,{method:"DELETE"});
   customers = customers.filter(i=>i.id!==id);
@@ -1203,6 +1224,21 @@ async function adjustStockForCustomerItems(previousItems,newItems){
   }
 }
 
+function stockAdjustmentsForCustomerItems(previousItems,newItems){
+  const before=summarizePurchaseItems(previousItems);
+  const after=summarizePurchaseItems(newItems);
+  const keys=Array.from(new Set([...Object.keys(before),...Object.keys(after)]));
+  return keys.map(key=>{
+    const oldQty=Number(before[key]?.qty || 0);
+    const newQty=Number(after[key]?.qty || 0);
+    const delta=newQty-oldQty;
+    if(!delta) return null;
+    const ref=after[key] || before[key];
+    const stockItem=findStockForPurchaseItem(ref);
+    return stockItem ? {stockId:stockItem.id,delta} : null;
+  }).filter(Boolean);
+}
+
 function renderGlobalSearch(){
   const input=$("globalSearch");
   const mobileInput=$("mobileGlobalSearch");
@@ -1291,8 +1327,7 @@ async function saveCustomerForm(e){
       status:$("customerStatus").value || "pending",
       notes
     };
-    await saveCustomerRemote(item);
-    await adjustStockForCustomerItems(previousItems,nextItems);
+    await saveSaleRemote(item,stockAdjustmentsForCustomerItems(previousItems,nextItems));
     resetCustomerForm();
     renderAll();
     showPage("customers");

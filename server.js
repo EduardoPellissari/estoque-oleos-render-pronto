@@ -417,6 +417,123 @@ async function createCustomer(item) {
   return item;
 }
 
+function buildCustomerItem(uid, fields, existingId = "") {
+  const now = new Date().toISOString();
+  return {
+    id: existingId || makeId("c"),
+    userId: uid,
+    customerName: String(fields.customerName || "").trim(),
+    phone: String(fields.phone || "").trim(),
+    products: String(fields.products || "").trim(),
+    amount: Number(fields.amount || 0),
+    purchaseDate: String(fields.purchaseDate || ""),
+    dueDate: String(fields.dueDate || ""),
+    status: String(fields.status || "pending"),
+    notes: String(fields.notes || ""),
+    createdAt: now,
+    updatedAt: now
+  };
+}
+
+async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
+  const item = buildCustomerItem(uid, fields, String(fields.id || ""));
+  if (!item.customerName) {
+    const err = new Error("Informe o nome do cliente.");
+    err.status = 400;
+    throw err;
+  }
+
+  const cleanAdjustments = (Array.isArray(adjustments) ? adjustments : [])
+    .map(adjustment => ({
+      stockId: String(adjustment.stockId || ""),
+      delta: Number(adjustment.delta || 0)
+    }))
+    .filter(adjustment => adjustment.stockId && adjustment.delta);
+
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const pool = getPool();
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      let customer;
+      if (fields.id) {
+        const { rows } = await client.query(
+          `UPDATE customers
+           SET customer_name = $3, phone = $4, products = $5, amount = $6,
+               purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
+           WHERE user_id = $1 AND id = $2
+           RETURNING *`,
+          [
+            uid, item.id, item.customerName, item.phone, item.products, item.amount,
+            item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt
+          ]
+        );
+        customer = customerFromRow(rows[0]);
+      } else {
+        const { rows } = await client.query(
+          `INSERT INTO customers
+           (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+           RETURNING *`,
+          [
+            item.id, item.userId, item.customerName, item.phone, item.products, item.amount,
+            item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt
+          ]
+        );
+        customer = customerFromRow(rows[0]);
+      }
+      if (!customer) {
+        const err = new Error("Cliente não encontrado.");
+        err.status = 404;
+        throw err;
+      }
+
+      const updatedStock = [];
+      for (const adjustment of cleanAdjustments) {
+        const { rows } = await client.query(
+          `UPDATE stock
+           SET qty = GREATEST(0, qty - $3), updated_at = $4
+           WHERE user_id = $1 AND id = $2
+           RETURNING *`,
+          [uid, adjustment.stockId, adjustment.delta, item.updatedAt]
+        );
+        if (rows[0]) updatedStock.push(stockFromRow(rows[0]));
+      }
+
+      await client.query("COMMIT");
+      return { customer, stock: updatedStock };
+    } catch (err) {
+      await client.query("ROLLBACK");
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  const db = readDb();
+  let customer;
+  if (fields.id) {
+    customer = db.customers.find(i => i.userId === uid && i.id === item.id);
+    if (!customer) return null;
+    Object.assign(customer, item, { createdAt: customer.createdAt || item.createdAt });
+  } else {
+    customer = item;
+    db.customers.push(customer);
+  }
+
+  const updatedStock = [];
+  cleanAdjustments.forEach(adjustment => {
+    const existing = db.stock.find(i => i.userId === uid && i.id === adjustment.stockId);
+    if (!existing) return;
+    existing.qty = Math.max(0, Number(existing.qty || 0) - adjustment.delta);
+    existing.updatedAt = item.updatedAt;
+    updatedStock.push(existing);
+  });
+  writeDb(db);
+  return { customer, stock: updatedStock };
+}
+
 async function updateCustomer(uid, id, fields) {
   const item = {
     id,
@@ -757,12 +874,26 @@ async function handleApi(req, res) {
           return send(res, 200, { ok: true, removed });
         }
       }
+
+      if (parts[3] === "sales" && method === "POST" && parts.length === 4) {
+        const body = await readBody(req);
+        const result = await saveCustomerWithStockAdjustments(
+          uid,
+          body.customer || {},
+          body.adjustments || []
+        );
+        if (!result) return send(res, 404, { error: "Cliente não encontrado." });
+        return send(res, 200, {
+          customer: result.customer,
+          stock: result.stock
+        });
+      }
     }
 
     return send(res, 404, { error: "Rota não encontrada." });
   } catch (err) {
     console.error(err);
-    return send(res, 500, { error: err.message || "Erro interno." });
+    return send(res, err.status || 500, { error: err.message || "Erro interno." });
   }
 }
 
