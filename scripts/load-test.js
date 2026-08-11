@@ -159,8 +159,7 @@ async function createStock(uid) {
 }
 
 async function getStockItem(uid, stockId) {
-  const rows = await request("stock:list", `/api/users/${uid}/stock`);
-  return rows.find((item) => item.id === stockId);
+  return request("stock:item", `/api/users/${uid}/stock/${stockId}`);
 }
 
 async function createSaleAndAdjustStock(uid, stockId, worker, iteration) {

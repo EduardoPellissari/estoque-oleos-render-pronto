@@ -11,6 +11,8 @@ const DB_PATH = process.env.DB_PATH || path.join(ROOT, "database.json");
 const DATABASE_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || "";
 let pgPool = null;
 let pgReady = false;
+const USER_CACHE_MS = 60 * 1000;
+const userByUidCache = new Map();
 
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -76,6 +78,12 @@ function userFromRow(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+}
+
+function rememberUser(user) {
+  if (!user || !user.uid) return user;
+  userByUidCache.set(user.uid, { user, expiresAt: Date.now() + USER_CACHE_MS });
+  return user;
 }
 
 function stockFromRow(row) {
@@ -164,6 +172,8 @@ async function ensurePostgres() {
       updated_at TEXT NOT NULL
     )
   `);
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_stock_user_created ON stock (user_id, created_at DESC)");
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_customers_user_created ON customers (user_id, created_at DESC)");
   pgReady = true;
 }
 
@@ -177,12 +187,16 @@ async function findUserByEmail(email) {
 }
 
 async function findUserByUid(uid) {
+  const cached = userByUidCache.get(uid);
+  if (cached && cached.expiresAt > Date.now()) return cached.user;
+  userByUidCache.delete(uid);
+
   if (usingPostgres()) {
     await ensurePostgres();
     const { rows } = await getPool().query("SELECT * FROM users WHERE uid = $1", [uid]);
-    return userFromRow(rows[0]);
+    return rememberUser(userFromRow(rows[0]));
   }
-  return readDb().users.find(u => u.uid === uid) || null;
+  return rememberUser(readDb().users.find(u => u.uid === uid) || null);
 }
 
 async function createUser(user) {
@@ -193,12 +207,12 @@ async function createUser(user) {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [user.uid, user.name, user.email, user.passwordHash, user.phone, user.city, user.notes, user.createdAt, user.updatedAt]
     );
-    return user;
+    return rememberUser(user);
   }
   const db = readDb();
   db.users.push(user);
   writeDb(db);
-  return user;
+  return rememberUser(user);
 }
 
 async function updateUserProfile(uid, fields) {
@@ -257,6 +271,18 @@ async function listStock(uid) {
   return readDb().stock
     .filter(i => i.userId === uid)
     .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+}
+
+async function findStockItem(uid, id) {
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const { rows } = await getPool().query(
+      "SELECT * FROM stock WHERE user_id = $1 AND id = $2",
+      [uid, id]
+    );
+    return stockFromRow(rows[0]);
+  }
+  return readDb().stock.find(i => i.userId === uid && i.id === id) || null;
 }
 
 async function createStockItem(item) {
@@ -611,6 +637,26 @@ async function handleApi(req, res) {
             createdAt: i.createdAt,
             updatedAt: i.updatedAt
           })));
+        }
+
+        if (method === "GET" && parts.length === 5) {
+          const id = parts[4];
+          const item = await findStockItem(uid, id);
+          if (!item) return send(res, 404, { error: "Produto não encontrado." });
+          return send(res, 200, {
+            id: item.id,
+            productName: item.productName,
+            productCode: item.productCode,
+            size: item.size,
+            qty: Number(item.qty || 0),
+            price: Number(item.price || 0),
+            entryDate: item.entryDate,
+            expiry: item.expiry,
+            notes: item.notes,
+            category: item.category,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt
+          });
         }
 
         if (method === "POST" && parts.length === 4) {
