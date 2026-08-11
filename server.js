@@ -219,10 +219,23 @@ async function ensurePostgres() {
       updated_at TEXT NOT NULL
     )
   `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS stock_movements (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+      stock_id TEXT NOT NULL REFERENCES stock(id) ON DELETE CASCADE,
+      customer_id TEXT DEFAULT '',
+      request_key TEXT DEFAULT '',
+      delta NUMERIC DEFAULT 0,
+      created_at TEXT NOT NULL
+    )
+  `);
   await pool.query("ALTER TABLE customers ADD COLUMN IF NOT EXISTS request_key TEXT DEFAULT ''");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_stock_user_created ON stock (user_id, created_at DESC)");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_customers_user_created ON customers (user_id, created_at DESC)");
   await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS idx_customers_user_request_key ON customers (user_id, request_key) WHERE request_key <> ''");
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_stock_movements_stock ON stock_movements (user_id, stock_id)");
+  await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS idx_stock_movements_request_key ON stock_movements (user_id, request_key) WHERE request_key <> ''");
   pgReady = true;
 }
 
@@ -312,7 +325,12 @@ async function listStock(uid) {
   if (usingPostgres()) {
     await ensurePostgres();
     const { rows } = await getPool().query(
-      "SELECT * FROM stock WHERE user_id = $1 ORDER BY created_at DESC",
+      `SELECT s.*, s.qty - COALESCE(SUM(m.delta), 0) AS qty
+       FROM stock s
+       LEFT JOIN stock_movements m ON m.user_id = s.user_id AND m.stock_id = s.id
+       WHERE s.user_id = $1
+       GROUP BY s.id
+       ORDER BY s.created_at DESC`,
       [uid]
     );
     return rows.map(stockFromRow);
@@ -326,12 +344,26 @@ async function findStockItem(uid, id) {
   if (usingPostgres()) {
     await ensurePostgres();
     const { rows } = await getPool().query(
-      "SELECT * FROM stock WHERE user_id = $1 AND id = $2",
+      `SELECT s.*, s.qty - COALESCE(SUM(m.delta), 0) AS qty
+       FROM stock s
+       LEFT JOIN stock_movements m ON m.user_id = s.user_id AND m.stock_id = s.id
+       WHERE s.user_id = $1 AND s.id = $2
+       GROUP BY s.id`,
       [uid, id]
     );
     return stockFromRow(rows[0]);
   }
   return readDb().stock.find(i => i.userId === uid && i.id === id) || null;
+}
+
+async function stockMovementTotal(uid, id) {
+  if (!usingPostgres()) return 0;
+  await ensurePostgres();
+  const { rows } = await getPool().query(
+    "SELECT COALESCE(SUM(delta), 0) AS total FROM stock_movements WHERE user_id = $1 AND stock_id = $2",
+    [uid, id]
+  );
+  return Number(rows[0]?.total || 0);
 }
 
 async function createStockItem(item) {
@@ -372,6 +404,7 @@ async function updateStockItem(uid, id, fields) {
 
   if (usingPostgres()) {
     await ensurePostgres();
+    const movementTotal = await stockMovementTotal(uid, id);
     const { rows } = await getPool().query(
       `UPDATE stock
        SET product_name = $3, product_code = $4, size = $5, qty = $6, price = $7,
@@ -379,11 +412,11 @@ async function updateStockItem(uid, id, fields) {
        WHERE user_id = $1 AND id = $2
        RETURNING *`,
       [
-        uid, id, item.productName, item.productCode, item.size, item.qty, item.price,
+        uid, id, item.productName, item.productCode, item.size, item.qty + movementTotal, item.price,
         item.entryDate, item.expiry, item.notes, item.category, item.updatedAt
       ]
     );
-    return stockFromRow(rows[0]);
+    return findStockItem(uid, rows[0]?.id);
   }
 
   const db = readDb();
@@ -400,14 +433,12 @@ async function adjustStockQty(uid, id, delta) {
 
   if (usingPostgres()) {
     await ensurePostgres();
-    const { rows } = await getPool().query(
-      `UPDATE stock
-       SET qty = GREATEST(0, qty - $3), updated_at = $4
-       WHERE user_id = $1 AND id = $2
-       RETURNING *`,
-      [uid, id, amount, updatedAt]
+    await getPool().query(
+      `INSERT INTO stock_movements (id, user_id, stock_id, delta, created_at)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [makeId("m"), uid, id, amount, updatedAt]
     );
-    return stockFromRow(rows[0]);
+    return findStockItem(uid, id);
   }
 
   const db = readDb();
@@ -521,22 +552,29 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
           `WITH saved_customer AS (
              ${customerSql}
            ),
-           updated_stock AS (
-             UPDATE stock
-             SET qty = GREATEST(0, qty - $13), updated_at = $11
-             WHERE user_id = $1
-               AND id = $14
-               AND $13 <> 0
-               AND COALESCE((SELECT inserted FROM saved_customer), TRUE)
-             RETURNING *
+           inserted_movement AS (
+             INSERT INTO stock_movements (id, user_id, stock_id, customer_id, request_key, delta, created_at)
+             SELECT $16, $1, $14, id, $15, $13, $11
+             FROM saved_customer
+             WHERE $13 <> 0 AND COALESCE(inserted, TRUE)
+             ON CONFLICT (user_id, request_key) WHERE request_key <> ''
+             DO NOTHING
+             RETURNING stock_id
+           ),
+           changed_stock AS (
+             SELECT s.*, s.qty - COALESCE(SUM(m.delta), 0) AS qty
+             FROM stock s
+             LEFT JOIN stock_movements m ON m.user_id = s.user_id AND m.stock_id = s.id
+             WHERE s.user_id = $1 AND s.id IN (SELECT stock_id FROM inserted_movement)
+             GROUP BY s.id
            )
            SELECT
              (SELECT row_to_json(saved_customer) FROM saved_customer) AS customer,
-             COALESCE((SELECT json_agg(updated_stock) FROM updated_stock), '[]'::json) AS stock`,
+             COALESCE((SELECT json_agg(changed_stock) FROM changed_stock), '[]'::json) AS stock`,
           [
             uid, item.id, item.customerName, item.phone, item.products, item.amount,
             item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt,
-            item.createdAt, adjustment.delta, adjustment.stockId, item.requestKey
+            item.createdAt, adjustment.delta, adjustment.stockId, item.requestKey, makeId("m")
           ]
         );
         const customer = customerFromRow(rows[0]?.customer);
@@ -604,12 +642,18 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
 
         const updatedStock = [];
         for (const adjustment of cleanAdjustments) {
+          await client.query(
+            `INSERT INTO stock_movements (id, user_id, stock_id, customer_id, delta, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6)`,
+            [makeId("m"), uid, adjustment.stockId, customer.id, adjustment.delta, item.updatedAt]
+          );
           const { rows } = await client.query(
-            `UPDATE stock
-             SET qty = GREATEST(0, qty - $3), updated_at = $4
-             WHERE user_id = $1 AND id = $2
-             RETURNING *`,
-            [uid, adjustment.stockId, adjustment.delta, item.updatedAt]
+            `SELECT s.*, s.qty - COALESCE(SUM(m.delta), 0) AS qty
+             FROM stock s
+             LEFT JOIN stock_movements m ON m.user_id = s.user_id AND m.stock_id = s.id
+             WHERE s.user_id = $1 AND s.id = $2
+             GROUP BY s.id`,
+            [uid, adjustment.stockId]
           );
           if (rows[0]) updatedStock.push(stockFromRow(rows[0]));
         }
