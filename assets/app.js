@@ -173,6 +173,15 @@ async function saveStockRemote(item){
   stock = await request(`${API_BASE}/users/${currentUser.uid}/stock`);
 }
 
+async function adjustStockRemote(id,delta){
+  await request(`${API_BASE}/users/${currentUser.uid}/stock/${id}`,{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({delta})
+  });
+  stock = await request(`${API_BASE}/users/${currentUser.uid}/stock`);
+}
+
 async function deleteStockRemote(id){
   await request(`${API_BASE}/users/${currentUser.uid}/stock/${id}`,{method:"DELETE"});
   stock = stock.filter(i=>i.id!==id);
@@ -1189,7 +1198,7 @@ async function adjustStockForCustomerItems(previousItems,newItems){
     const ref=after[key] || before[key];
     const stockItem=findStockForPurchaseItem(ref);
     if(stockItem){
-      await saveStockRemote({...stockItem, qty:Math.max(0, Number(stockItem.qty||0)-delta)});
+      await adjustStockRemote(stockItem.id,delta);
     }
   }
 }

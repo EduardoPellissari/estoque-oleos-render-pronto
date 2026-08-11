@@ -319,6 +319,31 @@ async function updateStockItem(uid, id, fields) {
   return existing;
 }
 
+async function adjustStockQty(uid, id, delta) {
+  const amount = Number(delta || 0);
+  const updatedAt = new Date().toISOString();
+
+  if (usingPostgres()) {
+    await ensurePostgres();
+    const { rows } = await getPool().query(
+      `UPDATE stock
+       SET qty = GREATEST(0, qty - $3), updated_at = $4
+       WHERE user_id = $1 AND id = $2
+       RETURNING *`,
+      [uid, id, amount, updatedAt]
+    );
+    return stockFromRow(rows[0]);
+  }
+
+  const db = readDb();
+  const existing = db.stock.find(i => i.userId === uid && i.id === id);
+  if (!existing) return null;
+  existing.qty = Math.max(0, Number(existing.qty || 0) - amount);
+  existing.updatedAt = updatedAt;
+  writeDb(db);
+  return existing;
+}
+
 async function deleteStockItem(uid, id) {
   if (usingPostgres()) {
     await ensurePostgres();
@@ -614,6 +639,14 @@ async function handleApi(req, res) {
           const id = parts[4];
           const body = await readBody(req);
           const item = await updateStockItem(uid, id, body);
+          if (!item) return send(res, 404, { error: "Produto não encontrado." });
+          return send(res, 200, item);
+        }
+
+        if (method === "PATCH" && parts.length === 5) {
+          const id = parts[4];
+          const body = await readBody(req);
+          const item = await adjustStockQty(uid, id, Number(body.delta || 0));
           if (!item) return send(res, 404, { error: "Produto não encontrado." });
           return send(res, 200, item);
         }

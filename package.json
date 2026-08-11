@@ -3,7 +3,8 @@
   "version": "4.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "load-test": "node scripts/load-test.js"
   },
   "engines": {
     "node": ">=20"
