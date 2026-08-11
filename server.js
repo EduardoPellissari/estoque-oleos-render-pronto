@@ -575,7 +575,8 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
            )
            SELECT
              (SELECT row_to_json(saved_customer) FROM saved_customer) AS customer,
-             COALESCE((SELECT json_agg(changed_stock) FROM changed_stock), '[]'::json) AS stock`,
+             COALESCE((SELECT json_agg(changed_stock) FROM changed_stock), '[]'::json) AS stock,
+             $12::text AS created_at_param`,
           [
             uid, item.id, item.customerName, item.phone, item.products, item.amount,
             item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt,
