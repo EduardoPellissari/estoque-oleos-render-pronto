@@ -13,6 +13,7 @@ const PG_POOL_MAX = Math.max(1, Number(process.env.PG_POOL_MAX || (DATABASE_URL.
 const PG_CONNECT_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_CONNECT_TIMEOUT_MS || 30000));
 const PG_IDLE_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_IDLE_TIMEOUT_MS || 10000));
 const PG_QUERY_RETRIES = Math.max(0, Number(process.env.PG_QUERY_RETRIES || 2));
+const AUTO_MIGRATE_DB = process.env.AUTO_MIGRATE_DB === "1" || !process.env.VERCEL;
 let pgPool = null;
 let pgReady = false;
 const USER_CACHE_MS = 60 * 1000;
@@ -171,6 +172,10 @@ function customerFromRow(row) {
 
 async function ensurePostgres() {
   if (!usingPostgres() || pgReady) return;
+  if (!AUTO_MIGRATE_DB) {
+    pgReady = true;
+    return;
+  }
   const pool = getPool();
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
