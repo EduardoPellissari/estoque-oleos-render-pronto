@@ -4,17 +4,11 @@ Este projeto tem um teste simples para simular varias pessoas usando o sistema a
 
 ## Uso local recomendado
 
-Em um terminal, rode o sistema com um banco de teste:
-
-```bash
-PORT=3017 DB_PATH=/tmp/estoque-load-test.json npm start
-```
-
-Em outro terminal, rode:
-
 ```bash
 npm run load-test
 ```
+
+Se nao houver servidor local rodando, o teste inicia um automaticamente usando um banco temporario.
 
 ## Ajustar intensidade
 
@@ -28,6 +22,12 @@ Isso simula 50 usuarios simultaneos, cada um fazendo 10 vendas.
 
 ```bash
 LOAD_TEST_URL=http://127.0.0.1:3017 npm run load-test
+```
+
+Se quiser obrigar o teste a usar um servidor que voce abriu manualmente, rode:
+
+```bash
+LOAD_TEST_NO_AUTO_START=1 npm run load-test
 ```
 
 Para testar producao, use com cuidado:

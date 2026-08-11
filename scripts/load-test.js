@@ -1,4 +1,5 @@
 const { performance } = require("perf_hooks");
+const { spawn } = require("child_process");
 
 const TARGET_URL = (process.env.LOAD_TEST_URL || process.env.TARGET_URL || "http://127.0.0.1:3017").replace(/\/+$/, "");
 const VUS = Math.max(1, Number(process.env.LOAD_TEST_USERS || process.env.VUS || 20));
@@ -7,6 +8,7 @@ const TIMEOUT_MS = Math.max(1000, Number(process.env.LOAD_TEST_TIMEOUT_MS || 150
 const ALLOW_PROD = process.env.LOAD_TEST_ALLOW_PROD === "1";
 const RUN_ID = `lt_${Date.now().toString(36)}_${Math.random().toString(16).slice(2, 8)}`;
 const INITIAL_QTY = VUS * ITERATIONS + 25;
+let localServer = null;
 
 if (/vercel\.app|estoqueoleos\.vercel\.app/i.test(TARGET_URL) && !ALLOW_PROD) {
   console.error("Este teste pode criar muitos dados. Para rodar em producao, use LOAD_TEST_ALLOW_PROD=1.");
@@ -15,6 +17,68 @@ if (/vercel\.app|estoqueoleos\.vercel\.app/i.test(TARGET_URL) && !ALLOW_PROD) {
 }
 
 const metrics = [];
+
+function isLocalTarget() {
+  return /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?/i.test(TARGET_URL);
+}
+
+async function canReachTarget() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 1200);
+    const res = await fetch(`${TARGET_URL}/api/health`, { signal: controller.signal });
+    clearTimeout(timer);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function startLocalServerIfNeeded() {
+  if (!isLocalTarget() || process.env.LOAD_TEST_NO_AUTO_START === "1") return;
+  if (await canReachTarget()) return;
+
+  const port = new URL(TARGET_URL).port || "3017";
+  const dbPath = process.env.DB_PATH || `/tmp/estoque-load-test-${RUN_ID}.json`;
+  console.log(`Servidor local nao encontrado. Iniciando teste em http://127.0.0.1:${port}...`);
+
+  localServer = spawn(process.execPath, ["server.js"], {
+    cwd: process.cwd(),
+    env: {
+      ...process.env,
+      PORT: port,
+      DB_PATH: dbPath
+    },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+
+  localServer.stdout.on("data", (chunk) => {
+    if (process.env.LOAD_TEST_SERVER_LOGS === "1") process.stdout.write(chunk);
+  });
+  localServer.stderr.on("data", (chunk) => {
+    if (process.env.LOAD_TEST_SERVER_LOGS === "1") process.stderr.write(chunk);
+  });
+
+  const started = performance.now();
+  while (performance.now() - started < 10000) {
+    if (await canReachTarget()) return;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error("Nao consegui iniciar o servidor local de teste.");
+}
+
+function stopLocalServer() {
+  if (localServer && !localServer.killed) {
+    localServer.kill("SIGTERM");
+  }
+}
+
+process.on("exit", stopLocalServer);
+process.on("SIGINT", () => {
+  stopLocalServer();
+  process.exit(130);
+});
 
 function percentile(values, p) {
   if (!values.length) return 0;
@@ -190,10 +254,12 @@ function summarize(errors, finalStock, finalCustomers, started) {
     if (stockMismatch) {
       console.log("Aviso: o estoque final nao bateu. Isso indica risco em vendas simultaneas no mesmo estoque.");
     }
+    stopLocalServer();
     process.exit(1);
   }
 
   console.log("\nStatus: OK");
+  stopLocalServer();
 }
 
 async function main() {
@@ -202,6 +268,7 @@ async function main() {
   console.log(`URL: ${TARGET_URL}`);
   console.log(`Run ID: ${RUN_ID}`);
 
+  await startLocalServerIfNeeded();
   await request("health", "/api/health");
   const user = await createTestUser();
   const stockItem = await createStock(user.uid);
