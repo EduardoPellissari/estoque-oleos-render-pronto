@@ -554,9 +554,9 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
            ),
            inserted_movement AS (
              INSERT INTO stock_movements (id, user_id, stock_id, customer_id, request_key, delta, created_at)
-             SELECT $16, $1, $14, id, $15, $13, $11
+             SELECT $16, $1, $14, id, $15, $13::numeric, $11
              FROM saved_customer
-             WHERE $13 <> 0 AND COALESCE(inserted, TRUE)
+             WHERE $13::numeric <> 0 AND COALESCE(inserted, TRUE)
              ON CONFLICT (user_id, request_key) WHERE request_key <> ''
              DO NOTHING
              RETURNING stock_id
