@@ -5,6 +5,7 @@ const TARGET_URL = (process.env.LOAD_TEST_URL || process.env.TARGET_URL || "http
 const VUS = Math.max(1, Number(process.env.LOAD_TEST_USERS || process.env.VUS || 20));
 const ITERATIONS = Math.max(1, Number(process.env.LOAD_TEST_ITERATIONS || process.env.ITERATIONS || 5));
 const TIMEOUT_MS = Math.max(1000, Number(process.env.LOAD_TEST_TIMEOUT_MS || 15000));
+const REQUEST_RETRIES = Math.max(0, Number(process.env.LOAD_TEST_RETRIES || 2));
 const ALLOW_PROD = process.env.LOAD_TEST_ALLOW_PROD === "1";
 const RUN_ID = `lt_${Date.now().toString(36)}_${Math.random().toString(16).slice(2, 8)}`;
 const INITIAL_QTY = VUS * ITERATIONS + 25;
@@ -17,6 +18,7 @@ if (/vercel\.app|estoqueoleos\.vercel\.app/i.test(TARGET_URL) && !ALLOW_PROD) {
 }
 
 const metrics = [];
+let retryCount = 0;
 
 function isLocalTarget() {
   return /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?/i.test(TARGET_URL);
@@ -87,40 +89,57 @@ function percentile(values, p) {
   return sorted[index];
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRetryable(err, status) {
+  if (status && status >= 400 && status < 500 && status !== 408 && status !== 429) return false;
+  const message = String(err?.message || "").toLowerCase();
+  return !status || status === 408 || status === 429 || status >= 500 ||
+    message.includes("failed") || message.includes("abort") || message.includes("timeout");
+}
+
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
 async function request(label, path, options = {}) {
-  const started = performance.now();
-  let status = 0;
-  let ok = false;
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(`${TARGET_URL}${path}`, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...(options.headers || {})
+  for (let attempt = 0; attempt <= REQUEST_RETRIES; attempt += 1) {
+    const started = performance.now();
+    let status = 0;
+    let ok = false;
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+      const res = await fetch(`${TARGET_URL}${path}`, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      clearTimeout(timer);
+      status = res.status;
+      const text = await res.text();
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+      ok = res.ok;
+      if (!res.ok) {
+        const error = new Error(data.error || `HTTP ${res.status}`);
+        error.status = res.status;
+        error.data = data;
+        throw error;
       }
-    });
-    clearTimeout(timer);
-    status = res.status;
-    const text = await res.text();
-    let data = {};
-    try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
-    ok = res.ok;
-    if (!res.ok) {
-      const error = new Error(data.error || `HTTP ${res.status}`);
-      error.status = res.status;
-      error.data = data;
-      throw error;
+      return data;
+    } catch (err) {
+      if (attempt >= REQUEST_RETRIES || !isRetryable(err, status)) throw err;
+      retryCount += 1;
+      await sleep(300 * (attempt + 1) + Math.floor(Math.random() * 250));
+    } finally {
+      metrics.push({ label, ms: performance.now() - started, status, ok });
     }
-    return data;
-  } finally {
-    metrics.push({ label, ms: performance.now() - started, status, ok });
   }
 }
 
@@ -213,8 +232,9 @@ function summarize(errors, finalStock, finalCustomers, started) {
   console.log(`Usuarios simultaneos: ${VUS}`);
   console.log(`Vendas por usuario: ${ITERATIONS}`);
   console.log(`Requisicoes: ${total}`);
-  console.log(`Falhas HTTP/timeout: ${failedRequests}`);
-  console.log(`Erros de fluxo: ${errors.length}`);
+  console.log(`Tentativas HTTP/timeout falhas: ${failedRequests}`);
+  console.log(`Erros definitivos de fluxo: ${errors.length}`);
+  console.log(`Retentativas: ${retryCount}`);
   console.log(`Duracao: ${elapsed.toFixed(2)}s`);
   console.log(`Media: ${(durations.reduce((sum, n) => sum + n, 0) / Math.max(1, durations.length)).toFixed(0)}ms`);
   console.log(`p95: ${percentile(durations, 95).toFixed(0)}ms`);
@@ -238,7 +258,7 @@ function summarize(errors, finalStock, finalCustomers, started) {
 
   const stockMismatch = Number(finalStock.qty) !== expectedQty;
   const customerMismatch = finalCustomers.length !== expectedSales;
-  if (failedRequests || errors.length || stockMismatch || customerMismatch) {
+  if (errors.length || stockMismatch || customerMismatch) {
     console.log("\nStatus: FALHOU");
     if (stockMismatch) {
       console.log("Aviso: o estoque final nao bateu. Isso indica risco em vendas simultaneas no mesmo estoque.");

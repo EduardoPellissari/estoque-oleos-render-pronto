@@ -1,5 +1,11 @@
 const { handleApi } = require("../server");
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   return handleApi(req, res);
+}
+
+handler.config = {
+  maxDuration: 30
 };
+
+module.exports = handler;

@@ -9,6 +9,10 @@ const HOST = process.env.HOST || "127.0.0.1";
 const ROOT = __dirname;
 const DB_PATH = process.env.DB_PATH || path.join(ROOT, "database.json");
 const DATABASE_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || "";
+const PG_POOL_MAX = Math.max(1, Number(process.env.PG_POOL_MAX || 1));
+const PG_CONNECT_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_CONNECT_TIMEOUT_MS || 10000));
+const PG_IDLE_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_IDLE_TIMEOUT_MS || 10000));
+const PG_QUERY_RETRIES = Math.max(0, Number(process.env.PG_QUERY_RETRIES || 2));
 let pgPool = null;
 let pgReady = false;
 const USER_CACHE_MS = 60 * 1000;
@@ -59,10 +63,52 @@ function getPool() {
     const isLocalDb = /localhost|127\.0\.0\.1/.test(DATABASE_URL);
     pgPool = new Pool({
       connectionString: DATABASE_URL,
-      ssl: isLocalDb ? undefined : { rejectUnauthorized: false }
+      ssl: isLocalDb ? undefined : { rejectUnauthorized: false },
+      max: PG_POOL_MAX,
+      connectionTimeoutMillis: PG_CONNECT_TIMEOUT_MS,
+      idleTimeoutMillis: PG_IDLE_TIMEOUT_MS,
+      allowExitOnIdle: true
     });
   }
   return pgPool;
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function isTransientPgError(err) {
+  const code = String(err?.code || "");
+  const message = String(err?.message || "").toLowerCase();
+  return [
+    "40001",
+    "40P01",
+    "53300",
+    "53400",
+    "57P01",
+    "57P03",
+    "08000",
+    "08003",
+    "08006"
+  ].includes(code) ||
+    message.includes("timeout") ||
+    message.includes("terminated") ||
+    message.includes("connection") ||
+    message.includes("too many clients");
+}
+
+async function withPgRetry(action) {
+  let lastErr;
+  for (let attempt = 0; attempt <= PG_QUERY_RETRIES; attempt += 1) {
+    try {
+      return await action();
+    } catch (err) {
+      lastErr = err;
+      if (attempt >= PG_QUERY_RETRIES || !isTransientPgError(err)) throw err;
+      await wait(80 * (attempt + 1) + Math.floor(Math.random() * 120));
+    }
+  }
+  throw lastErr;
 }
 
 function userFromRow(row) {
@@ -453,105 +499,109 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
   if (usingPostgres()) {
     await ensurePostgres();
     if (cleanAdjustments.length <= 1) {
-      const adjustment = cleanAdjustments[0] || { stockId: "", delta: 0 };
-      const customerSql = fields.id
-        ? `UPDATE customers
-           SET customer_name = $3, phone = $4, products = $5, amount = $6,
-               purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
-           WHERE user_id = $1 AND id = $2
-           RETURNING *`
-        : `INSERT INTO customers
-           (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
-           VALUES ($2, $1, $3, $4, $5, $6, $7, $8, $9, $10, $12, $11)
-           RETURNING *`;
-      const { rows } = await getPool().query(
-        `WITH saved_customer AS (
-           ${customerSql}
-         ),
-         updated_stock AS (
-           UPDATE stock
-           SET qty = GREATEST(0, qty - $13), updated_at = $11
-           WHERE user_id = $1 AND id = $14 AND $13 <> 0
-           RETURNING *
-         )
-         SELECT
-           (SELECT row_to_json(saved_customer) FROM saved_customer) AS customer,
-           COALESCE((SELECT json_agg(updated_stock) FROM updated_stock), '[]'::json) AS stock`,
-        [
-          uid, item.id, item.customerName, item.phone, item.products, item.amount,
-          item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt,
-          item.createdAt, adjustment.delta, adjustment.stockId
-        ]
-      );
-      const customer = customerFromRow(rows[0]?.customer);
-      if (!customer) {
-        const err = new Error("Cliente não encontrado.");
-        err.status = 404;
-        throw err;
-      }
-      return {
-        customer,
-        stock: (rows[0]?.stock || []).map(stockFromRow)
-      };
-    }
-
-    const pool = getPool();
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-      let customer;
-      if (fields.id) {
-        const { rows } = await client.query(
-          `UPDATE customers
-           SET customer_name = $3, phone = $4, products = $5, amount = $6,
-               purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
-           WHERE user_id = $1 AND id = $2
-           RETURNING *`,
+      return withPgRetry(async () => {
+        const adjustment = cleanAdjustments[0] || { stockId: "", delta: 0 };
+        const customerSql = fields.id
+          ? `UPDATE customers
+             SET customer_name = $3, phone = $4, products = $5, amount = $6,
+                 purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
+             WHERE user_id = $1 AND id = $2
+             RETURNING *`
+          : `INSERT INTO customers
+             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
+             VALUES ($2, $1, $3, $4, $5, $6, $7, $8, $9, $10, $12, $11)
+             RETURNING *`;
+        const { rows } = await getPool().query(
+          `WITH saved_customer AS (
+             ${customerSql}
+           ),
+           updated_stock AS (
+             UPDATE stock
+             SET qty = GREATEST(0, qty - $13), updated_at = $11
+             WHERE user_id = $1 AND id = $14 AND $13 <> 0
+             RETURNING *
+           )
+           SELECT
+             (SELECT row_to_json(saved_customer) FROM saved_customer) AS customer,
+             COALESCE((SELECT json_agg(updated_stock) FROM updated_stock), '[]'::json) AS stock`,
           [
             uid, item.id, item.customerName, item.phone, item.products, item.amount,
-            item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt
+            item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt,
+            item.createdAt, adjustment.delta, adjustment.stockId
           ]
         );
-        customer = customerFromRow(rows[0]);
-      } else {
-        const { rows } = await client.query(
-          `INSERT INTO customers
-           (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-           RETURNING *`,
-          [
-            item.id, item.userId, item.customerName, item.phone, item.products, item.amount,
-            item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt
-          ]
-        );
-        customer = customerFromRow(rows[0]);
-      }
-      if (!customer) {
-        const err = new Error("Cliente não encontrado.");
-        err.status = 404;
-        throw err;
-      }
-
-      const updatedStock = [];
-      for (const adjustment of cleanAdjustments) {
-        const { rows } = await client.query(
-          `UPDATE stock
-           SET qty = GREATEST(0, qty - $3), updated_at = $4
-           WHERE user_id = $1 AND id = $2
-           RETURNING *`,
-          [uid, adjustment.stockId, adjustment.delta, item.updatedAt]
-        );
-        if (rows[0]) updatedStock.push(stockFromRow(rows[0]));
-      }
-
-      await client.query("COMMIT");
-      return { customer, stock: updatedStock };
-    } catch (err) {
-      await client.query("ROLLBACK");
-      throw err;
-    } finally {
-      client.release();
+        const customer = customerFromRow(rows[0]?.customer);
+        if (!customer) {
+          const err = new Error("Cliente não encontrado.");
+          err.status = 404;
+          throw err;
+        }
+        return {
+          customer,
+          stock: (rows[0]?.stock || []).map(stockFromRow)
+        };
+      });
     }
+
+    return withPgRetry(async () => {
+      const pool = getPool();
+      const client = await pool.connect();
+      try {
+        await client.query("BEGIN");
+        let customer;
+        if (fields.id) {
+          const { rows } = await client.query(
+            `UPDATE customers
+             SET customer_name = $3, phone = $4, products = $5, amount = $6,
+                 purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
+             WHERE user_id = $1 AND id = $2
+             RETURNING *`,
+            [
+              uid, item.id, item.customerName, item.phone, item.products, item.amount,
+              item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt
+            ]
+          );
+          customer = customerFromRow(rows[0]);
+        } else {
+          const { rows } = await client.query(
+            `INSERT INTO customers
+             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+             RETURNING *`,
+            [
+              item.id, item.userId, item.customerName, item.phone, item.products, item.amount,
+              item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt
+            ]
+          );
+          customer = customerFromRow(rows[0]);
+        }
+        if (!customer) {
+          const err = new Error("Cliente não encontrado.");
+          err.status = 404;
+          throw err;
+        }
+
+        const updatedStock = [];
+        for (const adjustment of cleanAdjustments) {
+          const { rows } = await client.query(
+            `UPDATE stock
+             SET qty = GREATEST(0, qty - $3), updated_at = $4
+             WHERE user_id = $1 AND id = $2
+             RETURNING *`,
+            [uid, adjustment.stockId, adjustment.delta, item.updatedAt]
+          );
+          if (rows[0]) updatedStock.push(stockFromRow(rows[0]));
+        }
+
+        await client.query("COMMIT");
+        return { customer, stock: updatedStock };
+      } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+      } finally {
+        client.release();
+      }
+    });
   }
 
   const db = readDb();

@@ -63,11 +63,35 @@ function daysUntil(date){
   return Math.round((target-now)/(1000*60*60*24));
 }
 
+function delay(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+function shouldRetryRequest(err,status){
+  if(status && status>=400 && status<500 && status!==408 && status!==429) return false;
+  const text=String(err?.message || "").toLowerCase();
+  return !status || status===408 || status===429 || status>=500 ||
+    text.includes("failed") || text.includes("abort") || text.includes("network");
+}
+
 async function request(url, options={}){
-  const res = await fetch(url, options);
-  const data = await res.json().catch(()=>({}));
-  if(!res.ok) throw new Error(data.error || "Erro de comunicação com o servidor.");
-  return data;
+  const retries=Number(options.retries ?? 2);
+  const fetchOptions={...options};
+  delete fetchOptions.retries;
+
+  for(let attempt=0; attempt<=retries; attempt+=1){
+    let status=0;
+    try{
+      const res = await fetch(url, fetchOptions);
+      status=res.status;
+      const data = await res.json().catch(()=>({}));
+      if(!res.ok) throw new Error(data.error || "Erro de comunicação com o servidor.");
+      return data;
+    }catch(err){
+      if(attempt>=retries || !shouldRetryRequest(err,status)) throw err;
+      await delay(300*(attempt+1)+Math.floor(Math.random()*250));
+    }
+  }
 }
 
 function showAuthMessage(text,type="error"){
