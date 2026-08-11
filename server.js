@@ -206,6 +206,7 @@ async function ensurePostgres() {
     CREATE TABLE IF NOT EXISTS customers (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+      request_key TEXT DEFAULT '',
       customer_name TEXT NOT NULL,
       phone TEXT DEFAULT '',
       products TEXT DEFAULT '',
@@ -218,8 +219,10 @@ async function ensurePostgres() {
       updated_at TEXT NOT NULL
     )
   `);
+  await pool.query("ALTER TABLE customers ADD COLUMN IF NOT EXISTS request_key TEXT DEFAULT ''");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_stock_user_created ON stock (user_id, created_at DESC)");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_customers_user_created ON customers (user_id, created_at DESC)");
+  await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS idx_customers_user_request_key ON customers (user_id, request_key) WHERE request_key <> ''");
   pgReady = true;
 }
 
@@ -468,6 +471,7 @@ function buildCustomerItem(uid, fields, existingId = "") {
   return {
     id: existingId || makeId("c"),
     userId: uid,
+    requestKey: String(fields.requestKey || fields.request_key || "").trim(),
     customerName: String(fields.customerName || "").trim(),
     phone: String(fields.phone || "").trim(),
     products: String(fields.products || "").trim(),
@@ -506,11 +510,13 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
              SET customer_name = $3, phone = $4, products = $5, amount = $6,
                  purchase_date = $7, due_date = $8, status = $9, notes = $10, updated_at = $11
              WHERE user_id = $1 AND id = $2
-             RETURNING *`
+             RETURNING *, TRUE AS inserted`
           : `INSERT INTO customers
-             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
-             VALUES ($2, $1, $3, $4, $5, $6, $7, $8, $9, $10, $12, $11)
-             RETURNING *`;
+             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at, request_key)
+             VALUES ($2, $1, $3, $4, $5, $6, $7, $8, $9, $10, $12, $11, $15)
+             ON CONFLICT (user_id, request_key) WHERE request_key <> ''
+             DO UPDATE SET request_key = customers.request_key
+             RETURNING *, (xmax = 0) AS inserted`;
         const { rows } = await getPool().query(
           `WITH saved_customer AS (
              ${customerSql}
@@ -518,7 +524,10 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
            updated_stock AS (
              UPDATE stock
              SET qty = GREATEST(0, qty - $13), updated_at = $11
-             WHERE user_id = $1 AND id = $14 AND $13 <> 0
+             WHERE user_id = $1
+               AND id = $14
+               AND $13 <> 0
+               AND COALESCE((SELECT inserted FROM saved_customer), TRUE)
              RETURNING *
            )
            SELECT
@@ -527,7 +536,7 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
           [
             uid, item.id, item.customerName, item.phone, item.products, item.amount,
             item.purchaseDate, item.dueDate, item.status, item.notes, item.updatedAt,
-            item.createdAt, adjustment.delta, adjustment.stockId
+            item.createdAt, adjustment.delta, adjustment.stockId, item.requestKey
           ]
         );
         const customer = customerFromRow(rows[0]?.customer);
@@ -549,6 +558,17 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
       try {
         await client.query("BEGIN");
         let customer;
+        if (!fields.id && item.requestKey) {
+          const { rows } = await client.query(
+            "SELECT * FROM customers WHERE user_id = $1 AND request_key = $2",
+            [uid, item.requestKey]
+          );
+          customer = customerFromRow(rows[0]);
+          if (customer) {
+            await client.query("COMMIT");
+            return { customer, stock: [] };
+          }
+        }
         if (fields.id) {
           const { rows } = await client.query(
             `UPDATE customers
@@ -565,12 +585,13 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
         } else {
           const { rows } = await client.query(
             `INSERT INTO customers
-             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+             (id, user_id, customer_name, phone, products, amount, purchase_date, due_date, status, notes, created_at, updated_at, request_key)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
              RETURNING *`,
             [
               item.id, item.userId, item.customerName, item.phone, item.products, item.amount,
-              item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt
+              item.purchaseDate, item.dueDate, item.status, item.notes, item.createdAt, item.updatedAt,
+              item.requestKey
             ]
           );
           customer = customerFromRow(rows[0]);
@@ -611,6 +632,10 @@ async function saveCustomerWithStockAdjustments(uid, fields, adjustments) {
     if (!customer) return null;
     Object.assign(customer, item, { createdAt: customer.createdAt || item.createdAt });
   } else {
+    customer = item.requestKey
+      ? db.customers.find(i => i.userId === uid && i.requestKey === item.requestKey)
+      : null;
+    if (customer) return { customer, stock: [] };
     customer = item;
     db.customers.push(customer);
   }

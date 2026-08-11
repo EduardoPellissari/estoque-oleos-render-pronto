@@ -67,6 +67,11 @@ function delay(ms){
   return new Promise(resolve=>setTimeout(resolve,ms));
 }
 
+function makeRequestKey(prefix="req"){
+  if(window.crypto?.randomUUID) return `${prefix}_${window.crypto.randomUUID()}`;
+  return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(16).slice(2)}`;
+}
+
 function shouldRetryRequest(err,status){
   if(status && status>=400 && status<500 && status!==408 && status!==429) return false;
   const text=String(err?.message || "").toLowerCase();
@@ -1342,6 +1347,7 @@ async function saveCustomerForm(e){
     const notes=[String($("customerNotes").value || "").trim(), installmentNotes(), purchaseItemsNote()].filter(Boolean).join("\n");
     const item={
       id:existingId,
+      requestKey: existingId ? "" : makeRequestKey("sale"),
       customerName:$("customerName").value.trim(),
       phone:$("customerPhone").value.trim(),
       products:$("customerProducts").value.trim(),

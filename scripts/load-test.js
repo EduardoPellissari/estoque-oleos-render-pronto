@@ -186,6 +186,7 @@ async function createSaleAndAdjustStock(uid, stockItem, worker, iteration) {
     method: "POST",
     body: JSON.stringify({
       customer: {
+        requestKey: `sale_${RUN_ID}_${worker}_${iteration}`,
         customerName: `Cliente ${worker}-${iteration} ${RUN_ID}`,
         phone: "11999999999",
         products: `1x ${stockItem.productName} (${stockItem.size}) - R$ 100,00 un. = R$ 100,00`,
