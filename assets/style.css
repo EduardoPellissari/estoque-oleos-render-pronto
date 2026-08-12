@@ -127,6 +127,7 @@ th{font-size:12px;text-transform:uppercase;color:var(--p);background:#faf7ff}
 .direct-use{background:#faf7ff;border:1px solid var(--line);border-radius:12px;padding:10px 11px;color:var(--pd);font-size:14px;line-height:1.35}
 .direct-use strong{color:var(--p)}
 .direct-use.muted{background:#fffaf0;border-color:#f3d7a5;color:#75561a;font-size:12px}
+.source-link{color:var(--p);font-size:12px;font-weight:900;text-decoration:none}
 .customers-layout{display:grid;grid-template-columns:minmax(320px,420px) minmax(0,1fr);gap:20px;align-items:start}
 .customer-cards{display:grid;gap:12px}
 .customer-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;display:grid;gap:10px}

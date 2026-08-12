@@ -760,64 +760,64 @@ const USE_GUIDES = [
   {
     title: "Respiração, tosse e congestão",
     terms: ["tosse", "catarro", "congestao", "congestão", "nariz entupido", "respiracao", "respiração", "peito carregado", "garganta", "sinusite", "bronquite", "asma"],
-    productTerms: ["breathe", "air-x", "eucalyptus", "eucalipto", "lemon eucalyptus"],
-    how: "Difusor: 3 a 4 gotas. Tópico: aplicar diluído no peito, costas ou planta dos pés.",
+    productTerms: ["breathe"],
+    how: "Aplicar no peito, costas ou planta dos pés. No difusor, usar à noite para sensação de relaxamento e frescor.",
     note: "Se tiver falta de ar, febre ou tosse persistente, procure atendimento médico."
   },
   {
     title: "Dor de cabeça, tensão e nuca pesada",
     terms: ["dor de cabeça", "dor de cabeca", "enxaqueca", "migranea", "migrânea", "tensao", "tensão", "nuca", "ombro", "pressao na cabeca", "pressão na cabeça"],
-    productTerms: ["pasttense", "peppermint", "hortel", "lavender", "lavanda"],
-    how: "Aplicar diluído nas têmporas, nuca e ombros. Se for roll-on, aplicar direto e massagear.",
+    productTerms: ["pasttense", "peppermint", "hortel"],
+    how: "Hortelã-pimenta: diluir 1 a 3 gotas ou usar no difusor. PastTense: aplicar roll-on em pontos de tensão conforme necessário.",
     note: "Dor forte, súbita ou recorrente precisa de avaliação médica."
   },
   {
     title: "Calma, ansiedade e estresse",
     terms: ["ansiedade", "ansioso", "estresse", "stress", "nervoso", "acalmar", "calma", "irritacao", "irritação", "panico", "pânico", "tranquilidade"],
-    productTerms: ["adaptiv", "lavender", "lavanda", "serenity", "calmer", "peace", "balance"],
-    how: "Difusor: 3 a 4 gotas. Tópico: aplicar em punhos, nuca ou planta dos pés.",
+    productTerms: ["adaptiv", "lavender", "lavanda", "serenity", "calmer", "balance"],
+    how: "Adaptiv: inalar nas mãos ou massagear diluído. Lavender/Serenity: usar em difusor ou aplicar diluído para relaxamento.",
     note: "Use como apoio de bem-estar; não substitui tratamento emocional."
   },
   {
     title: "Sono e descanso",
     terms: ["sono", "dormir", "insonia", "insônia", "descanso", "relaxar a noite", "noite", "agitado"],
     productTerms: ["serenity", "lavender", "lavanda", "calmer", "cedarwood", "cedro", "vetiver"],
-    how: "Difusor no quarto antes de dormir. Tópico: aplicar diluído nos pés, nuca ou punhos.",
+    how: "Lavender/Serenity: aplicar na planta dos pés antes de dormir ou usar no difusor no quarto.",
     note: "Insônia persistente merece orientação profissional."
   },
   {
     title: "Digestão, enjoo e desconforto abdominal",
     terms: ["digestao", "digestão", "enjoo", "náusea", "nausea", "estomago", "estômago", "barriga", "gases", "refluxo", "gastrite", "azia"],
     productTerms: ["zengest", "tamer", "ginger", "gengibre", "peppermint", "hortel", "fennel", "erva doce"],
-    how: "Massagear diluído no abdômen em movimentos circulares ou usar conforme o rótulo.",
+    how: "ZenGest/Tamer: aplicar no abdômen antes de viajar ou quando quiser conforto. ZenGest deve ser diluído; Tamer é tópico pronto.",
     note: "Dor persistente, vômitos, refluxo intenso ou gastrite exigem orientação médica."
   },
   {
     title: "Dor muscular, cansaço e pós-treino",
     terms: ["dor muscular", "musculo", "músculo", "cansaco", "cansaço", "pernas cansadas", "treino", "academia", "costas", "joelho", "massagem"],
     productTerms: ["deep blue", "aromatouch", "pasttense", "wintergreen", "rescuer", "copaiba", "copaíba"],
-    how: "Aplicar diluído no local e massagear. Ideal após treino, esforço físico ou tensão.",
+    how: "Deep Blue: aplicar diluído em pés, joelhos, costas ou área desejada antes/depois de exercício. Touch/Rub: massagear direto.",
     note: "Dor intensa, inchaço ou trauma precisa de avaliação."
   },
   {
     title: "Foco, estudo e energia",
     terms: ["foco", "concentracao", "concentração", "estudo", "trabalho", "energia", "cansado", "desanimo", "desânimo", "produtividade"],
     productTerms: ["intune", "thinker", "peppermint", "hortel", "rosemary", "alecrim", "motivate", "lemon", "limão"],
-    how: "Difusor no ambiente de trabalho/estudo ou aplicação diluída em punhos e nuca.",
+    how: "Peppermint: inalar com Olíbano para experiência revigorante ou difundir. Rosemary: usar em difusor para aroma herbáceo e energizante.",
     note: "Use em pequenas quantidades para não ficar enjoativo."
   },
   {
     title: "Pele, acne e irritações",
     terms: ["pele", "acne", "espinha", "oleosidade", "irritacao", "irritação", "coceira", "unha", "micose", "ferida"],
     productTerms: ["melaleuca", "tea tree", "hd clear", "correct-x", "lavender", "lavanda"],
-    how: "Aplicar pontualmente e diluído na área desejada. Faça teste em pequena região antes.",
+    how: "Melaleuca: diluir 1 gota em 1 a 3 gotas de óleo carreador e aplicar na área desejada. Touch: aplicar direto na pele limpa.",
     note: "Não usar em feridas abertas, olhos ou mucosas."
   },
   {
     title: "Limpeza, ambiente e mau cheiro",
     terms: ["limpeza", "ambiente", "mau cheiro", "cheiro ruim", "purificar", "casa", "cozinha", "banheiro", "aroma"],
     productTerms: ["on guard", "lemon", "limão", "wild orange", "laranja", "eucalyptus", "eucalipto", "tea tree", "melaleuca", "purify"],
-    how: "Difusor: 3 a 4 gotas. Para limpeza, usar conforme receita segura e evitar contato com olhos/pele sensível.",
+    how: "On Guard: difundir no ambiente ou aplicar diluído no peito, pés, costas ou mãos. Melaleuca/Lemon: usar diluído ou no difusor.",
     note: "Não ingerir produtos de limpeza aromática."
   }
 ];
@@ -864,6 +864,20 @@ function useInfoObject(product){
   };
 }
 
+function directHowText(product,guide){
+  const info=useInfoObject(product);
+  if(info.source){
+    return [info.use, info.mode].filter(Boolean).join(" ");
+  }
+  return guide?.how || info.mode || info.use || "Use conforme o rótulo do produto.";
+}
+
+function directSourceLink(product,guide){
+  const info=officialProductInfo(product);
+  const source=info?.source || guide?.source || "";
+  return source ? `<a class="source-link" href="${escapeAttr(source)}" target="_blank" rel="noopener">Fonte doTERRA</a>` : "";
+}
+
 function renderUseChips(){
   const wrap=$("usesChips");
   if(!wrap) return;
@@ -904,7 +918,7 @@ function renderUses(){
   const cardsHtml=rows.map(product=>{
     const info=useInfoObject(product);
     const guide=product._guide;
-    const how=guide?.how || info.mode || info.use || "Use conforme o rótulo do produto.";
+    const how=directHowText(product,guide);
     const care=guide?.note || info.care || "Use conforme o rótulo.";
     return `<article class="use-card direct">
       <div class="use-card-top">
@@ -917,6 +931,7 @@ function renderUses(){
       </div>
       <div class="direct-use"><strong>Como usar:</strong> ${escapeHtml(how)}</div>
       <div class="direct-use muted"><strong>Cuidado:</strong> ${escapeHtml(care)}</div>
+      ${directSourceLink(product,guide)}
       <div class="catalog-prices"><span>Venda: ${money(product.retail)}</span><span>Atacado: ${money(product.wholesale)}</span></div>
       <button type="button" onclick="addCatalogToStock('${product.code}')">Adicionar ao estoque</button>
     </article>`;
