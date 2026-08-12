@@ -14,8 +14,13 @@ const PG_CONNECT_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_CONNECT_TIMEO
 const PG_IDLE_TIMEOUT_MS = Math.max(1000, Number(process.env.PG_IDLE_TIMEOUT_MS || 10000));
 const PG_QUERY_RETRIES = Math.max(0, Number(process.env.PG_QUERY_RETRIES || 2));
 const AUTO_MIGRATE_DB = process.env.AUTO_MIGRATE_DB === "1" || !process.env.VERCEL;
+const ADMIN_EMAILS = String(process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || "")
+  .split(",")
+  .map(email => email.trim().toLowerCase())
+  .filter(Boolean);
 let pgPool = null;
 let pgReady = false;
+let adminSchemaReady = false;
 const USER_CACHE_MS = 60 * 1000;
 const userByUidCache = new Map();
 
@@ -168,6 +173,53 @@ function customerFromRow(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+}
+
+function loginEventFromRow(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    userId: row.user_id,
+    email: row.email,
+    name: row.name,
+    createdAt: row.created_at,
+    ip: row.ip || "",
+    userAgent: row.user_agent || ""
+  };
+}
+
+function isAdminUser(user) {
+  if (!user || !ADMIN_EMAILS.length) return false;
+  return ADMIN_EMAILS.includes(String(user.email || "").toLowerCase());
+}
+
+async function ensureAdminSchema() {
+  if (!usingPostgres() || adminSchemaReady) return;
+  const pool = getPool();
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS login_events (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      email TEXT NOT NULL,
+      name TEXT DEFAULT '',
+      ip TEXT DEFAULT '',
+      user_agent TEXT DEFAULT '',
+      created_at TEXT NOT NULL
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_events (
+      id TEXT PRIMARY KEY,
+      admin_uid TEXT NOT NULL,
+      target_uid TEXT DEFAULT '',
+      action TEXT NOT NULL,
+      details TEXT DEFAULT '',
+      created_at TEXT NOT NULL
+    )
+  `);
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_login_events_user_created ON login_events (user_id, created_at DESC)");
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_admin_events_created ON admin_events (created_at DESC)");
+  adminSchemaReady = true;
 }
 
 async function ensurePostgres() {
@@ -324,6 +376,116 @@ async function updateUserPassword(uid, passwordHash) {
     user.updatedAt = updatedAt;
     writeDb(db);
   }
+}
+
+async function recordLogin(user, req) {
+  if (!user) return;
+  const now = new Date().toISOString();
+  const ip = String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "").split(",")[0].trim();
+  const userAgent = String(req.headers["user-agent"] || "");
+  if (usingPostgres()) {
+    await ensureAdminSchema();
+    await getPool().query(
+      `INSERT INTO login_events (id, user_id, email, name, ip, user_agent, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [makeId("login"), user.uid, user.email, user.name || "", ip, userAgent.slice(0, 500), now]
+    );
+    return;
+  }
+  const db = readDb();
+  db.loginEvents ||= [];
+  db.loginEvents.push({ id: makeId("login"), userId: user.uid, email: user.email, name: user.name || "", ip, userAgent, createdAt: now });
+  writeDb(db);
+}
+
+async function recordAdminEvent(adminUid, targetUid, action, details = "") {
+  const now = new Date().toISOString();
+  if (usingPostgres()) {
+    await ensureAdminSchema();
+    await getPool().query(
+      `INSERT INTO admin_events (id, admin_uid, target_uid, action, details, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [makeId("admin"), adminUid, targetUid || "", action, details, now]
+    );
+    return;
+  }
+  const db = readDb();
+  db.adminEvents ||= [];
+  db.adminEvents.push({ id: makeId("admin"), adminUid, targetUid: targetUid || "", action, details, createdAt: now });
+  writeDb(db);
+}
+
+async function listAdminUsers() {
+  if (usingPostgres()) {
+    await ensurePostgres();
+    await ensureAdminSchema();
+    const { rows } = await getPool().query(
+      `SELECT
+         u.uid, u.name, u.email, u.phone, u.city, u.notes, u.created_at, u.updated_at,
+         last_login.created_at AS last_login_at,
+         COALESCE(login_counts.total, 0) AS login_count
+       FROM users u
+       LEFT JOIN LATERAL (
+         SELECT created_at FROM login_events le
+         WHERE le.user_id = u.uid
+         ORDER BY created_at DESC
+         LIMIT 1
+       ) last_login ON true
+       LEFT JOIN (
+         SELECT user_id, COUNT(*) AS total FROM login_events GROUP BY user_id
+       ) login_counts ON login_counts.user_id = u.uid
+       ORDER BY COALESCE(last_login.created_at, u.created_at) DESC`
+    );
+    return rows.map(row => ({
+      uid: row.uid,
+      name: row.name || "",
+      email: row.email || "",
+      phone: row.phone || "",
+      city: row.city || "",
+      notes: row.notes || "",
+      createdAt: row.created_at || "",
+      updatedAt: row.updated_at || "",
+      lastLoginAt: row.last_login_at || "",
+      loginCount: Number(row.login_count || 0),
+      isAdmin: ADMIN_EMAILS.includes(String(row.email || "").toLowerCase())
+    }));
+  }
+  const db = readDb();
+  db.loginEvents ||= [];
+  return db.users.map(user => {
+    const events = db.loginEvents.filter(event => event.userId === user.uid).sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+    return {
+      uid: user.uid,
+      name: user.name || "",
+      email: user.email || "",
+      phone: user.phone || "",
+      city: user.city || "",
+      notes: user.notes || "",
+      createdAt: user.createdAt || "",
+      updatedAt: user.updatedAt || "",
+      lastLoginAt: events[0]?.createdAt || "",
+      loginCount: events.length,
+      isAdmin: ADMIN_EMAILS.includes(String(user.email || "").toLowerCase())
+    };
+  });
+}
+
+async function listAdminLoginEvents(limit = 50) {
+  const safeLimit = Math.max(1, Math.min(200, Number(limit || 50)));
+  if (usingPostgres()) {
+    await ensureAdminSchema();
+    const { rows } = await getPool().query(
+      "SELECT * FROM login_events ORDER BY created_at DESC LIMIT $1",
+      [safeLimit]
+    );
+    return rows.map(loginEventFromRow);
+  }
+  const db = readDb();
+  db.loginEvents ||= [];
+  return db.loginEvents
+    .slice()
+    .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+    .slice(0, safeLimit);
 }
 
 async function listStock(uid) {
@@ -784,7 +946,8 @@ function publicUser(user) {
     city: user.city || "",
     notes: user.notes || "",
     createdAt: user.createdAt || "",
-    updatedAt: user.updatedAt || ""
+    updatedAt: user.updatedAt || "",
+    isAdmin: isAdminUser(user)
   };
 }
 
@@ -874,7 +1037,50 @@ async function handleApi(req, res) {
       const password = String(body.password || "");
       const user = await findUserByEmail(email);
       if (!user || !verifyPassword(password, user.passwordHash)) return send(res, 401, { error: "E-mail ou senha incorretos." });
+      await recordLogin(user, req);
       return send(res, 200, { user: publicUser(user) });
+    }
+
+    if (parts[0] === "api" && parts[1] === "admin") {
+      const adminUid = parts[2];
+      const admin = await findUserByUid(adminUid);
+      if (!admin || !isAdminUser(admin)) return send(res, 403, { error: "Acesso restrito ao administrador." });
+
+      if (method === "GET" && parts[3] === "users") {
+        return send(res, 200, { users: await listAdminUsers() });
+      }
+
+      if (method === "GET" && parts[3] === "logins") {
+        return send(res, 200, { logins: await listAdminLoginEvents(url.searchParams.get("limit") || 50) });
+      }
+
+      if (method === "PUT" && parts[3] === "users" && parts[5] === "profile") {
+        const targetUid = parts[4];
+        const body = await readBody(req);
+        const name = String(body.name || "").trim();
+        if (!name) return send(res, 400, { error: "Informe o nome." });
+        const profile = await updateUserProfile(targetUid, {
+          name,
+          phone: String(body.phone || "").trim(),
+          city: String(body.city || "").trim(),
+          notes: String(body.notes || "").trim()
+        });
+        if (!profile) return send(res, 404, { error: "Usuário não encontrado." });
+        await recordAdminEvent(adminUid, targetUid, "profile_update", `Perfil alterado por ${admin.email}`);
+        return send(res, 200, publicUser(profile));
+      }
+
+      if (method === "PUT" && parts[3] === "users" && parts[5] === "password") {
+        const targetUid = parts[4];
+        const body = await readBody(req);
+        const password = String(body.password || "");
+        if (password.length < 6) return send(res, 400, { error: "A senha precisa ter pelo menos 6 caracteres." });
+        const target = await findUserByUid(targetUid);
+        if (!target) return send(res, 404, { error: "Usuário não encontrado." });
+        await updateUserPassword(targetUid, hashPassword(password));
+        await recordAdminEvent(adminUid, targetUid, "password_reset", `Senha redefinida por ${admin.email}`);
+        return send(res, 200, { ok: true });
+      }
     }
 
     if (parts[0] === "api" && parts[1] === "users") {

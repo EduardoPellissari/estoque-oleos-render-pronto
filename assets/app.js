@@ -3,6 +3,8 @@ let stock = [];
 let customers = [];
 let customerPurchaseItems = [];
 let userProfile = {};
+let adminUsers = [];
+let adminLogins = [];
 
 const $ = (id) => document.getElementById(id);
 const API_BASE = location.origin + "/api";
@@ -153,16 +155,19 @@ function showAuth(){
 }
 
 async function startSession(user){
-  currentUser={uid:user.uid,email:user.email,displayName:user.name || user.email};
+  currentUser={uid:user.uid,email:user.email,displayName:user.name || user.email,isAdmin:Boolean(user.isAdmin)};
   $("auth").classList.add("hidden");
   $("app").classList.remove("hidden");
   $("userLabel").textContent=currentUser.displayName || currentUser.email;
+  if($("adminNav")) $("adminNav").classList.toggle("hidden", !currentUser.isAdmin);
   await loadUserData();
   showPage("dashboard");
 }
 
 function logout(){
   localStorage.removeItem(SESSION_KEY);
+  adminUsers=[];
+  adminLogins=[];
   showAuth();
 }
 
@@ -1183,15 +1188,17 @@ function installmentNotes(){
 }
 
 function showPage(page){
+  if(page==="admin" && !currentUser?.isAdmin) page="dashboard";
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
   document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
   const pageEl=$(page);
   if(pageEl) pageEl.classList.remove("hidden");
   document.querySelectorAll(`.nav[data-page="${page}"]`).forEach(nav=>nav.classList.add("active"));
-  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",uses:"Usos e cuidados",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil"};
+  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",uses:"Usos e cuidados",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil",admin:"Administração"};
   $("pageTitle").textContent=titles[page] || "Sistema";
   closeMobileMenu();
   renderAll();
+  if(page==="admin") loadAdminData();
 }
 
 function filteredStock(){
@@ -1597,6 +1604,111 @@ async function removeCustomer(id){
   }catch(err){ alert("Erro ao excluir cliente: "+err.message); }
 }
 
+function formatDateTimeBR(value){
+  if(!value) return "-";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime())) return formatDateBR(value) || "-";
+  return date.toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+}
+
+async function loadAdminData(){
+  if(!currentUser?.isAdmin) return;
+  try{
+    const [usersData, loginsData]=await Promise.all([
+      request(`${API_BASE}/admin/${currentUser.uid}/users`),
+      request(`${API_BASE}/admin/${currentUser.uid}/logins?limit=50`)
+    ]);
+    adminUsers=Array.isArray(usersData.users) ? usersData.users : [];
+    adminLogins=Array.isArray(loginsData.logins) ? loginsData.logins : [];
+    renderAdmin();
+  }catch(err){
+    showMessage("adminMessage",err.message,"error");
+  }
+}
+
+function renderAdmin(){
+  if(!currentUser?.isAdmin) return;
+  if($("adminStatus")){
+    $("adminStatus").textContent=`${adminUsers.length} usuário(s) cadastrados.`;
+  }
+  const usersWrap=$("adminUsers");
+  if(usersWrap){
+    usersWrap.innerHTML=adminUsers.length ? adminUsers.map(user=>`
+      <article class="admin-user-card">
+        <div>
+          <strong>${escapeHtml(user.name || "-")}</strong>
+          <span>${escapeHtml(user.email || "-")}</span>
+          <small>Último acesso: ${escapeHtml(formatDateTimeBR(user.lastLoginAt))} • ${user.loginCount || 0} login(s)</small>
+        </div>
+        <button type="button" class="mini" onclick="selectAdminUser('${user.uid}')">Editar</button>
+      </article>
+    `).join("") : `<div class="empty">Nenhum usuário encontrado.</div>`;
+  }
+  const loginsWrap=$("adminLogins");
+  if(loginsWrap){
+    loginsWrap.innerHTML=adminLogins.length ? adminLogins.map(event=>`
+      <div class="admin-login-row">
+        <strong>${escapeHtml(event.name || event.email || "-")}</strong>
+        <span>${escapeHtml(event.email || "")}</span>
+        <small>${escapeHtml(formatDateTimeBR(event.createdAt))}</small>
+      </div>
+    `).join("") : `<div class="empty compact">Nenhum acesso registrado ainda.</div>`;
+  }
+}
+
+function selectAdminUser(uid){
+  const user=adminUsers.find(item=>item.uid===uid);
+  if(!user) return;
+  $("adminTargetUid").value=user.uid;
+  $("adminName").value=user.name || "";
+  $("adminEmail").value=user.email || "";
+  $("adminPhone").value=user.phone || "";
+  $("adminCity").value=user.city || "";
+  $("adminNotes").value=user.notes || "";
+  $("adminNewPassword").value="";
+  showMessage("adminMessage",`Editando ${user.name || user.email}.`,"success");
+}
+
+async function saveAdminUser(e){
+  e.preventDefault();
+  const uid=$("adminTargetUid").value;
+  if(!uid) return showMessage("adminMessage","Selecione um usuário primeiro.","error");
+  try{
+    await request(`${API_BASE}/admin/${currentUser.uid}/users/${uid}/profile`,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        name:$("adminName").value.trim(),
+        phone:$("adminPhone").value.trim(),
+        city:$("adminCity").value.trim(),
+        notes:$("adminNotes").value.trim()
+      })
+    });
+    showMessage("adminMessage","Dados do usuário salvos.","success");
+    await loadAdminData();
+  }catch(err){
+    showMessage("adminMessage",err.message,"error");
+  }
+}
+
+async function resetAdminPassword(){
+  const uid=$("adminTargetUid").value;
+  const password=$("adminNewPassword").value;
+  if(!uid) return showMessage("adminMessage","Selecione um usuário primeiro.","error");
+  if(String(password || "").length<6) return showMessage("adminMessage","A nova senha precisa ter pelo menos 6 caracteres.","error");
+  try{
+    await request(`${API_BASE}/admin/${currentUser.uid}/users/${uid}/password`,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({password})
+    });
+    $("adminNewPassword").value="";
+    showMessage("adminMessage","Senha redefinida.","success");
+  }catch(err){
+    showMessage("adminMessage",err.message,"error");
+  }
+}
+
 function renderProfile(){
   if(!userProfile) return;
   if($("profileName")) $("profileName").value=userProfile.name || "";
@@ -1620,6 +1732,7 @@ function renderAll(){
   renderUses();
   renderCustomers();
   renderReports();
+  renderAdmin();
 }
 
 async function saveStockForm(e){
@@ -1791,6 +1904,9 @@ function bindEvents(){
   if($("usesFilter")) $("usesFilter").addEventListener("input", renderUses);
   $("profileForm").addEventListener("submit", saveProfile);
   $("passwordForm").addEventListener("submit", savePassword);
+  if($("adminEditForm")) $("adminEditForm").addEventListener("submit", saveAdminUser);
+  if($("adminPasswordBtn")) $("adminPasswordBtn").addEventListener("click", resetAdminPassword);
+  if($("refreshAdmin")) $("refreshAdmin").addEventListener("click", loadAdminData);
   $("mobileMenuBtn").addEventListener("click", openMobileMenu);
   $("mobileOverlay").addEventListener("click", closeMobileMenu);
   document.querySelectorAll(".nav").forEach(btn=>btn.addEventListener("click",()=>showPage(btn.dataset.page)));

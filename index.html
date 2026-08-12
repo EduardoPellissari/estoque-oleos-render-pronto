@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Essenza Estoque">
   <link rel="manifest" href="manifest.json">
   <title>Essenza Cloud Pro | Estoque doTERRA</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260812-official-uses">
+  <link rel="stylesheet" href="assets/style.css?v=20260812-admin-panel">
   <script defer src="/_vercel/speed-insights/script.js" data-sdkn="@vercel/speed-insights" data-sdkv="2.0.0"></script>
 </head>
 <body>
@@ -60,6 +60,7 @@
     <button class="nav" data-page="customers"><span>🤝</span> Clientes</button>
     <button class="nav" data-page="reports"><span>📈</span> Relatórios</button>
     <button class="nav" data-page="profile"><span>👤</span> Usuários / Perfil</button>
+    <button id="adminNav" class="nav hidden" data-page="admin"><span>🔐</span> Admin</button>
     <button id="logout" class="logout" type="button"><span>🚪</span> Sair</button>
   </aside>
 
@@ -334,11 +335,58 @@
         </div>
       </div>
     </section>
+
+    <section id="admin" class="page hidden">
+      <div class="admin-layout">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Administração</h2>
+              <p id="adminStatus">Acesso restrito ao administrador.</p>
+            </div>
+            <button id="refreshAdmin" class="small-btn" type="button">Atualizar</button>
+          </div>
+          <div id="adminUsers" class="admin-users"></div>
+        </div>
+
+        <form id="adminEditForm" class="panel">
+          <h2>Editar usuário</h2>
+          <input type="hidden" id="adminTargetUid">
+
+          <label for="adminName">Nome</label>
+          <input id="adminName" placeholder="Nome do usuário">
+
+          <label for="adminEmail">E-mail</label>
+          <input id="adminEmail" disabled>
+
+          <label for="adminPhone">Telefone / WhatsApp</label>
+          <input id="adminPhone" placeholder="Telefone">
+
+          <label for="adminCity">Cidade</label>
+          <input id="adminCity" placeholder="Cidade">
+
+          <label for="adminNotes">Observações</label>
+          <textarea id="adminNotes" placeholder="Observações internas"></textarea>
+
+          <button type="submit">Salvar dados</button>
+
+          <label for="adminNewPassword">Nova senha</label>
+          <input id="adminNewPassword" type="password" placeholder="Mínimo 6 caracteres">
+          <button id="adminPasswordBtn" type="button" class="secondary">Redefinir senha</button>
+          <div id="adminMessage" class="profile-message hidden"></div>
+        </form>
+
+        <div class="panel">
+          <h2>Últimos acessos</h2>
+          <div id="adminLogins" class="admin-logins"></div>
+        </div>
+      </div>
+    </section>
   </section>
 </main>
 
 <script src="assets/catalog.js?v=20260811-load-test"></script>
 <script src="assets/image-links.js?v=20260806-stock-delta"></script>
-<script src="assets/app.js?v=20260812-official-uses"></script>
+<script src="assets/app.js?v=20260812-admin-panel"></script>
 </body>
 </html>
