@@ -748,6 +748,148 @@ function productUseInfo(p){
   </details>`;
 }
 
+function textFromProductUseInfo(p){
+  return productUseInfo(p)
+    .replace(/<small[\s\S]*?<\/small>/g," ")
+    .replace(/<[^>]+>/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+const USE_GUIDES = [
+  {
+    title: "Respiração, tosse e congestão",
+    terms: ["tosse", "catarro", "congestao", "congestão", "nariz entupido", "respiracao", "respiração", "peito carregado", "garganta", "sinusite", "bronquite", "asma"],
+    productTerms: ["breathe", "air-x", "eucalyptus", "eucalipto", "peppermint", "hortel", "lemon eucalyptus", "douglas fir", "siberian fir", "black spruce", "abeto", "pinheiro", "cypress", "cipreste"],
+    note: "Apoio aromático para sensação de vias aéreas mais abertas. Em falta de ar, febre, chiado ou tosse persistente, procure atendimento médico."
+  },
+  {
+    title: "Dor de cabeça, tensão e nuca pesada",
+    terms: ["dor de cabeça", "dor de cabeca", "enxaqueca", "migranea", "migrânea", "tensao", "tensão", "nuca", "ombro", "pressao na cabeca", "pressão na cabeça"],
+    productTerms: ["pasttense", "peppermint", "hortel", "lavender", "lavanda", "deep blue", "frankincense", "olibano"],
+    note: "Uso tópico/aromático para relaxamento e sensação refrescante. Dor forte, súbita, recorrente ou com outros sintomas precisa de avaliação médica."
+  },
+  {
+    title: "Calma, ansiedade e estresse",
+    terms: ["ansiedade", "ansioso", "estresse", "stress", "nervoso", "acalmar", "calma", "irritacao", "irritação", "panico", "pânico", "tranquilidade"],
+    productTerms: ["adaptiv", "lavender", "lavanda", "serenity", "calmer", "peace", "console", "balance", "steady", "copaiba", "copaíba", "ylang"],
+    note: "Apoio de bem-estar emocional e relaxamento. Não substitui tratamento para ansiedade, depressão, pânico ou insônia."
+  },
+  {
+    title: "Sono e descanso",
+    terms: ["sono", "dormir", "insonia", "insônia", "descanso", "relaxar a noite", "noite", "agitado"],
+    productTerms: ["serenity", "lavender", "lavanda", "calmer", "adaptiv", "peace", "cedarwood", "cedro", "vetiver", "balance"],
+    note: "Sugestões para ritual noturno, difusão e relaxamento. Insônia persistente merece orientação profissional."
+  },
+  {
+    title: "Digestão, enjoo e desconforto abdominal",
+    terms: ["digestao", "digestão", "enjoo", "náusea", "nausea", "estomago", "estômago", "barriga", "gases", "refluxo", "gastrite", "azia"],
+    productTerms: ["zengest", "tamer", "ginger", "gengibre", "peppermint", "hortel", "fennel", "erva doce", "cardamom", "cardamomo"],
+    note: "Apoio aromático/tópico para conforto após refeições. Dor persistente, refluxo intenso, vômitos ou gastrite exigem orientação médica."
+  },
+  {
+    title: "Dor muscular, cansaço e pós-treino",
+    terms: ["dor muscular", "musculo", "músculo", "cansaco", "cansaço", "pernas cansadas", "treino", "academia", "costas", "joelho", "massagem"],
+    productTerms: ["deep blue", "aromatouch", "pasttense", "wintergreen", "rescuer", "copaiba", "copaíba", "lemongrass", "capim limao"],
+    note: "Para massagem e conforto muscular. Dor intensa, inchaço, trauma ou perda de movimento precisa de avaliação."
+  },
+  {
+    title: "Foco, estudo e energia",
+    terms: ["foco", "concentracao", "concentração", "estudo", "trabalho", "energia", "cansado", "desanimo", "desânimo", "produtividade"],
+    productTerms: ["intune", "thinker", "peppermint", "hortel", "rosemary", "alecrim", "basil", "manjeric", "motivate", "lemon", "limão", "wild orange", "laranja"],
+    note: "Aromas para sensação de alerta, clareza e ânimo durante a rotina."
+  },
+  {
+    title: "Pele, acne e irritações",
+    terms: ["pele", "acne", "espinha", "oleosidade", "irritacao", "irritação", "coceira", "unha", "micose", "ferida"],
+    productTerms: ["melaleuca", "tea tree", "hd clear", "correct-x", "lavender", "lavanda", "frankincense", "olibano", "copaiba", "copaíba"],
+    note: "Uso pontual e diluído para rotina de pele. Não substitui tratamento para acne severa, infecções, micose ou feridas."
+  },
+  {
+    title: "Limpeza, ambiente e mau cheiro",
+    terms: ["limpeza", "ambiente", "mau cheiro", "cheiro ruim", "purificar", "casa", "cozinha", "banheiro", "aroma"],
+    productTerms: ["on guard", "lemon", "limão", "wild orange", "laranja", "eucalyptus", "eucalipto", "tea tree", "melaleuca", "purify", "air-x", "citrus bliss"],
+    note: "Aromas para sensação de ambiente limpo, fresco e acolhedor."
+  }
+];
+
+function matchingUseGuides(query){
+  const q=normalizeText(query);
+  if(!q) return [];
+  return USE_GUIDES.filter(guide=>guide.terms.some(term=>q.includes(normalizeText(term)) || normalizeText(term).includes(q)));
+}
+
+function scoreUseProduct(product,query,guides){
+  const q=normalizeText(query);
+  const info=textFromProductUseInfo(product);
+  const hay=normalizeText(`${product.name} ${product.code} ${product.size} ${product.category} ${info}`);
+  const tokens=q.split(/\s+/).filter(Boolean);
+  let score=0;
+  if(!q) score += 1;
+  tokens.forEach(token=>{
+    if(hay.includes(token)) score += 2;
+    if(normalizeText(product.name).includes(token)) score += 4;
+  });
+  guides.forEach(guide=>{
+    guide.productTerms.forEach(term=>{
+      if(hay.includes(normalizeText(term))) score += 8;
+    });
+  });
+  return score;
+}
+
+function renderUseChips(){
+  const wrap=$("usesChips");
+  if(!wrap) return;
+  const chips=["tosse","dor de cabeça","acalmar","sono","digestão","dor muscular","foco","pele","limpeza"];
+  wrap.innerHTML=chips.map(chip=>`<button type="button" onclick="setUsesSearch('${escapeAttr(chip)}')">${escapeHtml(chip)}</button>`).join("");
+}
+
+function setUsesSearch(value){
+  if($("usesFilter")) $("usesFilter").value=value;
+  renderUses();
+}
+
+function renderUses(){
+  const grid=$("usesGrid");
+  if(!grid) return;
+  const query=$("usesFilter") ? $("usesFilter").value : "";
+  const guides=matchingUseGuides(query);
+  const catalog=getCatalog();
+  const rows=catalog
+    .map(product=>({...product,_useScore:scoreUseProduct(product,query,guides)}))
+    .filter(product=>query ? product._useScore>0 : officialProductInfo(product))
+    .sort((a,b)=>b._useScore-a._useScore || String(a.name).localeCompare(String(b.name)))
+    .slice(0, query ? 24 : 18);
+  if($("usesStatus")){
+    $("usesStatus").textContent=query
+      ? `${rows.length} sugestão(ões) para "${query}".`
+      : "Pesquise por sintoma, necessidade ou nome do óleo.";
+  }
+  const guideHtml=guides.length ? `<div class="use-guide-match">
+    ${guides.map(guide=>`<article>
+      <strong>${escapeHtml(guide.title)}</strong>
+      <span>${escapeHtml(guide.note)}</span>
+    </article>`).join("")}
+  </div>` : "";
+  const cardsHtml=rows.map(product=>`
+    <article class="use-card">
+      <div class="use-card-top">
+        ${productIcon(product)}
+        <div>
+          <div class="product-meta"><span>${product.code || "-"}</span><span>${product.size || "-"}</span></div>
+          <h3>${escapeHtml(product.name || "-")}</h3>
+          <p>${escapeHtml(product.category || "Sem categoria")}</p>
+        </div>
+      </div>
+      ${productUseInfo(product)}
+      <div class="catalog-prices"><span>Venda: ${money(product.retail)}</span><span>Atacado: ${money(product.wholesale)}</span></div>
+      <button type="button" onclick="addCatalogToStock('${product.code}')">Adicionar ao estoque</button>
+    </article>
+  `).join("");
+  grid.innerHTML=guideHtml + (cardsHtml || `<div class="empty">Nenhum óleo encontrado para essa busca.</div>`);
+}
+
 function productIcon(p){
   const code = p?.code || p?.productCode || "";
   const name = String((p && (p.name || p.productName)) || "DT");
@@ -997,7 +1139,7 @@ function showPage(page){
   const pageEl=$(page);
   if(pageEl) pageEl.classList.remove("hidden");
   document.querySelectorAll(`.nav[data-page="${page}"]`).forEach(nav=>nav.classList.add("active"));
-  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil"};
+  const titles={dashboard:"Dashboard",stock:"Meu estoque",catalog:"Catálogo doTERRA",uses:"Usos e cuidados",customers:"Clientes",reports:"Relatórios",profile:"Usuários / Perfil"};
   $("pageTitle").textContent=titles[page] || "Sistema";
   closeMobileMenu();
   renderAll();
@@ -1095,7 +1237,6 @@ function renderCatalog(){
     <div class="product-meta"><span>${p.code || "-"}</span><span>${p.size || "-"}</span></div>
     <h3>${p.name || "-"}</h3>
     <p>${p.category || "Sem categoria"}</p>
-    ${productUseInfo(p)}
     <div class="catalog-prices"><span>Venda: ${money(p.retail)}</span><span>Atacado: ${money(p.wholesale)}</span><span>PV: ${p.pv || 0}</span></div>
     <button type="button" onclick="addCatalogToStock('${p.code}')">Adicionar ao estoque</button>
   </article>`).join("");
@@ -1283,7 +1424,8 @@ function renderGlobalSearch(){
   const results=[
     ...customers.filter(i=>normalizeText(`${i.customerName} ${i.phone} ${i.products}`).includes(q)).slice(0,5).map(i=>({type:"Cliente",title:i.customerName,detail:`${money(i.amount)} • ${billingLabel(i)}`,page:"customers"})),
     ...stock.filter(i=>normalizeText(`${i.productName} ${i.productCode} ${i.category}`).includes(q)).slice(0,5).map(i=>({type:"Estoque",title:i.productName,detail:`${i.qty} un. • ${money(i.price)}`,page:"stock"})),
-    ...getCatalog().filter(i=>normalizeText(`${i.name} ${i.code} ${i.category}`).includes(q)).slice(0,5).map(i=>({type:"Catálogo",title:i.name,detail:`${i.code} • ${money(i.retail)}`,page:"catalog"}))
+    ...getCatalog().filter(i=>normalizeText(`${i.name} ${i.code} ${i.category}`).includes(q)).slice(0,5).map(i=>({type:"Catálogo",title:i.name,detail:`${i.code} • ${money(i.retail)}`,page:"catalog"})),
+    ...USE_GUIDES.filter(guide=>normalizeText(`${guide.title} ${guide.terms.join(" ")}`).includes(q)).slice(0,3).map(guide=>({type:"Usos",title:guide.title,detail:"Buscar óleos por sintoma",page:"uses"}))
   ].slice(0,10);
   wrap.innerHTML=results.length ? results.map(r=>`<button type="button" onclick="showPage('${r.page}'); hide($('globalSearchResults'));">
     <span>${r.type}</span><strong>${escapeHtml(r.title || "-")}</strong><small>${escapeHtml(r.detail || "")}</small>
@@ -1425,6 +1567,8 @@ function renderAll(){
   renderDashboardDetails();
   renderStock();
   renderCatalog();
+  renderUseChips();
+  renderUses();
   renderCustomers();
   renderReports();
 }
@@ -1595,6 +1739,7 @@ function bindEvents(){
   $("catalogFilter").addEventListener("input", renderCatalog);
   $("catalogCategoryFilter").addEventListener("change", renderCatalog);
   $("refreshCatalog").addEventListener("click", renderCatalog);
+  if($("usesFilter")) $("usesFilter").addEventListener("input", renderUses);
   $("profileForm").addEventListener("submit", saveProfile);
   $("passwordForm").addEventListener("submit", savePassword);
   $("mobileMenuBtn").addEventListener("click", openMobileMenu);
